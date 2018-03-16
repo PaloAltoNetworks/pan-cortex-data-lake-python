@@ -1,0 +1,244 @@
+[
+  {
+    "jobId": "56176e1b-33fd-48ae-bffd-7104b6f1a9ca",
+    "sequenceNo": 0,
+    "status": "JOB_FINISHED",
+    "clientParams": {},
+    "result": {
+      "esResult": {
+        "took": 0,
+        "from": 0,
+        "size": 0,
+        "completed": true,
+        "response": {
+          "resultType": "elasticsearch",
+          "result": {
+            "_shards": {
+              "total": 3,
+              "successful": 3,
+              "failed": 0
+            },
+            "hits": {
+              "total": 5585,
+              "max_score": 0,
+              "hits": []
+            },
+            "took": 6,
+            "profile": {
+              "shards": []
+            },
+            "terminated_early": false,
+            "timed_out": false,
+            "suggest": {},
+            "aggregations": {
+              "46": {
+                "doc_count_error_upper_bound": 0,
+                "sum_other_doc_count": 0,
+                "buckets": [
+                  {
+                    "key": "",
+                    "doc_count": 5293,
+                    "dstuser": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": "",
+                          "doc_count": 5175,
+                          "sessions": {
+                            "value": 59626
+                          },
+                          "ncontent": {
+                            "value": 0
+                          },
+                          "nurlcount": {
+                            "value": 15040
+                          },
+                          "bytes": {
+                            "value": 1170234218
+                          },
+                          "nunique-of-apps": {
+                            "value": 42,
+                            "internal_value": {
+                              "registers": "500000004A00010000020000880288208011901D9014800C850D8003810880048003800D801B880984178407840D88028014900084088094058807800D84008404800A880E88098405851084328C02800D80108006"
+                            }
+                          },
+                          "nthreats": {
+                            "value": 38
+                          }
+                        },
+                        {
+                          "key": "forest\\administrator",
+                          "doc_count": 118,
+                          "sessions": {
+                            "value": 1914
+                          },
+                          "ncontent": {
+                            "value": 0
+                          },
+                          "nurlcount": {
+                            "value": 0
+                          },
+                          "bytes": {
+                            "value": 11566356
+                          },
+                          "nunique-of-apps": {
+                            "value": 14,
+                            "internal_value": {
+                              "registers": "5000000020000100000200405890018435800080158C318420880D8802801684158825884043800D804040"
+                            }
+                          },
+                          "nthreats": {
+                            "value": 261
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "forest\\administrator",
+                    "doc_count": 292,
+                    "dstuser": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": "",
+                          "doc_count": 254,
+                          "sessions": {
+                            "value": 51166
+                          },
+                          "ncontent": {
+                            "value": 0
+                          },
+                          "nurlcount": {
+                            "value": 15
+                          },
+                          "bytes": {
+                            "value": 291863134
+                          },
+                          "nunique-of-apps": {
+                            "value": 11,
+                            "internal_value": {
+                              "registers": "500000001A00010000020000884056903880404A842F880280168428841288198405844072"
+                            }
+                          },
+                          "nthreats": {
+                            "value": 3
+                          }
+                        },
+                        {
+                          "key": "forest\\administrator",
+                          "doc_count": 38,
+                          "sessions": {
+                            "value": 12942
+                          },
+                          "ncontent": {
+                            "value": 0
+                          },
+                          "nurlcount": {
+                            "value": 0
+                          },
+                          "bytes": {
+                            "value": 69131850
+                          },
+                          "nunique-of-apps": {
+                            "value": 3,
+                            "internal_value": {
+                              "registers": "50000000090001000002000088410D88028040EA"
+                            }
+                          },
+                          "nthreats": {
+                            "value": 0
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "progressInfo": {
+            "byTime": {
+              "actualStart": 1521131100800,
+              "timeRange": 0,
+              "totalCompleted": 0,
+              "totalRealTime": 0,
+              "totalRunTime": 0,
+              "lastInterval": 0,
+              "lastRealTime": 0,
+              "lastRunTime": 0
+            }
+          }
+        },
+        "timed_out": false
+      },
+      "esQuery": {
+        "table": [
+          "panw.trsum"
+        ],
+        "query": {
+          "aggregations": {
+            "46": {
+              "terms": {
+                "field": "srcuser",
+                "order": {
+                  "_term": "asc"
+                },
+                "missing": "default",
+                "size": "12"
+              },
+              "aggregations": {
+                "dstuser": {
+                  "terms": {
+                    "field": "dstuser",
+                    "order": {
+                      "_term": "asc"
+                    },
+                    "missing": "default",
+                    "size": "12"
+                  },
+                  "aggregations": {
+                    "bytes": {
+                      "sum": {
+                        "field": "bytes"
+                      }
+                    },
+                    "sessions": {
+                      "sum": {
+                        "field": "sessions"
+                      }
+                    },
+                    "nthreats": {
+                      "sum": {
+                        "field": "nthreats"
+                      }
+                    },
+                    "ncontent": {
+                      "sum": {
+                        "field": "ncontent"
+                      }
+                    },
+                    "nurlcount": {
+                      "sum": {
+                        "field": "nurlcount"
+                      }
+                    },
+                    "nunique-of-apps": {
+                      "pancardinality": {
+                        "field": "app",
+                        "precision_threshold": 64
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "size": 0
+        }
+      }
+    }
+  }
+]

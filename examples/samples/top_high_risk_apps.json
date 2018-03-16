@@ -1,0 +1,421 @@
+{
+  "jobId": "52077bb6-8cf5-4db2-b197-40dbd8b0faec",
+  "sequenceNo": 0,
+  "status": "JOB_FINISHED",
+  "clientParams": {},
+  "result": {
+    "esResult": {
+      "took": 0,
+      "from": 0,
+      "size": 0,
+      "completed": "true",
+      "response": {
+        "resultType": "elasticsearch",
+        "result": {
+          "_shards": {
+            "total": 1,
+            "successful": 1,
+            "failed": 0
+          },
+          "hits": {
+            "total": 109,
+            "max_score": 0,
+            "hits": []
+          },
+          "took": 5,
+          "timed_out": "false",
+          "aggregations": {
+            "561": {
+              "doc_count_error_upper_bound": 0,
+              "sum_other_doc_count": 0,
+              "buckets": [
+                {
+                  "key": 1,
+                  "doc_count": 7,
+                  "app": {
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 0,
+                    "buckets": [
+                      {
+                        "key": "isatap",
+                        "doc_count": 1,
+                        "bytes": {
+                          "value": 1536
+                        },
+                        "sortby": {
+                          "value": 1
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "reddit-base",
+                        "doc_count": 6,
+                        "bytes": {
+                          "value": 8382039
+                        },
+                        "sortby": {
+                          "value": 232
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "key": 2,
+                  "doc_count": 16,
+                  "app": {
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 0,
+                    "buckets": [
+                      {
+                        "key": "instagram-base",
+                        "doc_count": 2,
+                        "bytes": {
+                          "value": 180473
+                        },
+                        "sortby": {
+                          "value": 4
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "ldap",
+                        "doc_count": 1,
+                        "bytes": {
+                          "value": 584811
+                        },
+                        "sortby": {
+                          "value": 15
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "ms-wmi",
+                        "doc_count": 1,
+                        "bytes": {
+                          "value": 2369016
+                        },
+                        "sortby": {
+                          "value": 208
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "msrpc",
+                        "doc_count": 2,
+                        "bytes": {
+                          "value": 1008982
+                        },
+                        "sortby": {
+                          "value": 652
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "netbios-dg",
+                        "doc_count": 2,
+                        "bytes": {
+                          "value": 7023
+                        },
+                        "sortby": {
+                          "value": 8
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "netbios-ns",
+                        "doc_count": 2,
+                        "bytes": {
+                          "value": 7912
+                        },
+                        "sortby": {
+                          "value": 3
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "twitter-base",
+                        "doc_count": 6,
+                        "bytes": {
+                          "value": 87582
+                        },
+                        "sortby": {
+                          "value": 4
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "key": 3,
+                  "doc_count": 6,
+                  "app": {
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 0,
+                    "buckets": [
+                      {
+                        "key": "google-play",
+                        "doc_count": 2,
+                        "bytes": {
+                          "value": 1100997
+                        },
+                        "sortby": {
+                          "value": 8
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "itunes-base",
+                        "doc_count": 4,
+                        "bytes": {
+                          "value": 196126
+                        },
+                        "sortby": {
+                          "value": 4
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "key": 4,
+                  "doc_count": 80,
+                  "app": {
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 0,
+                    "buckets": [
+                      {
+                        "key": "dns",
+                        "doc_count": 8,
+                        "bytes": {
+                          "value": 160329
+                        },
+                        "sortby": {
+                          "value": 661
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "google-base",
+                        "doc_count": 6,
+                        "bytes": {
+                          "value": 159714
+                        },
+                        "sortby": {
+                          "value": 4
+                        },
+                        "nthreats": {
+                          "value": 1
+                        }
+                      },
+                      {
+                        "key": "imgur-base",
+                        "doc_count": 5,
+                        "bytes": {
+                          "value": 733333
+                        },
+                        "sortby": {
+                          "value": 15
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "ms-update",
+                        "doc_count": 5,
+                        "bytes": {
+                          "value": 743585
+                        },
+                        "sortby": {
+                          "value": 8
+                        },
+                        "nthreats": {
+                          "value": 1
+                        }
+                      },
+                      {
+                        "key": "ssl",
+                        "doc_count": 31,
+                        "bytes": {
+                          "value": 1236359
+                        },
+                        "sortby": {
+                          "value": 17
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "web-browsing",
+                        "doc_count": 19,
+                        "bytes": {
+                          "value": 423038
+                        },
+                        "sortby": {
+                          "value": 12
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      },
+                      {
+                        "key": "youtube-base",
+                        "doc_count": 6,
+                        "bytes": {
+                          "value": 174453
+                        },
+                        "sortby": {
+                          "value": 4
+                        },
+                        "nthreats": {
+                          "value": 0
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "progressInfo": {
+          "byTime": {
+            "actualStart": 1519138235000,
+            "timeRange": 0,
+            "totalCompleted": 0,
+            "totalRealTime": 0,
+            "totalRunTime": 0,
+            "lastInterval": 0,
+            "lastRealTime": 0,
+            "lastRunTime": 0
+          }
+        }
+      },
+      "timed_out": "false"
+    },
+    "esQuery": {
+      "table": [
+        "panw.trsum"
+      ],
+      "query": {
+        "aggregations": {
+          "561": {
+            "terms": {
+              "field": "risk-of-app",
+              "order": {
+                "_term": "asc"
+              },
+              "missing": "default",
+              "size": "52"
+            },
+            "aggregations": {
+              "app": {
+                "terms": {
+                  "field": "app",
+                  "order": {
+                    "_term": "asc"
+                  },
+                  "missing": "default",
+                  "size": "52"
+                },
+                "aggregations": {
+                  "bytes": {
+                    "sum": {
+                      "field": "bytes"
+                    }
+                  },
+                  "nthreats": {
+                    "sum": {
+                      "field": "nthreats"
+                    }
+                  },
+                  "sortby": {
+                    "sum": {
+                      "field": "sessions"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "bool": {
+                  "must": [
+                    {
+                      "range": {
+                        "time_generated": {
+                          "gte": 0
+                        }
+                      }
+                    },
+                    {
+                      "range": {
+                        "time_generated": {
+                          "lte": 1519137949
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "bool": {
+                  "must": [
+                    {
+                      "range": {
+                        "time_generated": {
+                          "gte": 1519134350
+                        }
+                      }
+                    },
+                    {
+                      "range": {
+                        "time_generated": {
+                          "lte": 2147483647
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "size": 0
+      }
+    }
+  }
+}

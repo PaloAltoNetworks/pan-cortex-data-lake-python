@@ -1,0 +1,137 @@
+[
+  {
+    "jobId": "37edb05b-447c-4a0f-abf5-2ad239ef258d",
+    "sequenceNo": 0,
+    "status": "JOB_FINISHED",
+    "clientParams": {},
+    "result": {
+      "esResult": {
+        "took": 0,
+        "from": 0,
+        "size": 0,
+        "completed": true,
+        "response": {
+          "resultType": "elasticsearch",
+          "result": {
+            "_shards": {
+              "total": 3,
+              "successful": 3,
+              "failed": 0
+            },
+            "hits": {
+              "total": 5585,
+              "max_score": 0,
+              "hits": []
+            },
+            "took": 6,
+            "profile": {
+              "shards": []
+            },
+            "terminated_early": false,
+            "timed_out": false,
+            "suggest": {},
+            "aggregations": {
+              "892": {
+                "doc_count_error_upper_bound": 0,
+                "sum_other_doc_count": 0,
+                "buckets": [
+                  {
+                    "key": "any-any",
+                    "doc_count": 5585,
+                    "sessions": {
+                      "value": 125648
+                    },
+                    "ncontent": {
+                      "value": 0
+                    },
+                    "nurlcount": {
+                      "value": 15055
+                    },
+                    "bytes": {
+                      "value": 1542795558
+                    },
+                    "nunique-of-apps": {
+                      "value": 49,
+                      "internal_value": {
+                        "registers": "500000005D0001000004000184800584404384238C3C8C04802580198000801D800880008002840E840A8408800588158437841480308010841C840780298C028013910C84088407801B8002800B8C15841E8414800C80008022801F841C882788078C1C8422840D"
+                      }
+                    },
+                    "nthreats": {
+                      "value": 302
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "progressInfo": {
+            "byTime": {
+              "actualStart": 1521131061927,
+              "timeRange": 0,
+              "totalCompleted": 0,
+              "totalRealTime": 0,
+              "totalRunTime": 0,
+              "lastInterval": 0,
+              "lastRealTime": 0,
+              "lastRunTime": 0
+            }
+          }
+        },
+        "timed_out": false
+      },
+      "esQuery": {
+        "table": [
+          "panw.trsum"
+        ],
+        "query": {
+          "aggregations": {
+            "892": {
+              "terms": {
+                "field": "rule",
+                "order": {
+                  "_term": "asc"
+                },
+                "missing": "default",
+                "size": "12"
+              },
+              "aggregations": {
+                "bytes": {
+                  "sum": {
+                    "field": "bytes"
+                  }
+                },
+                "sessions": {
+                  "sum": {
+                    "field": "sessions"
+                  }
+                },
+                "nthreats": {
+                  "sum": {
+                    "field": "nthreats"
+                  }
+                },
+                "ncontent": {
+                  "sum": {
+                    "field": "ncontent"
+                  }
+                },
+                "nurlcount": {
+                  "sum": {
+                    "field": "nurlcount"
+                  }
+                },
+                "nunique-of-apps": {
+                  "pancardinality": {
+                    "field": "app",
+                    "precision_threshold": 128
+                  }
+                }
+              }
+            }
+          },
+          "size": 0
+        }
+      }
+    }
+  }
+]

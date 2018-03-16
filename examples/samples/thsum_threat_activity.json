@@ -1,0 +1,872 @@
+[
+  {
+    "jobId": "fcfb4100-79ab-4d3b-8880-92d5017fef7d",
+    "sequenceNo": 0,
+    "status": "JOB_FINISHED",
+    "clientParams": {},
+    "result": {
+      "esResult": {
+        "took": 0,
+        "from": 0,
+        "size": 0,
+        "completed": true,
+        "response": {
+          "resultType": "elasticsearch",
+          "result": {
+            "_shards": {
+              "total": 2,
+              "successful": 2,
+              "failed": 0
+            },
+            "hits": {
+              "total": 206,
+              "max_score": 1,
+              "hits": [
+                {
+                  "_index": "117270002_panw.thsum_2018021500-2018021600_000000",
+                  "_type": "thsum",
+                  "_id": "AWGbKUKkQCGY6yiQ5foh",
+                  "_score": 1,
+                  "_source": {
+                    "risk-of-app": "4",
+                    "dst": "00000000000000000000ffffac12042c",
+                    "rule": "any-any",
+                    "type": "3",
+                    "parent_start_time": "0",
+                    "characteristic-of-app": [
+                      3,
+                      4,
+                      5,
+                      6,
+                      8
+                    ],
+                    "sanctioned-state-of-app": "0",
+                    "dport": "0",
+                    "dg_hier_level_4": "0",
+                    "category-of-threatid": "36",
+                    "device_name": "Aristotle",
+                    "inbound_if": "1108118339584",
+                    "dg_hier_level_1": "14",
+                    "actionflags": "-9223372036854775808",
+                    "subtype": "4",
+                    "dg_hier_level_3": "0",
+                    "dstuser": "forest\\administrator",
+                    "tunnelid_imsi": "0",
+                    "dg_hier_level_2": "0",
+                    "action": "4",
+                    "recsize": "1140",
+                    "from": "VM-Trust",
+                    "parent_session_id": "0",
+                    "vsys_name": "foo",
+                    "name-of-threatid": "HTTP SQL Injection Attempt",
+                    "repeatcnt": "1",
+                    "direction": "0",
+                    "app": "web-browsing",
+                    "severity": "3",
+                    "vsys": "vsys1",
+                    "threatid": "33340",
+                    "technology-of-app": "browser-based",
+                    "src": "00000000000000000000ffff0a01012c",
+                    "subcategory-of-app": "internet-utility",
+                    "outbound_if": "1112413306880",
+                    "category-of-app": "general-internet",
+                    "time_generated": "1518726599",
+                    "srcloc": "10.0.0.0-10.255.255.255",
+                    "users": "10.1.1.44",
+                    "fwd": "1",
+                    "config_ver": "1",
+                    "dstloc": "172.16.0.0-172.31.255.255",
+                    "vsys_id": "1",
+                    "tunneled-app": "tunneled-app",
+                    "to": "VM-Servers",
+                    "category": "10077",
+                    "is-saas-of-app": "0",
+                    "tunnel": "0"
+                  }
+                },
+                {
+                  "_index": "117270002_panw.thsum_2018021500-2018021600_000000",
+                  "_type": "thsum",
+                  "_id": "AWGbNvDdLexGV4hcm6-9",
+                  "_score": 1,
+                  "_source": {
+                    "risk-of-app": "4",
+                    "dst": "00000000000000000000ffffac12042c",
+                    "rule": "any-any",
+                    "type": "3",
+                    "parent_start_time": "0",
+                    "characteristic-of-app": [
+                      3,
+                      4,
+                      5,
+                      6,
+                      8
+                    ],
+                    "sanctioned-state-of-app": "0",
+                    "dport": "0",
+                    "dg_hier_level_4": "0",
+                    "category-of-threatid": "34",
+                    "device_name": "Aristotle",
+                    "inbound_if": "1108118339584",
+                    "dg_hier_level_1": "14",
+                    "actionflags": "-9223372036854775808",
+                    "subtype": "4",
+                    "dg_hier_level_3": "0",
+                    "dstuser": "forest\\administrator",
+                    "tunnelid_imsi": "0",
+                    "dg_hier_level_2": "0",
+                    "action": "4",
+                    "recsize": "1166",
+                    "from": "VM-Trust",
+                    "parent_session_id": "0",
+                    "vsys_name": "foo",
+                    "name-of-threatid": "FreeNAS Remote Shell Command Execution Vulnerability",
+                    "repeatcnt": "1",
+                    "direction": "0",
+                    "app": "web-browsing",
+                    "severity": "3",
+                    "vsys": "vsys1",
+                    "threatid": "34515",
+                    "technology-of-app": "browser-based",
+                    "src": "00000000000000000000ffff0a01012c",
+                    "subcategory-of-app": "internet-utility",
+                    "outbound_if": "1112413306880",
+                    "category-of-app": "general-internet",
+                    "time_generated": "1518727499",
+                    "srcloc": "10.0.0.0-10.255.255.255",
+                    "users": "10.1.1.44",
+                    "fwd": "1",
+                    "config_ver": "1",
+                    "dstloc": "172.16.0.0-172.31.255.255",
+                    "vsys_id": "1",
+                    "tunneled-app": "tunneled-app",
+                    "to": "VM-Servers",
+                    "category": "10077",
+                    "is-saas-of-app": "0",
+                    "tunnel": "0"
+                  }
+                },
+                {
+                  "_index": "117270002_panw.thsum_2018021500-2018021600_000000",
+                  "_type": "thsum",
+                  "_id": "AWGbNvDdLexGV4hcm6--",
+                  "_score": 1,
+                  "_source": {
+                    "risk-of-app": "4",
+                    "dst": "00000000000000000000ffffac12042c",
+                    "rule": "any-any",
+                    "type": "3",
+                    "parent_start_time": "0",
+                    "characteristic-of-app": [
+                      3,
+                      4,
+                      5,
+                      6,
+                      8
+                    ],
+                    "sanctioned-state-of-app": "0",
+                    "dport": "0",
+                    "dg_hier_level_4": "0",
+                    "category-of-threatid": "34",
+                    "device_name": "Aristotle",
+                    "inbound_if": "1108118339584",
+                    "dg_hier_level_1": "14",
+                    "actionflags": "-9223372036854775808",
+                    "subtype": "4",
+                    "dg_hier_level_3": "0",
+                    "dstuser": "forest\\administrator",
+                    "tunnelid_imsi": "0",
+                    "dg_hier_level_2": "0",
+                    "action": "11",
+                    "recsize": "1170",
+                    "from": "VM-Trust",
+                    "parent_session_id": "0",
+                    "vsys_name": "foo",
+                    "name-of-threatid": "Spreecommerce Arbitrary Command Execution Vulnerability",
+                    "repeatcnt": "1",
+                    "direction": "0",
+                    "app": "web-browsing",
+                    "severity": "3",
+                    "vsys": "vsys1",
+                    "threatid": "35131",
+                    "technology-of-app": "browser-based",
+                    "src": "00000000000000000000ffff0a01012c",
+                    "subcategory-of-app": "internet-utility",
+                    "outbound_if": "1112413306880",
+                    "category-of-app": "general-internet",
+                    "time_generated": "1518727499",
+                    "srcloc": "10.0.0.0-10.255.255.255",
+                    "users": "10.1.1.44",
+                    "fwd": "1",
+                    "config_ver": "1",
+                    "dstloc": "172.16.0.0-172.31.255.255",
+                    "vsys_id": "1",
+                    "tunneled-app": "tunneled-app",
+                    "to": "VM-Servers",
+                    "category": "10077",
+                    "is-saas-of-app": "0",
+                    "tunnel": "0"
+                  }
+                },
+                {
+                  "_index": "117270002_panw.thsum_2018021500-2018021600_000000",
+                  "_type": "thsum",
+                  "_id": "AWGbNvDdLexGV4hcm6-_",
+                  "_score": 1,
+                  "_source": {
+                    "risk-of-app": "4",
+                    "dst": "00000000000000000000ffffac12042c",
+                    "rule": "any-any",
+                    "type": "3",
+                    "parent_start_time": "0",
+                    "characteristic-of-app": [
+                      3,
+                      4,
+                      5,
+                      6,
+                      8
+                    ],
+                    "sanctioned-state-of-app": "0",
+                    "dport": "0",
+                    "dg_hier_level_4": "0",
+                    "category-of-threatid": "34",
+                    "device_name": "Aristotle",
+                    "inbound_if": "1108118339584",
+                    "dg_hier_level_1": "14",
+                    "actionflags": "-9223372036854775808",
+                    "subtype": "4",
+                    "dg_hier_level_3": "0",
+                    "dstuser": "forest\\administrator",
+                    "tunnelid_imsi": "0",
+                    "dg_hier_level_2": "0",
+                    "action": "11",
+                    "recsize": "1174",
+                    "from": "VM-Trust",
+                    "parent_session_id": "0",
+                    "vsys_name": "foo",
+                    "name-of-threatid": "Traq admincp common.php Remote Code Execution Vulnerability",
+                    "repeatcnt": "1",
+                    "direction": "0",
+                    "app": "web-browsing",
+                    "severity": "4",
+                    "vsys": "vsys1",
+                    "threatid": "34688",
+                    "technology-of-app": "browser-based",
+                    "src": "00000000000000000000ffff0a01012c",
+                    "subcategory-of-app": "internet-utility",
+                    "outbound_if": "1112413306880",
+                    "category-of-app": "general-internet",
+                    "time_generated": "1518727499",
+                    "srcloc": "10.0.0.0-10.255.255.255",
+                    "users": "10.1.1.44",
+                    "fwd": "1",
+                    "config_ver": "1",
+                    "dstloc": "172.16.0.0-172.31.255.255",
+                    "vsys_id": "1",
+                    "tunneled-app": "tunneled-app",
+                    "to": "VM-Servers",
+                    "category": "10077",
+                    "is-saas-of-app": "0",
+                    "tunnel": "0"
+                  }
+                },
+                {
+                  "_index": "117270002_panw.thsum_2018021500-2018021600_000000",
+                  "_type": "thsum",
+                  "_id": "AWGbNvDdLexGV4hcm6_A",
+                  "_score": 1,
+                  "_source": {
+                    "risk-of-app": "4",
+                    "dst": "00000000000000000000ffffac12042c",
+                    "rule": "any-any",
+                    "type": "3",
+                    "parent_start_time": "0",
+                    "characteristic-of-app": [
+                      3,
+                      4,
+                      5,
+                      6,
+                      8
+                    ],
+                    "sanctioned-state-of-app": "0",
+                    "dport": "0",
+                    "dg_hier_level_4": "0",
+                    "category-of-threatid": "34",
+                    "device_name": "Aristotle",
+                    "inbound_if": "1108118339584",
+                    "dg_hier_level_1": "14",
+                    "actionflags": "-9223372036854775808",
+                    "subtype": "4",
+                    "dg_hier_level_3": "0",
+                    "dstuser": "forest\\administrator",
+                    "tunnelid_imsi": "0",
+                    "dg_hier_level_2": "0",
+                    "action": "11",
+                    "recsize": "1179",
+                    "from": "VM-Trust",
+                    "parent_session_id": "0",
+                    "vsys_name": "foo",
+                    "name-of-threatid": "Horde 3.3.12 Backdoor Arbitrary PHP Code Execution Vulnerability",
+                    "repeatcnt": "1",
+                    "direction": "0",
+                    "app": "web-browsing",
+                    "severity": "4",
+                    "vsys": "vsys1",
+                    "threatid": "34708",
+                    "technology-of-app": "browser-based",
+                    "src": "00000000000000000000ffff0a01012c",
+                    "subcategory-of-app": "internet-utility",
+                    "outbound_if": "1112413306880",
+                    "category-of-app": "general-internet",
+                    "time_generated": "1518727499",
+                    "srcloc": "10.0.0.0-10.255.255.255",
+                    "users": "10.1.1.44",
+                    "fwd": "1",
+                    "config_ver": "1",
+                    "dstloc": "172.16.0.0-172.31.255.255",
+                    "vsys_id": "1",
+                    "tunneled-app": "tunneled-app",
+                    "to": "VM-Servers",
+                    "category": "10077",
+                    "is-saas-of-app": "0",
+                    "tunnel": "0"
+                  }
+                }
+              ]
+            },
+            "took": 12,
+            "timed_out": false,
+            "aggregations": {
+              "1227": {
+                "doc_count_error_upper_bound": 0,
+                "sum_other_doc_count": 167,
+                "buckets": [
+                  {
+                    "key": 30003,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 5,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 34,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 3
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 30090,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 4,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 34,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 3
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 30167,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 4,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 34,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 6
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 30354,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 5,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 34,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 39
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 30444,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 5,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 34,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 3
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 30479,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 4,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 34,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 3
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 30481,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 4,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 35,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 6
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 32085,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 4,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 35,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 3
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 33085,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 4,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 35,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 3
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 33256,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 4,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 35,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 3
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 33269,
+                    "doc_count": 3,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 4,
+                          "doc_count": 3,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 3,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 35,
+                                      "doc_count": 3,
+                                      "sortby": {
+                                        "value": 3
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": 33340,
+                    "doc_count": 6,
+                    "severity-of-threatid": {
+                      "doc_count_error_upper_bound": 0,
+                      "sum_other_doc_count": 0,
+                      "buckets": [
+                        {
+                          "key": 3,
+                          "doc_count": 6,
+                          "threat-type": {
+                            "doc_count_error_upper_bound": 0,
+                            "sum_other_doc_count": 0,
+                            "buckets": [
+                              {
+                                "key": 4,
+                                "doc_count": 6,
+                                "category-of-threatid": {
+                                  "doc_count_error_upper_bound": 0,
+                                  "sum_other_doc_count": 0,
+                                  "buckets": [
+                                    {
+                                      "key": 36,
+                                      "doc_count": 6,
+                                      "sortby": {
+                                        "value": 36
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "progressInfo": {
+            "byTime": {
+              "actualStart": 1521130671026,
+              "timeRange": 0,
+              "totalCompleted": 0,
+              "totalRealTime": 0,
+              "totalRunTime": 0,
+              "lastInterval": 0,
+              "lastRealTime": 0,
+              "lastRunTime": 0
+            }
+          }
+        },
+        "timed_out": false
+      },
+      "esQuery": {
+        "table": [
+          "panw.thsum"
+        ],
+        "query": {
+          "aggregations": {
+            "1227": {
+              "terms": {
+                "field": "threatid",
+                "order": {
+                  "_term": "asc"
+                },
+                "missing": "default",
+                "size": "12"
+              },
+              "aggregations": {
+                "severity-of-threatid": {
+                  "terms": {
+                    "field": "severity",
+                    "order": {
+                      "_term": "asc"
+                    },
+                    "missing": "default",
+                    "size": "12"
+                  },
+                  "aggregations": {
+                    "threat-type": {
+                      "terms": {
+                        "field": "subtype",
+                        "order": {
+                          "_term": "asc"
+                        },
+                        "missing": "default",
+                        "size": "12"
+                      },
+                      "aggregations": {
+                        "category-of-threatid": {
+                          "terms": {
+                            "field": "category-of-threatid",
+                            "order": {
+                              "_term": "asc"
+                            },
+                            "missing": "default",
+                            "size": "12"
+                          },
+                          "aggregations": {
+                            "sortby": {
+                              "sum": {
+                                "field": "sessions"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "size": 5
+        }
+      }
+    }
+  }
+]
