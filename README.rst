@@ -84,7 +84,7 @@ Contributors
 .. |pypi| image:: https://img.shields.io/pypi/v/pancloud.svg
         :target: https://pypi.python.org/pypi/pancloud
 
-.. |travis| image:: https://img.shields.io/travis/sserrata/pancloud.svg
+.. |travis| image:: https://img.shields.io/travis/PaloAltoNetworks/pancloud.svg
         :target: https://travis-ci.org/PaloAltoNetworks/pancloud
 
 .. |docs| image:: https://readthedocs.org/projects/pancloud/badge/?version=latest
