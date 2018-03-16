@@ -91,8 +91,7 @@ Contributors
         :target: https://pancloud.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. |updates| image:: https://pyup.io/repos/github/sserrata/pancloud/shield.svg
-     :target: https://pyup.io/repos/github/sserrata/pancloud/
+.. |updates| image:: https://pyup.io/repos/github/PaloAltoNetworks/pancloud/shield.svg
      :alt: Updates
 
 .. |requests| image:: https://img.shields.io/badge/docs-requests-blue.svg
