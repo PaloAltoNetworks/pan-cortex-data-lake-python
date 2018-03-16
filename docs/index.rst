@@ -1,4 +1,4 @@
-Welcome to PAN Cloud Python SDK's documentation!
+Welcome to the Palo Alto Networks Cloud Python SDK documentation!
 ======================================
 
 Contents:
