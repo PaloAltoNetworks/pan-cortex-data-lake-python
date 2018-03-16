@@ -92,6 +92,7 @@ Contributors
         :alt: Documentation Status
 
 .. |updates| image:: https://pyup.io/repos/github/PaloAltoNetworks/pancloud/shield.svg
+     :target: https://pyup.io/repos/github/PaloAltoNetworks/pancloud/
      :alt: Updates
 
 .. |requests| image:: https://img.shields.io/badge/docs-requests-blue.svg
