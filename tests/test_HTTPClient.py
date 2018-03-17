@@ -25,7 +25,6 @@ class TestHTTPClient:
     def test_entry_points(self):
 
         HTTPClient(url=TARPIT).request
-        HTTPClient(url=TARPIT).pyopenssl
 
     def test_invalid_url(self):
         with pytest.raises(HTTPError):
