@@ -18,3 +18,8 @@ python:
 - 3.5
 - 2.7
 script: tox
+
+# safelist
+branches:
+  only:
+  - master

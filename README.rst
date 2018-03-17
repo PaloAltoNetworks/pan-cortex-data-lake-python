@@ -84,15 +84,15 @@ Contributors
 .. |pypi| image:: https://img.shields.io/pypi/v/pancloud.svg
         :target: https://pypi.python.org/pypi/pancloud
 
-.. |travis| image:: https://img.shields.io/travis/sserrata/pancloud.svg
+.. |travis| image:: https://img.shields.io/travis/PaloAltoNetworks/pancloud.svg
         :target: https://travis-ci.org/PaloAltoNetworks/pancloud
 
 .. |docs| image:: https://readthedocs.org/projects/pancloud/badge/?version=latest
         :target: https://pancloud.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. |updates| image:: https://pyup.io/repos/github/sserrata/pancloud/shield.svg
-     :target: https://pyup.io/repos/github/sserrata/pancloud/
+.. |updates| image:: https://pyup.io/repos/github/PaloAltoNetworks/pancloud/shield.svg
+     :target: https://pyup.io/repos/github/PaloAltoNetworks/pancloud/
      :alt: Updates
 
 .. |requests| image:: https://img.shields.io/badge/docs-requests-blue.svg
