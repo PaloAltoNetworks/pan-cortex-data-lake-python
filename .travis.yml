@@ -26,4 +26,4 @@ branches:
   - develop
   - /^feature-.*$
   - /^release-.*$
-  = /^hotfix-.*$
+  - /^hotfix-.*$
