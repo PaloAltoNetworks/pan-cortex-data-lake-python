@@ -23,3 +23,7 @@ script: tox
 branches:
   only:
   - master
+  - develop
+  - /^feature-.*$
+  - /^release-.*$
+  - /^hotfix-.*$
