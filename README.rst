@@ -102,3 +102,7 @@ Contributors
 .. |pipenv| image:: https://img.shields.io/badge/docs-pipenv-green.svg
     :target: https://docs.pipenv.org
     :alt: Documentation Status
+
+.. |coveralls| image:: https://coveralls.io/repos/github/PaloAltoNetworks/pancloud/badge.svg?branch=master
+    :target: https://coveralls.io/github/PaloAltoNetworks/pancloud?branch=master
+    :alt: Code Coverage
