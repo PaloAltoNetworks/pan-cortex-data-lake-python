@@ -7,3 +7,9 @@ History
 
 * First release.
 
+1.0.1 (2018-03-19)
+------------------
+
+* Default to empty `path`
+
+
