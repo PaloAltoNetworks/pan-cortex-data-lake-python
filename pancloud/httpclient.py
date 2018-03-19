@@ -137,7 +137,7 @@ class HTTPClient(object):
 
         # Non-Requests key-word arguments
         enforce_json = kwargs.pop('enforce_json', self.enforce_json)
-        path = kwargs.pop('path', '/api')
+        path = kwargs.pop('path', '')  # default to empty path
         raise_for_status = kwargs.pop(
             'raise_for_status', self.raise_for_status
         )
