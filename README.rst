@@ -20,7 +20,7 @@ The secondary goal is to provide coverage, in the form of helper methods, for co
 
 -----
 
-|requests| |pipenv| |pypi| |travis| |docs| |updates|
+|requests| |pipenv| |pypi| |travis| |docs| |updates| |coveralls|
 
 -----
 
