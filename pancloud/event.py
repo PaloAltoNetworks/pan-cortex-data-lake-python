@@ -45,7 +45,7 @@ class EventService(object):
             ', '.join('%s=%r' % x for x in self.kwargs.items())
         )
 
-    def ack(self, channel_id=None, **kwargs):
+    def ack(self, channel_id=None, **kwargs):  # pragma: no cover
         """Send a read acknowledgment to the service.
 
         Causes the channel's start position to move to the channel's
@@ -71,7 +71,7 @@ class EventService(object):
         )
         return r
 
-    def get_filters(self, channel_id=None, **kwargs):
+    def get_filters(self, channel_id=None, **kwargs):  # pragma: no cover
         """Retrieve the filters currently set on the channel.
 
         Returns filters set using the "Set Filters" endpoint. The
@@ -101,7 +101,7 @@ class EventService(object):
         )
         return r
 
-    def nack(self, channel_id=None, **kwargs):
+    def nack(self, channel_id=None, **kwargs):  # pragma: no cover
         """Send a negative read-acknowledgement to the service.
 
         Causes the channel's read point to move to its previous position
@@ -127,7 +127,7 @@ class EventService(object):
         )
         return r
 
-    def poll(self, channel_id=None, **kwargs):
+    def poll(self, channel_id=None, **kwargs):  # pragma: no cover
         """Read one or more events from a channel.
 
         Reads events (log records) from the identified channel. Events
@@ -153,7 +153,7 @@ class EventService(object):
         )
         return r
 
-    def set_filters(self, channel_id=None, data=None, **kwargs):
+    def set_filters(self, channel_id=None, data=None, **kwargs):  # pragma: no cover
         """Set one or more filters for the channel.
 
         Configures one or more filters for a channel. The filters
