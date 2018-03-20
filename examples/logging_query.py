@@ -15,6 +15,7 @@ url = 'https://apigw-qa6.us.paloaltonetworks.com'
 
 # `export ACCESS_TOKEN=<access token>`
 access_token = os.environ['ACCESS_TOKEN']
+print(access_token)
 
 # Create Logging Service instance
 ls = LoggingService(
@@ -28,7 +29,7 @@ ls = LoggingService(
 )
 
 data = {  # Prepare 'query' data
-    "q": "select * from panw.traffic limit 1",
+    "query": "select * from panw.traffic limit 1",
     "startTime": 0,  # 1970
     "endTime": 1609459200,  # 2021
     "maxWaitTime": 0  # no logs in initial response
