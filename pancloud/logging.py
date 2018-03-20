@@ -44,7 +44,7 @@ class LoggingService(object):
             ', '.join('%s=%r' % x for x in self.kwargs.items())
         )
 
-    def delete(self, query_id=None, **kwargs):
+    def delete(self, query_id=None, **kwargs):  # pragma: no cover
         """Delete a query job.
 
         Uses the DELETE HTTP method to delete a query job. After calling
@@ -68,7 +68,7 @@ class LoggingService(object):
         )
         return r
 
-    def iter_poll(self, query_id=None, params=None, **kwargs):
+    def iter_poll(self, query_id=None, params=None, **kwargs):  # pragma: no cover
         """Retrieve pages iteratively in a non-greedy manner.
 
         Automatically increments the pageNumber as it continues to poll
@@ -99,7 +99,7 @@ class LoggingService(object):
                 yield r
                 time.sleep(1)  # wait before trying again
 
-    def poll(self, query_id=None, params=None, **kwargs):
+    def poll(self, query_id=None, params=None, **kwargs):  # pragma: no cover
         """Poll for asynchronous query results.
 
         Continue to poll for results until this endpoint reports
@@ -127,7 +127,7 @@ class LoggingService(object):
         )
         return r
 
-    def poll_all(self, query_id=None, params=None, **kwargs):
+    def poll_all(self, query_id=None, params=None, **kwargs):  # pragma: no cover
         """Retrieve pages iteratively in a greedy manner.
 
         Automatically increments the pageNumber as it continues to poll
@@ -164,7 +164,7 @@ class LoggingService(object):
                 time.sleep(1)  # wait before trying again
         return pages
 
-    def query(self, data=None, **kwargs):
+    def query(self, data=None, **kwargs):  # pragma: no cover
         """Generate a query that retrieves log records.
 
         Creates a query within the Logging Service that returns 0 or
@@ -194,7 +194,7 @@ class LoggingService(object):
         return r
 
     def xpoll(self, query_id=None, params=None, delete_query=True,
-              **kwargs):
+              **kwargs):  # pragma: no cover
         """Retrieve individual logs iteratively in a non-greedy manner.
 
         Generator function to return individual log entries from poll
