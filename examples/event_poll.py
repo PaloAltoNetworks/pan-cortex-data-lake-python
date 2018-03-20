@@ -11,7 +11,7 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pancloud.event import EventService
 
-url = 'https://apigw-qa6.us.paloaltonetworks.com'
+url = 'https://api.us.paloaltonetoworks.com'
 
 # `export ACCESS_TOKEN=<access token>`
 access_token = os.environ['ACCESS_TOKEN']
@@ -19,7 +19,6 @@ access_token = os.environ['ACCESS_TOKEN']
 # Create Event Service instance
 es = EventService(
     url=url,
-    verify=False,
     headers={
         'Authorization': 'Bearer {}'.format(access_token),
         "Content-Type": "application/json",
