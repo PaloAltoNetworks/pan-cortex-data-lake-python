@@ -61,9 +61,9 @@ Enter a pipenv shell::
 Example
 --------------
 
-To run the provided example scripts you'll first need to acquire a `client_id`, `client_secret`, `instanceId` and a registered `redirect_uri`. These items are necessary to perform OAuth and retrieve tokens.
+To run the provided example scripts you'll first need to acquire a `client_id`, `client_secret`, `instance_id` and a registered `redirect_uri`. These items are necessary to perform OAuth and retrieve tokens.
 
-The following example assumes an ACCESS_TOKEN environment variable has been exported::
+The following example assumes an `ACCESS_TOKEN` environment variable has been exported::
 
     $ ./logging_query.py
 
