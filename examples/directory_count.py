@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Example interaction with Event Service using get_filters."""
+"""Example interaction with Directory-Sync Service using count."""
 
 import os
 import sys
@@ -9,15 +9,15 @@ import sys
 curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
-from pancloud.event import EventService
+from pancloud.directorysync import DirectorySyncService
 
 url = 'https://api.us.paloaltonetoworks.com'
 
 # `export ACCESS_TOKEN=<access token>`
 access_token = os.environ['ACCESS_TOKEN']
 
-# Create Event Service instance
-es = EventService(
+# Create Directory-Sync Service instance
+ds = DirectorySyncService(
     url=url,
     headers={
         'Authorization': 'Bearer {}'.format(access_token),
@@ -26,14 +26,13 @@ es = EventService(
     }
 )
 
-channel_id = 'EventFilter'
-
-# Get event filters
-f = es.get_filters(channel_id)
+# Retrieve attributes from directory-sync
+a = ds.count(object_class="computer", params={'domain': 'parent.com'})
 
 # Print results
 print(
-    "\nSTATUS_CODE: {}, RESULT: {}\n".format(f.status_code, f.text)
+    "\nSTATUS_CODE: {}, RESULT: {}\n".format(a.status_code, a.text)
 )
+
 
 

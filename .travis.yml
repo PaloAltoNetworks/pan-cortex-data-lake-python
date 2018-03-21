@@ -9,7 +9,7 @@ deploy:
     secure: nufZy+8oBGM/lBq7tSyKE/ObIfMapCPZfvhiz7jIUy9gyJe3xercstbp/Kj35oXOjXB3Z+rTPluS8L8dvtG1TpAz4gCdv9uvhayl5UcgI19RBIozy5IGkVAkg8Qun2q5xUHfaEMbpbD968MZBbQeq7uFCc2NQYQ3c+CYoX8TjRq+tAkKiGqFNkUUO/dSf72cd4WdG1GhLQ9ayXrLYYq9Ykm+PLF4zmGD/W+PebepVtml6UYu9aZ0/BcZQ564bJIjg41fNpZ25VG7A8keHp0lpRGEufFEhkTjaUrG2DghHbnOdlr456QrUR1njLgEZSHFFZwRTjSKPEhJtgBoS8JZIk/d3xCwDzpaBzd68Rfx0sBqs1VPSP0k2MYPIMariXp8Fmkom4yiCHkRKjGGC/LO+kHsWgFu+lBiNCQbSbtH2/zrgfdB99zcjX06IyNDVAuX9QfmS6jfojGlya9ZvGlMpmNFxEFBP4V32UyG+Ll3PYlkCsIsIdzEDIDRyC6FGyo2f0KB1HtMOJh0MvwAU0zlYLArVHA0qHo63ZzRfahlmlp5cRPlDR0J9MTD6IwaRfir/VXXSKpHxTqOPNMHP9H52g0XWuy2q9XEONkkYoED+SiIHtzRdm0/hmBxXVyB1F1G/C0fthqJH32Ne2b59VLNI/QSNg8U/AfneqlEh7frZb4=
   provider: pypi
   user: sserrata
-install: 
+install:
 - pip install -U tox-travis
 - pip install coverage
 - pip install coveralls
@@ -32,6 +32,6 @@ branches:
   only:
   - master
   - develop
-  - /^feature-.*$
-  - /^release-.*$
-  - /^hotfix-.*$
+  - /^feature-.*$/
+  - /^release-.*$/
+  - /^hotfix-.*$/

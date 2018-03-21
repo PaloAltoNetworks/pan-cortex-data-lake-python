@@ -44,7 +44,7 @@ class DirectorySyncService(object):
             ', '.join('%s=%r' % x for x in self.kwargs.items())
         )
 
-    def attributes(self, **kwargs):
+    def attributes(self, **kwargs):  # pragma: no cover
         """Retrieve the attribute configuration object.
 
         Retrieves a mapping that identifies the custom directory
@@ -71,7 +71,7 @@ class DirectorySyncService(object):
         )
         return r
 
-    def count(self, object_class=None, **kwargs):
+    def count(self, object_class=None, **kwargs):  # pragma: no cover
         """Retrieve the attribute configuration object.
 
         Retrieve a count of all directory entries that belong to the
@@ -99,7 +99,7 @@ class DirectorySyncService(object):
         )
         return r
 
-    def domains(self, **kwargs):
+    def domains(self, **kwargs):  # pragma: no cover
         """Retrieves a list of all domains available.
 
         Directory Sync Service can be configured to read directory
@@ -127,7 +127,7 @@ class DirectorySyncService(object):
         )
         return r
 
-    def query(self, object_class=None, data=None, **kwargs):
+    def query(self, object_class=None, data=None, **kwargs):  # pragma: no cover
         """Query data stored in directory.
 
         Retrieves directory data by querying a Directory Sync Service

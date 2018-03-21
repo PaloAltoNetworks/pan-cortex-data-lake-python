@@ -98,16 +98,6 @@ class HTTPClient(object):
             ', '.join('%s=%r' % x for x in self.kwargs.items())
         )
 
-    @property
-    def pyopenssl(self):
-        """Check if pyopenssl module exists.
-
-        Returns:
-            module: pyopenssl module
-
-        """
-        return requests.pyopenssl
-
     def request(self, **kwargs):
         """Generate HTTP request using given parameters.
 

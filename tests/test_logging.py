@@ -14,9 +14,10 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 from pancloud.logging import LoggingService
 from pancloud.httpclient import HTTPClient
 from pancloud.exceptions import RequiredKwargsError, \
-    UnexpectedKwargsError
+    UnexpectedKwargsError, HTTPError
 
 
+HTTPBIN = os.environ.get('HTTPBIN_URL', 'http://httpbin.org')
 TARPIT = os.environ.get('TARPIT', 'http://10.255.255.1')
 
 
