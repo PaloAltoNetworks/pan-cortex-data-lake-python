@@ -1,6 +1,6 @@
-====================
+===================================
 Palo Alto Networks Cloud Python SDK
-====================
+===================================
 
 Python idiomatic SDK for the Palo Alto Networks Application Framework.
 
@@ -20,7 +20,7 @@ The secondary goal is to provide coverage, in the form of helper methods, for co
 
 -----
 
-|requests| |pipenv| |pypi| |travis| |docs| |updates| |coveralls|
+|requests| |pipenv| |pypi| |travis| |docs|
 
 -----
 
@@ -91,10 +91,6 @@ Contributors
         :target: https://pancloud.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. |updates| image:: https://pyup.io/repos/github/PaloAltoNetworks/pancloud/shield.svg
-     :target: https://pyup.io/repos/github/PaloAltoNetworks/pancloud/
-     :alt: Updates
-
 .. |requests| image:: https://img.shields.io/badge/docs-requests-blue.svg
     :target: http://docs.python-requests.org/en/master
     :alt: Documentation Status
@@ -102,7 +98,3 @@ Contributors
 .. |pipenv| image:: https://img.shields.io/badge/docs-pipenv-green.svg
     :target: https://docs.pipenv.org
     :alt: Documentation Status
-
-.. |coveralls| image:: https://coveralls.io/repos/github/PaloAltoNetworks/pancloud/badge.svg?branch=master
-    :target: https://coveralls.io/github/PaloAltoNetworks/pancloud?branch=master
-    :alt: Code Coverage
