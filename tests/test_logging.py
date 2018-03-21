@@ -35,11 +35,6 @@ class TestLoggingService:
         LoggingService(url=TARPIT).poll_all
         LoggingService(url=TARPIT).xpoll
 
-    def test_repr(self):
-        assert repr(
-            LoggingService(url='http://', verify=False)
-        ) == "LoggingService(url='http://', verify=False)"
-
     def test_required_kwargs(self):
         with pytest.raises(RequiredKwargsError):
             LoggingService()
@@ -54,4 +49,3 @@ class TestLoggingService:
     def test_session(self):
         session = HTTPClient(url=TARPIT)
         LoggingService(session=session)
-
