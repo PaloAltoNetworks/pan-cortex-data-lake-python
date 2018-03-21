@@ -12,7 +12,7 @@ deploy:
 install:
 - pip install -U tox-travis
 - pip install coverage
-- pip install coveralls
+- pip install requests
 language: python
 python:
 - pypy3
@@ -20,12 +20,10 @@ python:
 - 3.6
 - 3.5
 - 2.7
-script: 
+script:
 - tox
 - coverage run --source pancloud -m py.test
 - coverage report -m
-after_success:
-  coveralls
 
 # safelist
 branches:
