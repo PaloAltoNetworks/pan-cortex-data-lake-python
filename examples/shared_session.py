@@ -14,7 +14,7 @@ from pancloud.logging import LoggingService
 from pancloud.event import EventService
 from pancloud.directorysync import DirectorySyncService
 
-url = 'https://apigw-qa6.us.paloaltonetworks.com'
+url = 'https://api.us.paloaltonetoworks.com'
 
 # `export ACCESS_TOKEN=<access token>`
 access_token = os.environ['ACCESS_TOKEN']
@@ -23,7 +23,6 @@ session = HTTPClient(
     url=url,
     max_retries=5,
     pool_maxsize=30,
-    verify=False,
     headers={
         'Authorization': 'Bearer {}'.format(access_token),
         "Content-Type": "application/json",

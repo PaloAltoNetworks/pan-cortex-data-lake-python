@@ -11,7 +11,7 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pancloud.logging import LoggingService
 
-url = 'https://apigw-qa6.us.paloaltonetworks.com'
+url = 'https://api.us.paloaltonetoworks.com'
 
 # `export ACCESS_TOKEN=<access token>`
 access_token = os.environ['ACCESS_TOKEN']
@@ -20,7 +20,6 @@ print(access_token)
 # Create Logging Service instance
 ls = LoggingService(
     url=url,
-    verify=False,
     headers={
         'Authorization': 'Bearer {}'.format(access_token),
         "Content-Type": "application/json",
@@ -45,19 +44,18 @@ print(
 query_id = q.json()['queryId']  # access 'queryId' from 'query' response
 
 params = {  # Prepare 'poll' params
-    "sequenceNo": 0,  # initial sequenceNo
     "maxWaitTime": 3000
 }
 
 # Poll 'query' for results
-p = ls.poll(query_id, params)
+p = ls.poll(query_id, 0, params)
 
 try:
     print(
-        "{}: jobID: {}, sequenceNo: {}, retrieving from {}, size: {},"
+        "{}: queryId: {}, sequenceNo: {}, retrieving from {}, size: {},"
         " took: {} ms\n\nRESULT: {}\n".format(
-            p.json()['status'],
-            p.json()['jobId'],
+            p.json()['queryStatus'],
+            p.json()['queryId'],
             p.json()['sequenceNo'],
             p.json()['result']['esResult']['from'],
             p.json()['result']['esResult']['size'],
@@ -67,9 +65,9 @@ try:
     )
 except TypeError:
     print(
-        "{}: jobID: {}, sequenceNo: {}".format(
-            p.json()['status'],
-            p.json()['jobId'],
+        "{}: queryId: {}, sequenceNo: {}".format(
+            p.json()['queryStatus'],
+            p.json()['queryId'],
             p.json()['sequenceNo'],
         )
     )

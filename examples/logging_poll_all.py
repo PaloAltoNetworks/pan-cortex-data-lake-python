@@ -10,7 +10,7 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pancloud.logging import LoggingService
 
-url = 'https://apigw-qa6.us.paloaltonetworks.com'
+url = 'https://api.us.paloaltonetoworks.com'
 
 # `export ACCESS_TOKEN=<access token>`
 access_token = os.environ['ACCESS_TOKEN']
@@ -18,7 +18,6 @@ access_token = os.environ['ACCESS_TOKEN']
 # Instantiate QueryService
 ls = LoggingService(
     url=url,
-    verify=False,
     headers={
         'Authorization': 'Bearer {}'.format(access_token),
         "Content-Type": "application/json",
@@ -27,7 +26,7 @@ ls = LoggingService(
 )
 
 data = {  # Prepare 'query' data
-    "q": "select * from panw.traffic limit 1000",
+    "query": "select * from panw.traffic limit 1000",
     "startTime": 0,  # 1970
     "endTime": 1609459200,  # 2021
     "maxWaitTime": 0  # no logs in initial response
@@ -43,12 +42,11 @@ print(
 query_id = q.json()['queryId']  # access 'jobId' from 'query' response
 
 params = {  # Prepare 'poll' params
-    "sequenceNo": 0,
-    "maxWaitTime": 1
+    "maxWaitTime": 1000
 }
 
 # Poll 'job' for all results
-all_chunks = ls.poll_all(query_id, params)
+all_chunks = ls.poll_all(query_id, 0, params)
 print("ALL_CHUNKS: {}\n".format(all_chunks))
 
 

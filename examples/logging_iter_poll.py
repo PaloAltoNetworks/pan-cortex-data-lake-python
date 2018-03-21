@@ -11,7 +11,7 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pancloud.logging import LoggingService
 
-url = 'https://apigw-qa6.us.paloaltonetworks.com'
+url = 'https://api.us.paloaltonetoworks.com'
 
 # `export ACCESS_TOKEN=<access token>`
 access_token = os.environ['ACCESS_TOKEN']
@@ -19,7 +19,6 @@ access_token = os.environ['ACCESS_TOKEN']
 # Create Logging Service instance
 ls = LoggingService(
     url=url,
-    verify=False,
     headers={
         'Authorization': 'Bearer {}'.format(access_token),
         "Content-Type": "application/json",
@@ -28,7 +27,7 @@ ls = LoggingService(
 )
 
 data = {  # Prepare 'query' data
-    "q": "select * from panw.traffic limit 1",
+    "query": "select * from panw.traffic limit 1",
     "startTime": 0,  # 1970
     "endTime": 1609459200,  # 2021
     "maxWaitTime": 0  # no logs in initial response
@@ -44,19 +43,18 @@ print(
 query_id = q.json()['queryId']  # access 'queryId' from 'query' response
 
 params = {  # Prepare 'poll' params
-    "pageNumber": 0,  # initial sequenceNo
     "maxWaitTime": 3000
 }
 
 # Poll 'query' for results
-for page in ls.iter_poll(query_id, params):
+for page in ls.iter_poll(query_id, 0, params):
     try:
         print(
-            "{}: queryId: {}, pageNumber: {}, retrieving from {},"
+            "{}: queryId: {}, sequenceNo: {}, retrieving from {},"
             " size: {}, took: {} ms\n".format(
-                page.json()['status'],
+                page.json()['queryStatus'],
                 page.json()['queryId'],
-                page.json()['pageNumber'],
+                page.json()['sequenceNo'],
                 page.json()['result']['esResult']['from'],
                 page.json()['result']['esResult']['size'],
                 page.json()['result']['esResult']['took']
@@ -64,10 +62,10 @@ for page in ls.iter_poll(query_id, params):
         )
     except TypeError:
         print(
-            "{}: jobID: {}, sequenceNo: {}".format(
-                page.json()['status'],
+            "{}: queryId: {}, sequenceNo: {}".format(
+                page.json()['queryStatus'],
                 page.json()['queryId'],
-                page.json()['pageNumber']
+                page.json()['sequenceNo']
             )
         )
 

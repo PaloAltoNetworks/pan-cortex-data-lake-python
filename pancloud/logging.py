@@ -68,7 +68,8 @@ class LoggingService(object):
         )
         return r
 
-    def iter_poll(self, query_id=None, params=None, **kwargs):  # pragma: no cover
+    def iter_poll(self, query_id=None, sequence_no=None, params=None,
+                  **kwargs):  # pragma: no cover
         """Retrieve pages iteratively in a non-greedy manner.
 
         Automatically increments the pageNumber as it continues to poll
@@ -78,6 +79,7 @@ class LoggingService(object):
         Args:
             params (dict): Payload/request dictionary
             query_id (str): Specifies the ID of the query job
+            sequence_no (int): Specifies the sequenceNo
             **kwargs: Supported Request() and Session() kwargs
 
         Yields:
@@ -85,21 +87,22 @@ class LoggingService(object):
 
         """
         while True:
-            r = self.poll(query_id, params, **kwargs)
-            if r.json()['status'] == "FINISHED":
-                params['pageNumber'] += 1
+            r = self.poll(query_id, sequence_no, params, **kwargs)
+            if r.json()['queryStatus'] == "FINISHED":
+                params['sequenceNo'] += 1
                 yield r
-            elif r.json()['status'] == "JOB_FINISHED":
+            elif r.json()['queryStatus'] == "JOB_FINISHED":
                 yield r
                 break
-            elif r.json()['status'] == "JOB_FAILED":
+            elif r.json()['queryStatus'] == "JOB_FAILED":
                 yield r
                 break
             else:  # query status ostensibly == 'RUNNING'
                 yield r
                 time.sleep(1)  # wait before trying again
 
-    def poll(self, query_id=None, params=None, **kwargs):  # pragma: no cover
+    def poll(self, query_id=None, sequence_no=None, params=None,
+             **kwargs):  # pragma: no cover
         """Poll for asynchronous query results.
 
         Continue to poll for results until this endpoint reports
@@ -111,13 +114,16 @@ class LoggingService(object):
         Args:
             params (dict): Payload/request dictionary
             query_id (str): Specifies the ID of the query job
+            sequence_no (int): Specifies the sequenceNo
             **kwargs: Supported Request() and Session() kwargs
 
         Returns:
             requests.Response: requests Response() object
 
         """
-        path = "/logging-service/v1/queries/{}".format(query_id)
+        path = "/logging-service/v1/queries/{}/{}".format(
+            query_id, sequence_no
+        )
         r = self._httpclient.request(
             method="GET",
             url=self.url,
@@ -127,7 +133,8 @@ class LoggingService(object):
         )
         return r
 
-    def poll_all(self, query_id=None, params=None, **kwargs):  # pragma: no cover
+    def poll_all(self, query_id=None, sequence_no=None, params=None,
+                 **kwargs):  # pragma: no cover
         """Retrieve pages iteratively in a greedy manner.
 
         Automatically increments the pageNumber as it continues to poll
@@ -141,6 +148,7 @@ class LoggingService(object):
         Args:
             params (dict): Payload/request dictionary
             query_id (str): Specifies the ID of the query job
+            sequence_no (int): Specifies the sequenceNo
             **kwargs: Supported Request() and Session() kwargs
 
         Returns:
@@ -149,14 +157,14 @@ class LoggingService(object):
         """
         pages = []
         while True:
-            r = self.poll(query_id, params, **kwargs)
-            if r.json()['status'] == "FINISHED":
-                params['pageNumber'] += 1
+            r = self.poll(query_id, sequence_no, params, **kwargs)
+            if r.json()['queryStatus'] == "FINISHED":
+                params['sequenceNo'] += 1
                 pages.append(r)
-            elif r.json()['status'] == "JOB_FINISHED":
+            elif r.json()['queryStatus'] == "JOB_FINISHED":
                 pages.append(r)
                 break
-            elif r.json()['status'] == "JOB_FAILED":
+            elif r.json()['queryStatus'] == "JOB_FAILED":
                 pages.append(r)
                 break
             else:  # query status ostensibly == 'RUNNING'
@@ -193,8 +201,8 @@ class LoggingService(object):
         )
         return r
 
-    def xpoll(self, query_id=None, params=None, delete_query=True,
-              **kwargs):  # pragma: no cover
+    def xpoll(self, query_id=None, sequence_no=None, params=None,
+              delete_query=True, **kwargs):  # pragma: no cover
         """Retrieve individual logs iteratively in a non-greedy manner.
 
         Generator function to return individual log entries from poll
@@ -203,6 +211,7 @@ class LoggingService(object):
         Args:
             params (dict): Payload/request dictionary
             query_id (str): Specifies the ID of the query job
+            sequence_no (int): Specifies the sequenceNo
             delete_query (bool): True for delete, False otherwise.
             **kwargs: Supported Request() and Session() kwargs
 
@@ -236,7 +245,7 @@ class LoggingService(object):
             else:
                 raise PanCloudError('no "ok" in response')
 
-        r = self.poll(query_id, params, **kwargs)
+        r = self.poll(query_id, sequence_no, params, **kwargs)
         try:
             r_json = r.json()
         except ValueError as e:
@@ -249,12 +258,12 @@ class LoggingService(object):
                 raise PanCloudError('%s %s' % (r.status_code,
                                                r.reason))
 
-        if 'status' not in r_json:
+        if 'queryStatus' not in r_json:
             self._debug(r_json)
-            raise PanCloudError('no "status" in response')
+            raise PanCloudError('no "queryStatus" in response')
 
-        self._debug(r_json['status'])
-        if r_json['status'] in ['FINISHED', 'JOB_FINISHED']:
+        self._debug(r_json['queryStatus'])
+        if r_json['queryStatus'] in ['FINISHED', 'JOB_FINISHED']:
             try:
                 hits = r_json['result']['esResult']['hits']['hits']
             except KeyError as e:
@@ -264,21 +273,21 @@ class LoggingService(object):
             for x in hits:
                 yield x['_source']
 
-            if r_json['status'] == 'JOB_FINISHED':
+            if r_json['queryStatus'] == 'JOB_FINISHED':
                 if delete_query:
                     _delete(params['queryId'], **kwargs)
                 return
 
-            if 'pageNumber' in params:
-                params['pageNumber'] += 1
+            if 'sequenceNo' in params:
+                params['sequenceNo'] += 1
             else:
-                params['pageNumber'] = 1
+                params['sequenceNo'] = 1
 
-        elif r_json['status'] == 'JOB_FAILED':
+        elif r_json['queryStatus'] == 'JOB_FAILED':
             # XXX "message"?
             raise PanCloudError('%s' % r_json['status'])
 
-        elif r_json['status'] == 'RUNNING':
+        elif r_json['queryStatus'] == 'RUNNING':
             if 'maxWaitTime' in params:
                 pass
             else:
@@ -288,7 +297,8 @@ class LoggingService(object):
             raise PanCloudError('Bad status: %s' % r_json['status'])
 
         # recursion
-        for x in self.xjob(query_id, params, delete_query, **kwargs):
+        for x in self.xpoll(query_id, sequence_no, params, delete_query,
+                            **kwargs):
             yield x
 
 

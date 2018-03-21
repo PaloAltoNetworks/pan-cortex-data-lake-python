@@ -20,7 +20,7 @@ from pancloud.exceptions import RequiredKwargsError, \
 TARPIT = os.environ.get('TARPIT', 'http://10.255.255.1')
 
 
-class TestLoggingService:
+class TestEventService:
 
     def test_entry_points(self):
 
@@ -32,11 +32,6 @@ class TestLoggingService:
         EventService(url=TARPIT).poll
         EventService(url=TARPIT).ack
         EventService(url=TARPIT).nack
-
-    def test_repr(self):
-        assert repr(
-            EventService(url='http://', verify=False)
-        ) == "EventService(url='http://', verify=False)"
 
     def test_required_kwargs(self):
         with pytest.raises(RequiredKwargsError):

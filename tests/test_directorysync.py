@@ -20,7 +20,7 @@ from pancloud.exceptions import RequiredKwargsError, \
 TARPIT = os.environ.get('TARPIT', 'http://10.255.255.1')
 
 
-class TestLoggingService:
+class TestDirectorySyncService:
 
     def test_entry_points(self):
 
@@ -32,10 +32,6 @@ class TestLoggingService:
         DirectorySyncService(url=TARPIT).domains
         DirectorySyncService(url=TARPIT).count
 
-    def test_repr(self):
-        assert repr(
-            DirectorySyncService(url='http://', verify=False)
-        ) == "DirectorySyncService(url='http://', verify=False)"
 
     def test_required_kwargs(self):
         with pytest.raises(RequiredKwargsError):
