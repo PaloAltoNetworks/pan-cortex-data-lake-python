@@ -15,6 +15,7 @@ url = 'https://api.us.paloaltonetoworks.com'
 
 # `export ACCESS_TOKEN=<access token>`
 access_token = os.environ['ACCESS_TOKEN']
+print(access_token)
 
 # Create Logging Service instance
 ls = LoggingService(
