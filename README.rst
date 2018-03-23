@@ -61,9 +61,9 @@ Enter a pipenv shell::
 Example
 --------------
 
-To run the provided example scripts you'll first need to acquire a `client_id`, `client_secret`, `instanceId` and a registered `redirect_uri`. These items are necessary to perform OAuth and retrieve tokens.
+To run the provided example scripts you'll need to acquire a `client_id` and `client_secret` from your DevRel representative. You'll also need to a include a `redirect_uri` that has been registered with the Application Framework identity provider. An additional custom parameter/field, `instance_id`, will also need to be supplied. These items, combined, are required for granting authorization to your Logging, Event and Directory-Sync instances and for fetching tokens.
 
-The following example assumes an ACCESS_TOKEN environment variable has been exported::
+The following example assumes an `ACCESS_TOKEN` environment variable has been exported::
 
     $ ./logging_query.py
 
