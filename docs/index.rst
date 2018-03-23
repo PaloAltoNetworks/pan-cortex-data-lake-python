@@ -1,18 +1,16 @@
-Welcome to the Palo Alto Networks Cloud Python SDK documentation!
-======================================
+.. pancloud documentation master file, created by
+   sphinx-quickstart on Mon Mar 26 09:03:37 2018.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
-Contents:
+Welcome to pancloud's documentation!
+====================================
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
-   readme
-   installation
-   usage
-   modules
-   contributing
-   authors
-   history
+
 
 Indices and tables
 ==================
