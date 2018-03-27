@@ -14,6 +14,7 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('_themes'))
 
@@ -87,11 +88,11 @@ html_theme = 'alabaster'
 # documentation.
 #
 html_theme_options = {
-    'show_powered_by': False,
-    'github_user': 'pancloud',
+    'show_powered_by': True,
+    'github_user': 'PaloAltoNetworks',
     'github_repo': 'pancloud',
     'github_banner': True,
-    'show_related': False,
+    'show_related': True,
     'note_bg': '#FFF59C'
 }
 
@@ -108,12 +109,10 @@ html_static_path = ['_static']
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-# html_sidebars = {
-#     'index': ['sidebarintro.html', 'sourcelink.html', 'searchbox.html',
-#               'hacks.html'],
-#     '**': ['sidebarlogo.html', 'localtoc.html', 'relations.html',
-#            'sourcelink.html', 'searchbox.html', 'hacks.html']
-# }
+html_sidebars = {
+    'index': ['sidebarindex.html', 'localtoc.html', 'searchbox.html'],
+    '**': ['sidebarleft.html', 'localtoc.html', 'searchbox.html']
+}
 
 # If true, links to the reST sources are added to the pages.
 html_show_sourcelink = False
