@@ -53,8 +53,8 @@ Instructions for how to leverage `pancloud` in your Application Framework develo
    history
    contributing
 
-API
----
+API Reference
+-------------
 .. toctree::
    :maxdepth: 2
 
