@@ -9,10 +9,10 @@ import sys
 curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
-from pancloud.httpclient import HTTPClient
-from pancloud.logging import LoggingService
-from pancloud.event import EventService
-from pancloud.directorysync import DirectorySyncService
+from pancloud import HTTPClient
+from pancloud import LoggingService
+from pancloud import EventService
+from pancloud import DirectorySyncService
 
 url = 'https://api.us.paloaltonetoworks.com'
 

@@ -9,7 +9,7 @@ import sys
 curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
-from pancloud.event import EventService
+from pancloud import EventService
 
 url = 'https://api.us.paloaltonetoworks.com'
 
