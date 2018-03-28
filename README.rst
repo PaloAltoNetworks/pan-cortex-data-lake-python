@@ -14,7 +14,6 @@ is to provide full, low-level API coverage for the following services:
 
 The secondary goal is to provide coverage, in the form of helper methods, for common high-level tasks/operations.
 
-* Overview: https://github.com/PaloAltoNetworks/pancloud
 * Documentation: https://pancloud.readthedocs.io
 * Free software: ISC license
 
@@ -42,11 +41,15 @@ The Palo Alto Networks Cloud Python SDK is considered **beta** at this time.
 Installation
 ------------
 
-The easiest method to install the Palo Alto Networks Cloud Python SDK is to clone the repo to your dev machine::
+The simplest method to install the Palo Alto Networks Cloud Python SDK is to install from PyPI::
+
+    $ pip install pancloud
+
+To run the example scripts, begin by cloning the repo::
 
     $ git clone https://github.com/PaloAltoNetworks/pancloud.git
 
-Use |pipenv| to install all dependencies and create a virtualenv for your project::
+Next, `cd` into project folder and use |pipenv| to install dependencies::
 
     $ pipenv install
 
@@ -78,8 +81,8 @@ The following example assumes an `ACCESS_TOKEN` environment variable has been ex
 Contributors
 ------------
 
-- Kevin Steves - `github <https://github.com/kevinsteves>`__
 - Steven Serrata - `github <https://github.com/sserrata>`__
+- Kevin Steves - `github <https://github.com/kevinsteves>`__
 
 .. |pypi| image:: https://img.shields.io/pypi/v/pancloud.svg
         :target: https://pypi.python.org/pypi/pancloud
