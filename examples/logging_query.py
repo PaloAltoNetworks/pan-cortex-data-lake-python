@@ -11,7 +11,7 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pancloud import LoggingService
 
-url = 'https://api.us.paloaltonetoworks.com'
+url = 'https://apigw-stg4.us.paloaltonetworks.com'
 
 # `export ACCESS_TOKEN=<access token>`
 access_token = os.environ['ACCESS_TOKEN']

@@ -8,11 +8,10 @@ to directory information. However, most directories are located
 on-premise so they cannot be accessed by cloud-based applications.
 The Directory Sync Service allows cloud-based applications to access
 directory data by using an on-premise agent to collect it, and then
-transferring the data to the cloud-based Directory Sync Service.
+transferring the data to the cloud-based Directory-Sync Service.
 
 Examples:
-    Refer to the examples provided with this library and/or the official
-    Reference Application.
+    Refer to the examples provided with this library.
 
 """
 
@@ -27,6 +26,16 @@ class DirectorySyncService(object):
     """An Application Framework Directory-Sync Service Instance."""
 
     def __init__(self, **kwargs):
+        """
+
+        Parameters:
+            session (HTTPClient): :class:`~pancloud.httpclient.HTTPClient` object. Defaults to ``None``.
+            url (str): URL to send API requests to. Later combined with ``port`` and :meth:`~request` ``path`` parameter.
+
+        Args:
+            **kwargs: Supported :class:`~pancloud.httpclient.HTTPClient` parameters.
+
+        """
         self.kwargs = kwargs.copy()  # used for __repr__
         self.session = kwargs.pop('session', None)
         if isinstance(self.session, HTTPClient):
@@ -53,13 +62,13 @@ class DirectorySyncService(object):
         attributes.
 
         Args:
-            **kwargs: Supported Request() and Session() kwargs
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
 
         Examples:
-            Refer to directory_attributes.py example.
+            Refer to ``directory_attributes.py`` example.
 
         """
         path = "/directory-sync-service/v1/attributes"
@@ -78,11 +87,11 @@ class DirectorySyncService(object):
         identified objectClass. The count is limited toa single domain.
 
         Args:
-            object_class (str): Directory object class
-            **kwargs: Supported Request() and Session() kwargs
+            object_class (str): Directory object class.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
 
         Examples:
             Coming soon.
@@ -109,10 +118,10 @@ class DirectorySyncService(object):
         and distinguished name format.
 
         Args:
-            **kwargs: Supported Request() and Session() kwargs
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
 
         Examples:
             Coming soon.
@@ -138,12 +147,12 @@ class DirectorySyncService(object):
         cloud-based Directory Sync Service instance.
 
         Args:
-            object_class (str): Directory object class
-            data (dict): Payload/request dictionary
-            **kwargs: Supported Request() and Session() kwargs
+            object_class (str): Directory object class.
+            data (dict): Payload/request dictionary.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
 
         Examples:
             Coming soon.

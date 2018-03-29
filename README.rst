@@ -81,7 +81,7 @@ Contributors
 - Kevin Steves - `github <https://github.com/kevinsteves>`__
 - Steven Serrata - `github <https://github.com/sserrata>`__
 
-.. |pypi| image:: https://img.shields.io/pypi/v/pancloud.svg
+.. |pypi| image:: https://img.shields.io/pypi/pyversions/pancloud.svg
         :target: https://pypi.python.org/pypi/pancloud
 
 .. |travis| image:: https://img.shields.io/travis/PaloAltoNetworks/pancloud.svg

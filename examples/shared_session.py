@@ -14,7 +14,7 @@ from pancloud import LoggingService
 from pancloud import EventService
 from pancloud import DirectorySyncService
 
-url = 'https://api.us.paloaltonetoworks.com'
+url = 'https://apigw-stg4.us.paloaltonetworks.com'
 
 # `export ACCESS_TOKEN=<access token>`
 access_token = os.environ['ACCESS_TOKEN']

@@ -16,7 +16,7 @@ class PanCloudError(Exception):
         """Override the base class message attribute.
 
         Args:
-            message (str): Exception message
+            message (str): Exception message.
 
         """
         super(PanCloudError, self).__init__(message)
@@ -30,7 +30,7 @@ class HTTPError(PanCloudError):
         """Convert exception instance to string.
 
         Args:
-            inst (class): Exception instance
+            inst (class): Exception instance.
 
         """
         PanCloudError.__init__(
@@ -45,7 +45,7 @@ class RequiredKwargsError(PanCloudError):
         """Capture missing key-word argument.
 
         Args:
-            kwarg (str): Key-word argument
+            kwarg (str): Key-word argument.
 
         """
         PanCloudError.__init__(self, "{}".format(kwarg))
@@ -58,7 +58,7 @@ class UnexpectedKwargsError(PanCloudError):
         """Convert kwargs to CSV string.
 
         Args:
-            kwargs (dict): Key-word arguments
+            kwargs (dict): Key-word arguments.
 
         """
         PanCloudError.__init__(
