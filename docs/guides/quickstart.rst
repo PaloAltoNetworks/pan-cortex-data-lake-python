@@ -5,14 +5,14 @@ Quickstart
 
 This page should give a good indication of how to get started with ``pancloud``.
 
-First off, ensure ``pancloud`` is installed and up-to-date.
+First off, ensure ``pancloud`` is :ref:`installed <installation>` and :ref:`up-to-date <installation>`.
 
 Let's start with a basic example.
 
 Querying Logging Service
 ------------------------
 
-(example below assumes an ``ACCESS_TOKEN`` has been properly exported)
+(example below assumes an ``ACCESS_TOKEN`` has been properly :ref:`exported <credentials>`)
 
 Start by importing :class:`~pancloud.logging.LoggingService`::
 

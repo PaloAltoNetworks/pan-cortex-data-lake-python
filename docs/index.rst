@@ -41,6 +41,7 @@ Instructions for how to leverage ``pancloud`` in your Application Framework deve
    :maxdepth: 2
 
    guides/quickstart
+   guides/credentials
    installation
    history
    contributing
