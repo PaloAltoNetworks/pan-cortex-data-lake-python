@@ -12,8 +12,7 @@ that provisions your app for the customer in Palo Alto Network's
 Application Framework.
 
 Examples:
-    Refer to the examples provided with this library and/or the official
-    Reference Application.
+    Refer to the examples provided with this library.
 
 """
 
@@ -28,6 +27,16 @@ class EventService(object):
     """An Application Framework Event Service Instance."""
 
     def __init__(self, **kwargs):
+        """
+
+        Parameters:
+            session (HTTPClient): :class:`~pancloud.httpclient.HTTPClient` object. Defaults to ``None``.
+            url (str): URL to send API requests to. Later combined with ``port`` and :meth:`~request` ``path`` parameter.
+
+        Args:
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+
+        """
         self.kwargs = kwargs.copy()  # used for __repr__
         self.session = kwargs.pop('session', None)
         if isinstance(self.session, HTTPClient):
@@ -52,14 +61,14 @@ class EventService(object):
         current read position.
 
         Args:
-            channel_id (str): The channel ID
-            **kwargs: Supported Request() and Session() kwargs
+            channel_id (str): The channel ID.
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
 
         Examples:
-            Refer to event_ack.py example.
+            Refer to ``event_ack.py`` example.
 
         """
         path = "/event-service/v1/channels/{}/ack".format(channel_id)
@@ -80,14 +89,14 @@ class EventService(object):
         Each object identifies a log type and a filter.
 
         Args:
-            channel_id (str): The channel ID
-            **kwargs: Supported Request() and Session() kwargs
+            channel_id (str): The channel ID.
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
 
         Examples:
-            Refer to event_get_filters.py example.
+            Refer to ``event_get_filters.py`` example.
 
         """
         path = "/event-service/v1/channels/{}/filters".format(
@@ -108,14 +117,14 @@ class EventService(object):
         prior to the last poll.
 
         Args:
-            channel_id (str): The channel ID
-            **kwargs: Supported Request() and Session() kwargs
+            channel_id (str): The channel ID.
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
 
         Examples:
-            Refer to event_nack.py example.
+            Refer to ``event_nack.py`` example.
 
         """
         path = "/event-service/v1/channels/{}/nack".format(channel_id)
@@ -134,14 +143,14 @@ class EventService(object):
         are read in chronological order.
 
         Args:
-            channel_id (str): The channel ID
-            **kwargs: Supported Request() and Session() kwargs
+            channel_id (str): The channel ID.
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
 
         Examples:
-            Refer to event_poll.py example.
+            Refer to ``event_poll.py`` example.
 
         """
         path = "/event-service/v1/channels/{}/poll".format(channel_id)
@@ -161,15 +170,15 @@ class EventService(object):
         filters.
 
         Args:
-            channel_id (str): The channel ID
-            data (dict): Payload/request dictionary
-            **kwargs: Supported Request() and Session() kwargs
+            channel_id (str): The channel ID.
+            data (dict): Payload/request dictionary.
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object
 
         Examples:
-            Refer to event_set_filters.py example.
+            Refer to ``event_set_filters.py`` example.
 
         """
         path = "/event-service/v1/channels/{}/filters".format(

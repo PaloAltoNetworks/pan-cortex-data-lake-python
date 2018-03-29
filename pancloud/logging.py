@@ -10,8 +10,7 @@ the software and services created by Palo Alto Network's various
 partners.
 
 Examples:
-    Refer to the examples provided with this library and/or the official
-    Reference Application.
+    Refer to the examples provided with this library.
 
 """
 
@@ -27,6 +26,16 @@ class LoggingService(object):
     """An Application Framework Logging Service Instance."""
 
     def __init__(self, **kwargs):
+        """
+
+        Parameters:
+            session (HTTPClient): :class:`~pancloud.httpclient.HTTPClient` object. Defaults to ``None``.
+            url (str): URL to send API requests to. Later combined with ``port`` and :meth:`~request` ``path`` parameter.
+
+        Args:
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+
+        """
         self.kwargs = kwargs.copy()  # used for __repr__
         self.session = kwargs.pop('session', None)
         if isinstance(self.session, HTTPClient):
@@ -52,11 +61,14 @@ class LoggingService(object):
         the queryId specified here.
 
         Args:
-            query_id (str): Specifies the ID of the query job
-            **kwargs: Supported Request() and Session() kwargs
+            query_id (str): Specifies the ID of the query job.
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
+
+        Examples:
+            Refer to ``logging_query.py`` example.
 
         """
         path = "/logging-service/v1/queries/{}".format(query_id)
@@ -72,18 +84,21 @@ class LoggingService(object):
                   **kwargs):  # pragma: no cover
         """Retrieve pages iteratively in a non-greedy manner.
 
-        Automatically increments the pageNumber as it continues to poll
+        Automatically increments the sequenceNo as it continues to poll
         for results until the endpoint reports JOB_FINISHED or
         JOB_FAILED, or an exception is raised by the pancloud library.
 
         Args:
-            params (dict): Payload/request dictionary
-            query_id (str): Specifies the ID of the query job
-            sequence_no (int): Specifies the sequenceNo
-            **kwargs: Supported Request() and Session() kwargs
+            params (dict): Payload/request dictionary.
+            query_id (str): Specifies the ID of the query job.
+            sequence_no (int): Specifies the sequenceNo.
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Yields:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
+
+        Examples:
+            Refer to ``logging_iter_poll.py`` example.
 
         """
         while True:
@@ -112,13 +127,16 @@ class LoggingService(object):
         well as to track query result status.
 
         Args:
-            params (dict): Payload/request dictionary
-            query_id (str): Specifies the ID of the query job
-            sequence_no (int): Specifies the sequenceNo
-            **kwargs: Supported Request() and Session() kwargs
+            params (dict): Payload/request dictionary.
+            query_id (str): Specifies the ID of the query job.
+            sequence_no (int): Specifies the sequenceNo.
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
+
+        Examples:
+            Refer to ``logging_query.py`` example.
 
         """
         path = "/logging-service/v1/queries/{}/{}".format(
@@ -137,22 +155,25 @@ class LoggingService(object):
                  **kwargs):  # pragma: no cover
         """Retrieve pages iteratively in a greedy manner.
 
-        Automatically increments the pageNumber as it continues to poll
-        for results until the endpoint reports JOB_FINISHED or
-        JOB_FAILED, or an exception is raised by the pancloud library.
+        Automatically increments the sequenceNo as it continues to poll
+        for results until the endpoint reports ``JOB_FINISHED`` or
+        ``JOB_FAILED``, or an exception is raised by the pancloud library.
 
         WARNING: Be mindful of memory consumption as all results will be
         stored in memory until they are destroyed or garbage collection
         occurs.
 
         Args:
-            params (dict): Payload/request dictionary
-            query_id (str): Specifies the ID of the query job
-            sequence_no (int): Specifies the sequenceNo
-            **kwargs: Supported Request() and Session() kwargs
+            params (dict): Payload/request dictionary.
+            query_id (str): Specifies the ID of the query job.
+            sequence_no (int): Specifies the sequenceNo.
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Returns:
-            list of requests.Response: requests Response() objects
+            list of requests.Response: Requests Response() objects.
+
+        Examples:
+            Refer to ``logging_query.py`` example.
 
         """
         pages = []
@@ -178,17 +199,17 @@ class LoggingService(object):
         Creates a query within the Logging Service that returns 0 or
         more log records. Query results can be returned in pages,
         depending on the size of your result set. You can retrieve pages
-        using poll, iter_poll, or poll_all.
+        using :meth:`poll`, :meth:`iter_poll`, :meth:`poll_all` or :meth:`xpoll`.
 
         Args:
-            data (dict): Payload/request dictionary
-            **kwargs: Supported Request() and Session() kwargs
+            data (dict): Payload/request dictionary.
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Returns:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
 
         Examples:
-            Refer to logging_query.py example.
+            Refer to ``logging_query.py`` example.
 
         """
         path = "/logging-service/v1/queries"
@@ -209,17 +230,17 @@ class LoggingService(object):
         API request.
 
         Args:
-            params (dict): Payload/request dictionary
-            query_id (str): Specifies the ID of the query job
-            sequence_no (int): Specifies the sequenceNo
+            params (dict): Payload/request dictionary.
+            query_id (str): Specifies the ID of the query job.
+            sequence_no (int): Specifies the sequenceNo.
             delete_query (bool): True for delete, False otherwise.
-            **kwargs: Supported Request() and Session() kwargs
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Yields:
-            requests.Response: requests Response() object
+            requests.Response: Requests Response() object.
 
         Examples:
-            Refer to logging_xpoll.py example.
+            Refer to ``logging_xpoll.py`` example.
 
         """
         def _delete(query_id, **kwargs):

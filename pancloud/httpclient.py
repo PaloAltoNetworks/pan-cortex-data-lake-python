@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""HTTP client wrapper for the *excellent* requests library."""
+"""HTTP client wrapper for the **excellent** ``requests`` library."""
 
 from __future__ import absolute_import
 
@@ -18,23 +18,24 @@ class HTTPClient(object):
     """HTTP client for the Application Framework REST API"""
 
     def __init__(self, **kwargs):
-        """Persist Session() attributes and implement connection-pooling
+        """Persist Session() attributes and implement connection-pooling.
 
-        Built on top of the Requests library, HTTPClient is an
-        abstraction layer for preparing and sending HTTP requests to the
-        Application Framework REST APIs and handling responses. All
-        Requests are prepared as Session() objects, with the option to
-        persist certain attributes such as 'cert', 'headers', 'proxies',
-        etc. HTTPAdapter is implemented to enable more granular
-        performance and reliability tuning.
+        Built on top of the ``Requests`` library, ``HTTPClient`` is an
+        abstraction layer for preparing and sending HTTP `requests` to the
+        Application Framework REST APIs and handling `responses`. All
+        ``Requests`` are prepared as ``Session`` objects, with the option
+        to persist certain attributes such as ``cert``, ``headers``,
+        ``proxies``, etc. ``HTTPAdapter`` is implemented to enable more
+        granular performance and reliability tuning.
 
-        Attribute/Parameter order of precedence:
-            - Service-level method parameters
-            - Request-level parameters
-            - Session-level attributes
+        Parameters:
+            enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.HTTPError`. Defaults to ``False``.
+            port (int): TCP port to append to URL. Defaults to ``443``.
+            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if :exc:`~requests.HTTPError` status_code is returned.
+            url (str): URL to send API requests to - gets combined with ``port`` and :meth:`~request` ``path`` parameter.
 
         Args:
-            **kwargs: All supported requests Session() kwargs
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         """
         if not logging.getLogger(__name__).isEnabledFor(logging.DEBUG):
@@ -106,8 +107,13 @@ class HTTPClient(object):
         overridden by method-level variables offering (hopefully)
         greater flexibility and efficiency.
 
+        Parameters:
+            enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.HTTPError`. Defaults to ``False``.
+            path (str): URI path to append to URL. Defaults to empty path.
+            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if :exc:`~requests.HTTPError` status_code is returned.
+
         Args:
-            **kwargs: Supported Request() and Session() kwargs
+            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         Returns:
             requests.Response: Requests Response() object
