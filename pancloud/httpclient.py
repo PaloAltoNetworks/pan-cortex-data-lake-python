@@ -31,7 +31,7 @@ class HTTPClient(object):
         Parameters:
             enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.HTTPError`. Defaults to ``False``.
             port (int): TCP port to append to URL. Defaults to ``443``.
-            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if :exc:`~requests.HTTPError` status_code is returned. Defaults to ``False``.
+            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
             url (str): URL to send API requests to - gets combined with ``port`` and :meth:`~request` ``path`` parameter. Defaults to ``None``.
 
         Args:
@@ -110,7 +110,7 @@ class HTTPClient(object):
         Parameters:
             enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.HTTPError`. Defaults to ``False``.
             path (str): URI path to append to URL. Defaults to ``empty``.
-            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if :exc:`~requests.HTTPError` status_code is returned. Defaults to ``False``.
+            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
 
         Args:
             **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
