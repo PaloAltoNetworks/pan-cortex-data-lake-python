@@ -14,13 +14,60 @@ To install the Palo Alto Networks Cloud Python SDK, run this command in your ter
 
     $ pip install pancloud
 
-This is the preferred method to install the Palo Alto Networks Cloud Python SDK, as it will always install the most recent stable release.
+To upgrade the Palo Alto Networks Cloud Python SDK, run this command in your terminal:
+
+.. code-block:: console
+
+    $ pip install pancloud --upgrade
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
 
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
+
+
+Using Pipenv
+------------
+
+(`The officially recommended Python packaging tool from Python.org`)
+
+To install the Palo Alto Networks Cloud Python SDK using `pipenv`_, start by creating a virtualenv:
+
+.. code-block:: console
+
+    $ pipenv install
+
+You can optionally specify which python version to use in your virtualenv using the following:
+
+.. code-block:: console
+
+    $ pipenv --three install
+
+or
+
+.. code-block:: console
+
+    $ pipenv --two install
+
+I highly recommend you move to python3 as python2 will be `retiring`_ soon.
+
+.. _pipenv: https://docs.pipenv.org/
+.. _retiring: https://pythonclock.org/
+
+
+Now it's time to install ``pancloud``:
+
+.. code-block:: console
+
+    $ pipenv install pancloud
+
+To upgrade `pancloud` using pipenv:
+
+
+.. code-block:: console
+
+    $ pipenv upgrade pancloud
 
 
 From sources
