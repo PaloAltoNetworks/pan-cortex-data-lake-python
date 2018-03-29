@@ -34,7 +34,7 @@ class EventService(object):
             url (str): URL to send API requests to. Later combined with ``port`` and :meth:`~request` ``path`` parameter.
 
         Args:
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :class:`~pancloud.httpclient.HTTPClient` parameters.
 
         """
         self.kwargs = kwargs.copy()  # used for __repr__
@@ -62,7 +62,7 @@ class EventService(object):
 
         Args:
             channel_id (str): The channel ID.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -90,7 +90,7 @@ class EventService(object):
 
         Args:
             channel_id (str): The channel ID.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -118,7 +118,7 @@ class EventService(object):
 
         Args:
             channel_id (str): The channel ID.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -144,7 +144,7 @@ class EventService(object):
 
         Args:
             channel_id (str): The channel ID.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -172,7 +172,7 @@ class EventService(object):
         Args:
             channel_id (str): The channel ID.
             data (dict): Payload/request dictionary.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object

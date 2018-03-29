@@ -33,7 +33,7 @@ class LoggingService(object):
             url (str): URL to send API requests to. Later combined with ``port`` and :meth:`~request` ``path`` parameter.
 
         Args:
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :class:`~pancloud.httpclient.HTTPClient` parameters.
 
         """
         self.kwargs = kwargs.copy()  # used for __repr__
@@ -62,7 +62,7 @@ class LoggingService(object):
 
         Args:
             query_id (str): Specifies the ID of the query job.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -92,7 +92,7 @@ class LoggingService(object):
             params (dict): Payload/request dictionary.
             query_id (str): Specifies the ID of the query job.
             sequence_no (int): Specifies the sequenceNo.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Yields:
             requests.Response: Requests Response() object.
@@ -130,7 +130,7 @@ class LoggingService(object):
             params (dict): Payload/request dictionary.
             query_id (str): Specifies the ID of the query job.
             sequence_no (int): Specifies the sequenceNo.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -167,7 +167,7 @@ class LoggingService(object):
             params (dict): Payload/request dictionary.
             query_id (str): Specifies the ID of the query job.
             sequence_no (int): Specifies the sequenceNo.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
             list of requests.Response: Requests Response() objects.
@@ -203,7 +203,7 @@ class LoggingService(object):
 
         Args:
             data (dict): Payload/request dictionary.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -234,7 +234,7 @@ class LoggingService(object):
             query_id (str): Specifies the ID of the query job.
             sequence_no (int): Specifies the sequenceNo.
             delete_query (bool): True for delete, False otherwise.
-            **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Yields:
             requests.Response: Requests Response() object.

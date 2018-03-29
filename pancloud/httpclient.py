@@ -31,8 +31,8 @@ class HTTPClient(object):
         Parameters:
             enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.HTTPError`. Defaults to ``False``.
             port (int): TCP port to append to URL. Defaults to ``443``.
-            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if :exc:`~requests.HTTPError` status_code is returned.
-            url (str): URL to send API requests to - gets combined with ``port`` and :meth:`~request` ``path`` parameter.
+            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if :exc:`~requests.HTTPError` status_code is returned. Defaults to ``False``.
+            url (str): URL to send API requests to - gets combined with ``port`` and :meth:`~request` ``path`` parameter. Defaults to ``None``.
 
         Args:
             **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
@@ -104,13 +104,13 @@ class HTTPClient(object):
 
         The request method prepares HTTP requests using class or
         method-level attributes/variables. Class-level attributes may be
-        overridden by method-level variables offering (hopefully)
-        greater flexibility and efficiency.
+        overridden by method-level variables offering greater
+        flexibility and efficiency.
 
         Parameters:
             enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.HTTPError`. Defaults to ``False``.
-            path (str): URI path to append to URL. Defaults to empty path.
-            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if :exc:`~requests.HTTPError` status_code is returned.
+            path (str): URI path to append to URL. Defaults to ``empty``.
+            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if :exc:`~requests.HTTPError` status_code is returned. Defaults to ``False``.
 
         Args:
             **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
