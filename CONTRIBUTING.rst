@@ -23,6 +23,14 @@ If you are reporting a bug, please include:
 * Any details about your local setup that might be helpful in troubleshooting.
 * Detailed steps to reproduce the bug.
 
+If you are reporting a bug specific to an Application Framework API, please
+contact Palo Alto Networks TAC to open a case.
+
+Other ways to report a bug:
+
+* Palo Alto Networks Developer Community Portal (coming soon)
+* ``pancloud`` Gitter
+
 Fix Bugs
 ~~~~~~~~
 
@@ -57,9 +65,9 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up `pancloud` for local development.
+Ready to contribute? Here's how to set up ``pancloud`` for local development.
 
-1. Fork the `pancloud` repo on GitHub.
+1. Fork the ``pancloud`` repo on GitHub.
 2. Clone your fork locally::
 
     $ git clone git@github.com:your_name_here/pancloud.git
