@@ -86,7 +86,7 @@ Now, if a response returns improperly-formatted JSON, ``pancloud`` will raise a 
 HTTP Status Code Errors
 -----------------------
 
-Here, you've got options. You can choose to handle HTTP status code errors by inspecting ``r.status_code`` or ``r.text`` or
+Here, you've got options. You can choose to handle HTTP status code errors by inspecting ``r.status_code`` or
 you can tell ``pancloud`` to raise a :exc:`~pancloud.exceptions.HTTPError` exception whenever an HTTP status code error is returned::
 
     >>> ls = LoggingService(
