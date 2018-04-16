@@ -48,6 +48,9 @@ class DirectorySyncService(object):
         self._debug = logging.getLogger(__name__).debug
 
     def __repr__(self):
+        for k in self.kwargs.get('headers', {}):
+            if k.lower() == 'authorization':
+                self.kwargs['headers'][k] = '*' * 6
         return '{}({})'.format(
             self.__class__.__name__,
             ', '.join('%s=%r' % x for x in self.kwargs.items())
