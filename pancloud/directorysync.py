@@ -84,7 +84,7 @@ class DirectorySyncService(object):
         """Retrieve the attribute configuration object.
 
         Retrieve a count of all directory entries that belong to the
-        identified objectClass. The count is limited toa single domain.
+        identified objectClass. The count is limited to a single domain.
 
         Args:
             object_class (str): Directory object class.
@@ -114,7 +114,7 @@ class DirectorySyncService(object):
         Directory Sync Service can be configured to read directory
         entries from multiple domains. This API retrieves all the
         domains from which your Directory Sync Service instance is
-        configured to read entries. Domains areidentified in both DNS
+        configured to read entries. Domains are identified in both DNS
         and distinguished name format.
 
         Args:
@@ -140,7 +140,7 @@ class DirectorySyncService(object):
         """Query data stored in directory.
 
         Retrieves directory data by querying a Directory Sync Service
-        cloud-based instance. The directory data isstored with the
+        cloud-based instance. The directory data is stored with the
         Directory Sync Service instance using an agent that is installed
         in the customer's network.This agent retrieves directory data
         from the customer's Active Directory, and then sends it to the
