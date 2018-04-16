@@ -6,7 +6,7 @@ The Event Service allows your application to consume log data using a
 subscription (pull) model. When a customer activates your application in
 the Cloud Services Portal, a channel is assigned to it. This channel is
 dedicated to the customer's application instance. The channel will
-contain no data for any other customer,or any other application
+contain no data for any other customer, or any other application
 instance. You will receive this channel's ID as a part of the process
 that provisions your app for the customer in Palo Alto Network's
 Application Framework.
@@ -84,7 +84,7 @@ class EventService(object):
         """Retrieve the filters currently set on the channel.
 
         Returns filters set using the "Set Filters" endpoint. The
-        response body contains a JSON object with a singlefield:
+        response body contains a JSON object with a single field:
         "filters". This field provides a JSON array of JSON objects.
         Each object identifies a log type and a filter.
 
@@ -192,4 +192,3 @@ class EventService(object):
             **kwargs
         )
         return r
-
