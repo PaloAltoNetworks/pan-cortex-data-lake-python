@@ -28,10 +28,10 @@ es = EventService(
 
 data = {  # Prepare 'filter' data
     "filters": [
-        {"panw.threat": "SELECT * FROM panw.threat"},
-        {"panw.traffic": "SELECT * FROM panw.traffic"},
-        {"panw.system": "SELECT * FROM panw.system"},
-        {"panw.config": "SELECT * FROM panw.config"}
+        {"panw.threat": "SELECT * FROM `panw.threat`"},
+        {"panw.traffic": "SELECT * FROM `panw.traffic`"},
+        {"panw.system": "SELECT * FROM `panw.system`"},
+        {"panw.config": "SELECT * FROM `panw.config`"}
     ]
 }
 
