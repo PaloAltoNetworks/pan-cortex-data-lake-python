@@ -102,7 +102,7 @@ class HTTPClient(object):
                     self.__class__.__name__,
                     ', '.join('%s=%r' % (x, _) for x, _ in
                               self.kwargs.items() if x != 'headers'),
-                    'headers=%s' % x
+                    'headers=%r' % x
                 )
         return '{}({})'.format(
             self.__class__.__name__,
