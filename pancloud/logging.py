@@ -50,10 +50,18 @@ class LoggingService(object):
     def __repr__(self):
         for k in self.kwargs.get('headers', {}):
             if k.lower() == 'authorization':
-                self.kwargs['headers'][k] = '*' * 6
+                x = dict(self.kwargs['headers'].items())
+                x[k] = '*' * 6  # starrify token
+                return '{}({}, {})'.format(
+                    self.__class__.__name__,
+                    ', '.join('%s=%r' % (x, _) for x, _ in
+                              self.kwargs.items() if x != 'headers'),
+                    'headers=%r' % x
+                )
         return '{}({})'.format(
             self.__class__.__name__,
-            ', '.join('%s=%r' % x for x in self.kwargs.items())
+            ', '.join(
+                '%s=%r' % x for x in self.kwargs.items())
         )
 
     def delete(self, query_id=None, **kwargs):  # pragma: no cover
