@@ -10,4 +10,4 @@ from .httpclient import HTTPClient
 from .logging import LoggingService
 
 __author__ = 'Palo Alto Networks'
-__version__ = '1.0.2'
+__version__ = '1.0.3'
