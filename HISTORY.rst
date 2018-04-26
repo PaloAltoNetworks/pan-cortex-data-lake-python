@@ -2,6 +2,14 @@
 History
 =======
 
+1.0.3 (2018-04-26)
+------------------
+
+* Overhauled and updated RTDs
+* Updated `__init__.py` to allow package-level imports
+* Fixed issue where starrifying authorization token in `__repr__` overrode value in request header.
+
+
 1.0.2 (2018-03-20)
 ------------------
 
