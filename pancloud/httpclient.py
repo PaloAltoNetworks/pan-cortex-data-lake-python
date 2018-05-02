@@ -81,6 +81,8 @@ class HTTPClient(object):
             self.session.mount('http://', self.adapter)
 
             # Non-Requests key-word arguments
+            self.auto_refresh = kwargs.pop('auto_refresh', False)
+            self.credentials = kwargs.pop('credentials', None)
             self.enforce_json = kwargs.pop(
                 'enforce_json', False
             )
@@ -93,6 +95,11 @@ class HTTPClient(object):
             if len(kwargs) > 0:  # Handle invalid kwargs
                 raise UnexpectedKwargsError(kwargs)
 
+            if self.credentials:
+                self.session.headers = self._apply_credentials(
+                    self.session.headers, self.credentials
+                )
+
     def __repr__(self):
         for k in self.kwargs.get('headers', {}):
             if k.lower() == 'authorization':
@@ -101,6 +108,13 @@ class HTTPClient(object):
             self.__class__.__name__,
             ', '.join('%s=%r' % x for x in self.kwargs.items())
         )
+
+    def _apply_credentials(self, headers, credentials):
+        token = credentials.get_credentials().access_token
+        if token is None:
+            token = credentials.refresh(access_token=None, timeout=10)
+        headers['Authorization'] = "Bearer {}".format(token)
+        return headers
 
     def request(self, **kwargs):
         """Generate HTTP request using given parameters.
@@ -135,12 +149,21 @@ class HTTPClient(object):
         verify = kwargs.pop('verify', None)
 
         # Non-Requests key-word arguments
+        auto_refresh = kwargs.pop('auto_refresh', False)
+        credentials = kwargs.pop(
+            'credentials', None) or self.credentials
         enforce_json = kwargs.pop('enforce_json', self.enforce_json)
         path = kwargs.pop('path', '')  # default to empty path
         raise_for_status = kwargs.pop(
             'raise_for_status', self.raise_for_status
         )
         url = "{}:{}{}".format(url, self.port, path)
+
+        if credentials and not headers:
+            headers = self._apply_credentials(
+                self.session.headers, credentials)
+        elif credentials and headers:
+            headers = self._apply_credentials(headers, credentials)
 
         k = {  # Re-pack kwargs to dictionary
             'params': params or self.session.params,
@@ -189,6 +212,10 @@ class HTTPClient(object):
                         raise HTTPError(
                             "Invalid JSON: {}".format(e)
                         )
+            if credentials and auto_refresh:
+                if r.status_code == 401:
+                    token = credentials.get_credentials().access_token
+                    credentials.refresh(access_token=token, timeout=10)
             return r
         except requests.RequestException as e:
             raise HTTPError(e)
