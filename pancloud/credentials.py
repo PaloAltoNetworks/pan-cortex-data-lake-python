@@ -11,7 +11,8 @@ from threading import Lock, RLock
 import requests
 from tinydb import TinyDB, Query
 
-from .exceptions import UnexpectedKwargsError, PanCloudError
+from .exceptions import UnexpectedKwargsError, PanCloudError, \
+    PartialCredentialsError
 
 # Constants
 TOKEN_URL = 'https://api.paloaltonetworks.com/api/oauth2/RequestToken'
@@ -28,8 +29,8 @@ class Credentials(object):
     """An Application Framework credentials object."""
 
     def __init__(self, auth_base_url=None, client_id=None, client_secret=None,
-                 instance_id=None, profile=None, redirect_uri=None, region=None,
-                 refresh_token=None, scope=None, token_url=None,
+                 instance_id=None, profile=None, redirect_uri=None,
+                 region=None, refresh_token=None, scope=None, token_url=None,
                  token_revoke_url=None, **kwargs):
         """Persist Session() and credentials attributes.
 
@@ -274,33 +275,38 @@ class Credentials(object):
             with self.token_lock:
                 if access_token == self.access_token_ or access_token is None:
                     c = self.get_credentials()
-                    r = self.session.post(
-                        url=self.token_url,
-                        data={
-                            'client_id': c.client_id,
-                            'client_secret': c.client_secret,
-                            'refresh_token': c.refresh_token,
-                        },
-                        timeout=timeout
-                    )
-                    if not r.ok:
-                        raise PanCloudError(
-                            '%s %s: %s' % (r.status_code, r.reason, r.text)
+                    if c.client_id and c.client_secret and c.refresh_token:
+                        r = self.session.post(
+                            url=self.token_url,
+                            data={
+                                'client_id': c.client_id,
+                                'client_secret': c.client_secret,
+                                'refresh_token': c.refresh_token,
+                            },
+                            timeout=timeout
                         )
-                    try:
-                        self.access_token_ = r.json().get(
-                            'access_token', ''
-                        )
-                    except ValueError as e:
-                        raise PanCloudError("Invalid JSON: %s" % e)
+                        if not r.ok:
+                            raise PanCloudError(
+                                '%s %s: %s' % (r.status_code, r.reason, r.text)
+                            )
+                        try:
+                            self.access_token_ = r.json().get(
+                                'access_token', ''
+                            )
+                        except ValueError as e:
+                            raise PanCloudError("Invalid JSON: %s" % e)
+                        else:
+                            if r.json().get(
+                                'error_description'
+                            ) or r.json().get(
+                                'error'
+                            ):
+                                raise PanCloudError(r.text)
+                        return self.access_token_
                     else:
-                        if r.json().get(
-                            'error_description'
-                        ) or r.json().get(
-                            'error'
-                        ):
-                            raise PanCloudError(r.text)
-                    return self.access_token_
+                        raise PartialCredentialsError(
+                            "Missing one or more required credentials"
+                        )
 
     def revoke_access_token(self, timeout=None):
         """Revoke access token."""
