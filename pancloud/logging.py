@@ -113,9 +113,12 @@ class LoggingService(object):
 
         """
         while True:
-            r = self.poll(query_id, sequence_no, params, **kwargs)
+            r = self.poll(
+                query_id, sequence_no, params, enforce_json=True,
+                **kwargs
+            )
             if r.json()['queryStatus'] == "FINISHED":
-                params['sequenceNo'] += 1
+                sequence_no += 1
                 yield r
             elif r.json()['queryStatus'] == "JOB_FINISHED":
                 yield r
@@ -123,9 +126,13 @@ class LoggingService(object):
             elif r.json()['queryStatus'] == "JOB_FAILED":
                 yield r
                 break
-            else:  # query status ostensibly == 'RUNNING'
+            elif r.json()['queryStatus'] == "RUNNING":
                 yield r
-                time.sleep(1)  # wait before trying again
+                time.sleep(1)
+            else:
+                raise PanCloudError(
+                    'Bad queryStatus: %s' % r.json()['queryStatus']
+                )
 
     def poll(self, query_id=None, sequence_no=None, params=None,
              **kwargs):  # pragma: no cover
