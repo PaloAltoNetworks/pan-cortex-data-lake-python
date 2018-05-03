@@ -117,7 +117,8 @@ class HTTPClient(object):
                 '%s=%r' % x for x in self.kwargs.items())
         )
 
-    def _apply_credentials(self, headers, credentials):
+    @staticmethod
+    def _apply_credentials(headers, credentials):
         token = credentials.get_credentials().access_token
         if token is None:
             token = credentials.refresh(access_token=None, timeout=10)
