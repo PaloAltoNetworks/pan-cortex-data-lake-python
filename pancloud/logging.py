@@ -169,48 +169,6 @@ class LoggingService(object):
         )
         return r
 
-    def poll_all(self, query_id=None, sequence_no=None, params=None,
-                 **kwargs):  # pragma: no cover
-        """Retrieve pages iteratively in a greedy manner.
-
-        Automatically increments the sequenceNo as it continues to poll
-        for results until the endpoint reports ``JOB_FINISHED`` or
-        ``JOB_FAILED``, or an exception is raised by the pancloud library.
-
-        WARNING: Be mindful of memory consumption as all results will be
-        stored in memory until they are destroyed or garbage collection
-        occurs.
-
-        Args:
-            params (dict): Payload/request dictionary.
-            query_id (str): Specifies the ID of the query job.
-            sequence_no (int): Specifies the sequenceNo.
-            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
-
-        Returns:
-            list of requests.Response: Requests Response() objects.
-
-        Examples:
-            Refer to ``logging_query.py`` example.
-
-        """
-        pages = []
-        while True:
-            r = self.poll(query_id, sequence_no, params, **kwargs)
-            if r.json()['queryStatus'] == "FINISHED":
-                params['sequenceNo'] += 1
-                pages.append(r)
-            elif r.json()['queryStatus'] == "JOB_FINISHED":
-                pages.append(r)
-                break
-            elif r.json()['queryStatus'] == "JOB_FAILED":
-                pages.append(r)
-                break
-            else:  # query status ostensibly == 'RUNNING'
-                pages.append(r)
-                time.sleep(1)  # wait before trying again
-        return pages
-
     def query(self, data=None, **kwargs):  # pragma: no cover
         """Generate a query that retrieves log records.
 
