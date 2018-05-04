@@ -38,6 +38,21 @@ class HTTPError(PanCloudError):
         )
 
 
+class PartialCredentialsError(PanCloudError):
+    """The required credentials were not supplied."""
+
+    def __init__(self, inst):
+        """Convert exception instance to string.
+
+        Args:
+            inst (class): Exception instance.
+
+        """
+        PanCloudError.__init__(
+            self, "{}".format(inst)
+        )
+
+
 class RequiredKwargsError(PanCloudError):
     """A required keyword argument was not passed."""
 
