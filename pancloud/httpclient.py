@@ -11,7 +11,7 @@ import requests
 from requests.adapters import HTTPAdapter
 
 from .exceptions import UnexpectedKwargsError, \
-    RequiredKwargsError, HTTPError
+    RequiredKwargsError, HTTPError, PanCloudError
 
 
 class HTTPClient(object):
@@ -218,7 +218,7 @@ class HTTPClient(object):
                     try:
                         r.json()
                     except ValueError as e:
-                        raise HTTPError(
+                        raise PanCloudError(
                             "Invalid JSON: {}".format(e)
                         )
             if credentials and auto_refresh:

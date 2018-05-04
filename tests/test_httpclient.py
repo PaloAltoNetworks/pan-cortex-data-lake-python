@@ -13,7 +13,7 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pancloud.httpclient import HTTPClient
 from pancloud.exceptions import HTTPError, RequiredKwargsError, \
-    UnexpectedKwargsError
+    UnexpectedKwargsError, PanCloudError
 
 
 HTTPBIN = os.environ.get('HTTPBIN_URL', 'http://httpbin.org')
@@ -57,7 +57,7 @@ class TestHTTPClient:
             HTTPClient(url=TARPIT).request(method='GET', foo='foo')
 
     def test_enforce_json(self):
-        with pytest.raises(HTTPError):
+        with pytest.raises(PanCloudError):
             HTTPClient(
                 url=HTTPBIN,
                 port=80,

@@ -32,7 +32,6 @@ class TestLoggingService:
         LoggingService(url=TARPIT).query
         LoggingService(url=TARPIT).delete
         LoggingService(url=TARPIT).iter_poll
-        LoggingService(url=TARPIT).poll_all
         LoggingService(url=TARPIT).xpoll
 
     def test_required_kwargs(self):
