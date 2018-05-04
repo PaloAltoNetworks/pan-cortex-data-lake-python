@@ -19,7 +19,7 @@ Examples:
 from __future__ import absolute_import
 import logging
 
-from .exceptions import RequiredKwargsError
+from .exceptions import PanCloudError, RequiredKwargsError
 from .httpclient import HTTPClient
 
 
@@ -147,7 +147,7 @@ class EventService(object):
         )
         return r
 
-    def poll(self, channel_id=None, **kwargs):  # pragma: no cover
+    def poll(self, channel_id=None, data=None, **kwargs):  # pragma: no cover
         """Read one or more events from a channel.
 
         Reads events (log records) from the identified channel. Events
@@ -155,6 +155,7 @@ class EventService(object):
 
         Args:
             channel_id (str): The channel ID.
+            data (dict): Payload/request dictionary.
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
@@ -168,6 +169,7 @@ class EventService(object):
         r = self._httpclient.request(
             method="POST",
             url=self.url,
+            data=data,
             path=path,
             **kwargs
         )
@@ -203,3 +205,68 @@ class EventService(object):
             **kwargs
         )
         return r
+
+    def xpoll(self, channel_id=None, data=None, ack=False,
+              follow=False, **kwargs):
+        """Retrieve logType, event entries iteratively in a non-greedy manner.
+
+        Generator function to return logType, event entries from poll
+        API request.
+
+        Args:
+            channel_id (str): The channel ID.
+            data (dict): Payload/request dictionary.
+            ack (bool): True to acknowledge read.
+            follow(bool): True to continue polling after channelId empty.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
+
+        Yields:
+            dictionary with single logType and event entries.
+
+        """
+        def _ack(channel_id, **kwargs):
+            r = self.ack(channel_id, **kwargs)
+            try:
+                r_json = r.json()
+            except ValueError as e:
+                raise PanCloudError('Invalid JSON: %s' % e)
+
+            if not (200 <= r.status_code < 300):
+                if 'errorCode' in r_json and 'errorMessage' in r_json:
+                    raise PanCloudError('%s: %s' %
+                                        (r_json['errorCode'],
+                                         r_json['errorMessage']))
+                else:
+                    raise PanCloudError('%s %s' % (r.status_code,
+                                                   r.reason))
+
+            if r.status_code == 200:
+                return
+            else:
+                raise PanCloudError('ack: status_code: %d' %
+                                    r.status_code)
+
+        while True:
+            r = self.poll(channel_id, data, **kwargs)
+            try:
+                r_json = r.json()
+            except ValueError as e:
+                raise PanCloudError('Invalid JSON: %s' % e)
+
+            if not (200 <= r.status_code < 300):
+                if 'errorCode' in r_json and 'errorMessage' in r_json:
+                    raise PanCloudError('%s: %s' %
+                                        (r_json['errorCode'],
+                                         r_json['errorMessage']))
+                else:
+                    raise PanCloudError('%s %s' % (r.status_code,
+                                                   r.reason))
+
+            if not r_json and not follow:
+                return
+
+            for x in r_json:
+                yield x
+
+            if ack:
+                _ack(channel_id, **kwargs)
