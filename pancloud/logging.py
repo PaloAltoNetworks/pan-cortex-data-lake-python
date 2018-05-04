@@ -248,10 +248,7 @@ class LoggingService(object):
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Yields:
-            requests.Response: Requests Response() object.
-
-        Examples:
-            Refer to ``logging_xpoll.py`` example.
+            dictionary with single log entry.
 
         """
         def _delete(query_id, **kwargs):
@@ -262,20 +259,19 @@ class LoggingService(object):
                 raise PanCloudError('Invalid JSON: %s' % e)
 
             if not (200 <= r.status_code < 300):
-                if 'message' in r_json:
-                    # XXX delete error response object borked
-                    raise PanCloudError(r_json['message'])
+                if 'errorCode' in r_json and 'errorMessage' in r_json:
+                    raise PanCloudError('%s: %s' %
+                                        (r_json['errorCode'],
+                                         r_json['errorMessage']))
                 else:
                     raise PanCloudError('%s %s' % (r.status_code,
                                                    r.reason))
 
-            if 'ok' in r_json:
-                if r_json['ok'] is True:
-                    return
-                else:
-                    raise PanCloudError('delete: ok: %s' % r_json['ok'])
+            if r.status_code == 200:
+                return
             else:
-                raise PanCloudError('no "ok" in response')
+                raise PanCloudError('delete: status_code: %d' %
+                                    r.status_code)
 
         r = self.poll(query_id, sequence_no, params, **kwargs)
         try:
@@ -284,8 +280,10 @@ class LoggingService(object):
             raise PanCloudError('Invalid JSON: %s' % e)
 
         if not (200 <= r.status_code < 300):
-            if 'message' in r_json:
-                raise PanCloudError(r_json['message'])
+            if 'errorCode' in r_json and 'errorMessage' in r_json:
+                raise PanCloudError('%s: %s' %
+                                    (r_json['errorCode'],
+                                     r_json['errorMessage']))
             else:
                 raise PanCloudError('%s %s' % (r.status_code,
                                                r.reason))
@@ -307,17 +305,19 @@ class LoggingService(object):
 
             if r_json['queryStatus'] == 'JOB_FINISHED':
                 if delete_query:
-                    _delete(params['queryId'], **kwargs)
+                    _delete(query_id, **kwargs)
                 return
 
-            if 'sequenceNo' in params:
-                params['sequenceNo'] += 1
+            if sequence_no is not None:
+                sequence_no += 1
             else:
-                params['sequenceNo'] = 1
+                sequence_no = 1
 
         elif r_json['queryStatus'] == 'JOB_FAILED':
-            # XXX "message"?
-            raise PanCloudError('%s' % r_json['status'])
+            raise PanCloudError('%s: %s: %s' %
+                                (r_json['queryStatus'],
+                                 r_json['errorCode'],
+                                 r_json['errorMessage']))
 
         elif r_json['queryStatus'] == 'RUNNING':
             if 'maxWaitTime' in params:
@@ -326,11 +326,9 @@ class LoggingService(object):
                 # XXX
                 time.sleep(1)
         else:
-            raise PanCloudError('Bad status: %s' % r_json['status'])
+            raise PanCloudError('Bad queryStatus: %s' % r_json['queryStatus'])
 
         # recursion
         for x in self.xpoll(query_id, sequence_no, params, delete_query,
                             **kwargs):
             yield x
-
-
