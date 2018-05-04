@@ -118,7 +118,10 @@ class LoggingService(object):
                 **kwargs
             )
             if r.json()['queryStatus'] == "FINISHED":
-                sequence_no += 1
+                if sequence_no is not None:
+                    sequence_no += 1
+                else:
+                    sequence_no = 1
                 yield r
             elif r.json()['queryStatus'] == "JOB_FINISHED":
                 yield r
