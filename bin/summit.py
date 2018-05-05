@@ -754,8 +754,6 @@ def parse_opts():
                 sys.exit(1)
             global debug
             debug = options['debug']
-        elif opt == '-T':
-            options['timeout'] = arg
         elif opt == '--version':
             print('pancloud', __version__)
             sys.exit(0)
