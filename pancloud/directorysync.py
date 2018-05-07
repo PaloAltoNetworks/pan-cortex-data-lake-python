@@ -91,14 +91,14 @@ class DirectorySyncService(object):
         )
         return r
 
-    def count(self, object_class=None, domain=None, **kwargs):  # pragma: no cover
+    def count(self, object_class=None, params=None, **kwargs):  # pragma: no cover
         """Retrieve the attribute configuration object.
 
         Retrieve a count of all directory entries that belong to the
         identified objectClass. The count is limited to a single domain.
 
         Args:
-            domain (str): Domain FQDN.
+            params (dict): Payload/request dictionary.
             object_class (str): Directory object class.
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
@@ -109,14 +109,14 @@ class DirectorySyncService(object):
             Coming soon.
 
         """
-        path = "/directory-sync-service/v1/{}/count?{}".format(
-            object_class,
-            domain
+        path = "/directory-sync-service/v1/{}/count".format(
+            object_class
         )
         r = self._httpclient.request(
             method="GET",
             path=path,
             url=self.url,
+            params=params,
             **kwargs
         )
         return r
