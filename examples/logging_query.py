@@ -10,21 +10,16 @@ curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pancloud import LoggingService
+from pancloud import Credentials
 
 url = 'https://apigw-stg4.us.paloaltonetworks.com'
 
-# `export ACCESS_TOKEN=<access token>`
-access_token = os.environ['ACCESS_TOKEN']
-print(access_token)
+c = Credentials()
 
 # Create Logging Service instance
 ls = LoggingService(
     url=url,
-    headers={
-        'Authorization': 'Bearer {}'.format(access_token),
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }
+    credentials=c
 )
 
 data = {  # Prepare 'query' data
