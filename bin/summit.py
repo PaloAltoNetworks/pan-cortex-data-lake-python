@@ -87,8 +87,10 @@ def main():
 def logging(options):
     def query(api, options):
         action = inspect.stack()[0][3]
+        k = 'LoggingService:query'
 
-        x = options['R1_obj'].copy()
+        R = options['R']
+        x = R['R1_obj'][k].copy()
         if options['start_seconds']:
             x['startTime'] = options['start_seconds']
         if options['end_seconds']:
@@ -99,7 +101,7 @@ def logging(options):
                   file=sys.stderr)
 
         try:
-            r = api.query(data=x, **options['R2_obj'])
+            r = api.query(data=x, **R['R2_obj'][k])
         except Exception as e:
             print_exception(action, e)
             sys.exit(1)
@@ -110,12 +112,14 @@ def logging(options):
 
     def poll(api, options):
         action = inspect.stack()[0][3]
+        k = 'LoggingService:poll'
 
+        R = options['R']
         try:
             r = api.poll(query_id=options['id'],
                          sequence_no=options['seq'],
-                         params=options['R1_obj'],
-                         **options['R2_obj'])
+                         params=R['R1_obj'][k],
+                         **R['R2_obj'][k])
         except Exception as e:
             print_exception(action, e)
             sys.exit(1)
@@ -126,13 +130,15 @@ def logging(options):
 
     def xpoll(api, options):
         action = inspect.stack()[0][3]
+        k = 'LoggingService:poll'
 
+        R = options['R']
         try:
             for x in api.xpoll(query_id=options['id'],
                                sequence_no=options['seq'],
                                delete_query=options['delete'],
-                               params=options['R1_obj'],
-                               **options['R2_obj']):
+                               params=R['R1_obj'][k],
+                               **R['R2_obj'][k]):
                 print_response_body(options, x)
 
         except Exception as e:
@@ -141,10 +147,12 @@ def logging(options):
 
     def delete(api, options):
         action = inspect.stack()[0][3]
+        k = 'LoggingService:delete'
 
+        R = options['R']
         try:
             r = api.delete(query_id=options['id'],
-                           **options['R2_obj'])
+                           **R['R2_obj'][k])
         except Exception as e:
             print_exception(action, e)
             sys.exit(1)
@@ -155,16 +163,22 @@ def logging(options):
 
     def write(api, options):
         action = inspect.stack()[0][3]
+        k = 'LoggingService:write'
+
+        R = options['R']
         print(action, 'not implemented')
 
     action = inspect.stack()[0][3]
+    k = 'LoggingService'
 
     try:
+        R = options['R']
         if options['http_client']:
-            session = HTTPClient(**options['R3_obj'])
-            api = LoggingService(session=session, **options['R0_obj'])
+            session = HTTPClient(**R['R0_obj']['HTTPClient'])
+            api = LoggingService(session=session,
+                                 **R['R0_obj'][k])
         else:
-            api = LoggingService(**options['R0_obj'])
+            api = LoggingService(**R['R0_obj'][k])
     except Exception as e:
         print_exception(action, e)
         sys.exit(1)
@@ -192,10 +206,11 @@ def logging(options):
 
 
 def event(options):
-    def generic(api, options, func, action):
+    def generic(api, options, func, action, k):
+        R = options['R']
         try:
             r = func(channel_id=options['id'],
-                     **options['R2_obj'])
+                     **R['R2_obj'][k])
         except Exception as e:
             print_exception(action, e)
             sys.exit(1)
@@ -206,11 +221,13 @@ def event(options):
 
     def set_filters(api, options):
         action = inspect.stack()[0][3]
+        k = 'EventService:set_filters'
 
+        R = options['R']
         try:
             r = api.set_filters(channel_id=options['id'],
-                                data=options['R1_obj'],
-                                **options['R2_obj'])
+                                data=R['R1_obj'][k],
+                                **R['R2_obj'][k])
         except Exception as e:
             print_exception(action, e)
             sys.exit(1)
@@ -221,17 +238,20 @@ def event(options):
 
     def get_filters(api, options):
         action = inspect.stack()[0][3]
-        generic(api, options, api.get_filters, action)
+        k = 'EventService:get_filters'
+        generic(api, options, api.get_filters, action, k)
 
     def xpoll(api, options):
         action = inspect.stack()[0][3]
+        k = 'LoggingService:xpoll'
 
+        R = options['R']
         try:
             for x in api.xpoll(channel_id=options['id'],
-                               data=options['R1_obj'],
+                               data=R['R1_obj'][k],
                                ack=options['ack'],
                                follow=options['follow'],
-                               **options['R2_obj']):
+                               **R['R2_obj'][k]):
                 print('%s:' % action, end='', file=sys.stderr)
                 event_print_status(options, [x])
                 print(file=sys.stderr)
@@ -242,24 +262,38 @@ def event(options):
 
     def poll(api, options):
         action = inspect.stack()[0][3]
-        generic(api, options, api.poll, action)
+        k = 'LoggingService:poll'
+
+        R = options['R']
+        try:
+            r = api.poll(channel_id=options['id'],
+                         data=R['R1_obj'][k],
+                         **R['R2_obj'][k])
+        except Exception as e:
+            print_exception(action, e)
+            sys.exit(1)
 
     def ack(api, options):
         action = inspect.stack()[0][3]
-        generic(api, options, api.ack, action)
+        k = 'EventService:ack'
+        generic(api, options, api.ack, action, k)
 
     def nack(api, options):
         action = inspect.stack()[0][3]
-        generic(api, options, api.nack, action)
+        k = 'EventService:nack'
+        generic(api, options, api.nack, action, k)
 
     action = inspect.stack()[0][3]
+    k = 'EventService'
 
     try:
+        R = options['R']
         if options['http_client']:
-            session = HTTPClient(**options['R3_obj'])
-            api = EventService(session=session, **options['R0_obj'])
+            session = HTTPClient(**R['R0_obj']['HTTPClient'])
+            api = EventService(session=session,
+                               **R['R0_obj'][k])
         else:
-            api = EventService(**options['R0_obj'])
+            api = EventService(**R['R0_obj'][k])
     except Exception as e:
         print_exception(action, e)
         sys.exit(1)
@@ -290,9 +324,10 @@ def event(options):
 
 
 def directory_sync(options):
-    def generic(api, options, func, action):
+    def generic(api, options, func, action, k):
+        R = options['R']
         try:
-            r = func(**options['R2_obj'])
+            r = func(**R['R2_obj'][k])
         except Exception as e:
             print_exception(action, e)
             sys.exit(1)
@@ -303,11 +338,13 @@ def directory_sync(options):
 
     def query(api, options):
         action = inspect.stack()[0][3]
+        k = 'DirectorySyncService:query'
 
+        R = options['R']
         try:
             r = api.query(object_class=options['id'],
-                          data=options['R1_obj'],
-                          **options['R2_obj'])
+                          data=R['R1_obj'][k],
+                          **R['R2_obj'][k])
         except Exception as e:
             print_exception(action, e)
             sys.exit(1)
@@ -318,10 +355,13 @@ def directory_sync(options):
 
     def count(api, options):
         action = inspect.stack()[0][3]
+        k = 'DirectorySyncService:count'
 
+        R = options['R']
         try:
             r = api.count(object_class=options['id'],
-                          **options['R2_obj'])
+                          params=R['R1_obj'][k],
+                          **R['R2_obj'][k])
         except Exception as e:
             print_exception(action, e)
             sys.exit(1)
@@ -332,20 +372,25 @@ def directory_sync(options):
 
     def domains(api, options):
         action = inspect.stack()[0][3]
-        generic(api, options, api.domains, action)
+        k = 'DirectorySyncService:domains'
+        generic(api, options, api.domains, action, k)
 
     def attributes(api, options):
         action = inspect.stack()[0][3]
-        generic(api, options, api.attributes, action)
+        k = 'DirectorySyncService:attributes'
+        generic(api, options, api.attributes, action, k)
 
     action = inspect.stack()[0][3]
+    k = 'DirectorySyncService'
 
     try:
+        R = options['R']
         if options['http_client']:
-            session = HTTPClient(**options['R3_obj'])
-            api = DirectorySyncService(session=session, **options['R0_obj'])
+            session = HTTPClient(**R['R0_obj']['HTTPClient'])
+            api = DirectorySyncService(session=session,
+                                       **R['R0_obj'][k])
         else:
-            api = DirectorySyncService(**options['R0_obj'])
+            api = DirectorySyncService(**R['R0_obj'][k])
     except Exception as e:
         print_exception(action, e)
         sys.exit(1)
@@ -571,7 +616,7 @@ def process_json_args(args, init=None):
             print(e, file=sys.stderr)
             sys.exit(1)
 
-        if debug > 1:
+        if debug > 1 and obj:
             print(pprint.pformat(obj, indent=INDENT), file=sys.stderr)
             print(json_arg, file=sys.stderr)
 
@@ -618,7 +663,52 @@ def process_time(x):
 
 
 def parse_opts():
+    options_R = {
+        # class init **kwargs
+        'R0': {
+            'HTTPClient': [],
+            'LoggingService': [],
+            'EventService': [],
+            'DirectorySyncService': [],
+        },
+        # class method data/params
+        # XXX can't have data and params
+        'R1': {
+            'LoggingService:query': [],
+            'LoggingService:poll': [],
+            'LoggingService:xpoll': [],
+
+            'EventService:set_filters': [],
+            'EventService:poll': [],
+            'EventService:xpoll': [],
+
+            'DirectorySyncService:query': [],
+            'DirectorySyncService:count': [],
+        },
+        # class method **kwargs
+        'R2': {
+            'LoggingService:delete': [],
+            'LoggingService:poll': [],
+            'LoggingService:xpoll': [],
+            'LoggingService:query': [],
+            'LoggingService:write': [],
+
+            'EventService:set_filters': [],
+            'EventService:get_filters': [],
+            'EventService:ack': [],
+            'EventService:nack': [],
+            'EventService:poll': [],
+            'EventService:xpoll': [],
+
+            'DirectorySyncService:query': [],
+            'DirectorySyncService:count': [],
+            'DirectorySyncService:domains': [],
+            'DirectorySyncService:attributes': [],
+        },
+    }
+
     options = {
+        'R': options_R,
         'http_client': False,
         'logging_api': False,
         'directory_sync_api': False,
@@ -642,20 +732,28 @@ def parse_opts():
         'count': False,
         'domains': False,
         'attributes': False,
-        #
-        'R0': [],
-        'R0_obj': {},
-        'R1': [],
-        'R1_obj': {},
-        'R2': [],
-        'R2_obj': {},
-        'R3': [],
-        'R3_obj': {},
         'jmespath': None,
         'print_python': False,
         'print_json': False,
         'debug': 0,
         }
+
+    def _options_R(k, last_c, last_m, arg):
+        if k == 'R0':
+            if last_c in options_R[k]:
+                options_R[k][last_c].append(process_arg(arg))
+            else:
+                print('--%s has no class context' % k, file=sys.stderr)
+                sys.exit(1)
+
+        elif k in ['R1', 'R2']:
+            x = '%s:%s' % (last_c, last_m)
+            if x in options_R[k]:
+                options_R[k][x].append(process_arg(arg))
+            else:
+                print('--%s has no class:method context: %s' % (k, x),
+                      file=sys.stderr)
+                sys.exit(1)
 
     short_options = 'HLDEJ:pj'
     long_options = [
@@ -676,27 +774,39 @@ def parse_opts():
         print(error, file=sys.stderr)
         sys.exit(1)
 
+    last_c = ''  # class
+    last_m = ''  # method
+
     for opt, arg in opts:
         if False:
             pass
         elif opt == '-H':
             options['http_client'] = True
+            last_c = 'HTTPClient'
         elif opt == '-L':
             options['logging_api'] = True
+            last_c = 'LoggingService'
         elif opt == '-D':
             options['directory_sync_api'] = True
+            last_c = 'DirectorySyncService'
         elif opt == '-E':
             options['event_api'] = True
+            last_c = 'EventService'
         elif opt == '--delete':
             options['delete'] = True
+            last_m = 'delete'
         elif opt == '--poll':
             options['poll'] = True
+            last_m = 'poll'
         elif opt == '--xpoll':
             options['xpoll'] = True
+            last_m = 'xpoll'
         elif opt == '--query':
             options['query'] = True
+            last_m = 'query'
         elif opt == '--write':
             options['write'] = True
+            last_m = 'write'
         elif opt == '--start':
             options['start'] = arg
             options['start_seconds'] = process_time(arg)
@@ -709,28 +819,29 @@ def parse_opts():
             options['seq'] = arg
         elif opt == '--set':
             options['set'] = True
+            last_m = 'set_filters'
         elif opt == '--get':
             options['get'] = True
+            last_m = 'get_filters'
         elif opt == '--ack':
             options['ack'] = True
+            last_m = 'ack'
         elif opt == '--nack':
             options['nack'] = True
+            last_m = 'nack'
         elif opt == '--follow':
             options['follow'] = True
         elif opt == '--count':
             options['count'] = True
+            last_m = 'count'
         elif opt == '--domains':
             options['domains'] = True
+            last_m = 'domains'
         elif opt == '--attributes':
             options['attributes'] = True
-        elif opt == '--R0':
-            options['R0'].append(process_arg(arg))
-        elif opt == '--R1':
-            options['R1'].append(process_arg(arg))
-        elif opt == '--R2':
-            options['R2'].append(process_arg(arg))
-        elif opt == '--R3':
-            options['R3'].append(process_arg(arg))
+            last_m = 'attributes'
+        elif opt in ['--R0', '--R1', '--R2']:
+            _options_R(opt[2:], last_c, last_m, arg)
         elif opt == '-J':
             if not have_jmespath:
                 print('Install JMESPath for -J support: http://jmespath.org/',
@@ -754,8 +865,6 @@ def parse_opts():
                 sys.exit(1)
             global debug
             debug = options['debug']
-        elif opt == '-T':
-            options['timeout'] = arg
         elif opt == '--version':
             print('pancloud', __version__)
             sys.exit(0)
@@ -773,12 +882,14 @@ def parse_opts():
             'Accept': 'application/json',
         }
 
-    for x in ['R0', 'R1', 'R2', 'R3']:
-        if options[x]:
-            init = None
-            if x in ['R0', 'R3'] and headers is not None:
-                init = {'headers': headers}
-            options[x + '_obj'] = process_json_args(options[x], init)
+    for k in list(options_R.keys()):
+        init = None
+        if k == 'R0' and headers is not None:
+            init = {'headers': headers}
+        options_R[k + '_obj'] = {}
+        for x in options_R[k].keys():
+            options_R[k + '_obj'][x] =\
+                process_json_args(options_R[k][x], init)
 
     if options['debug'] > 2:
         s = pprint.pformat(options, indent=INDENT)
@@ -819,11 +930,11 @@ def usage():
       --attributes        get directory attributes
       --id class          objectClass
     -H                    use HTTPClient() session
-    --R0 json             service class constructor args (**kwargs)
-    --R1 json             service class method body/QUERY_STRING (data/params)
-    --R2 json             service class method args (**kwargs)
-    --R3 json             HTTPClient() class constructor args (**kwargs)
-                          (multiple --R[0123]'s allowed)
+    --R0 json             class constructor args (**kwargs)
+    --R1 json             class method body/QUERY_STRING (data/params)
+    --R2 json             class method args (**kwargs)
+                          multiple --R[012]'s allowed, will be merged
+                          context/order dependent on previous class, method
     -J expression         JMESPath expression for JSON response data
     -p                    print response in Python to stdout
     -j                    print response in JSON to stdout
