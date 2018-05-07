@@ -23,7 +23,7 @@ ds = DirectorySyncService(
 )
 
 # Retrieve attributes from directory-sync
-a = ds.count(object_class="computer", params={'domain': 'parent.com'})
+a = ds.count(object_class="computer", domain="parent.com")
 
 # Print results
 print(
