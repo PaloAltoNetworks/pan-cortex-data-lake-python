@@ -21,10 +21,12 @@ def main():
         client_id = input("CLIENT_ID: ")
         client_secret = getpass.getpass(prompt="CLIENT_SECRET: ")
         refresh_token = getpass.getpass(prompt="REFRESH_TOKEN: ")
+        profile = input("PROFILE [default]: ") or None
         print("Generating credentials file...")
         c = Credentials(client_id=client_id,
                         client_secret=client_secret,
-                        refresh_token=refresh_token)
+                        refresh_token=refresh_token,
+                        profile=profile)
         c.write_credentials()
         print("Done!\n")
     except KeyboardInterrupt:
