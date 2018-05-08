@@ -357,8 +357,6 @@ class Credentials(object):
             int: Result of operation.
 
         """
-        if not os.path.exists(directory):
-            os.makedirs(directory)
         c = self.get_credentials()
         credentials = {
             'profile': self.profile,
