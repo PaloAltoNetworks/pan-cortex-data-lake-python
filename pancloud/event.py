@@ -226,12 +226,12 @@ class EventService(object):
         """
         def _ack(channel_id, **kwargs):
             r = self.ack(channel_id, **kwargs)
-            try:
-                r_json = r.json()
-            except ValueError as e:
-                raise PanCloudError('Invalid JSON: %s' % e)
 
             if not (200 <= r.status_code < 300):
+                try:
+                    r_json = r.json()
+                except ValueError as e:
+                    raise PanCloudError('Invalid JSON: %s' % e)
                 if 'errorCode' in r_json and 'errorMessage' in r_json:
                     raise PanCloudError('%s: %s' %
                                         (r_json['errorCode'],
