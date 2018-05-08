@@ -21,7 +21,7 @@ try:
     refresh_token = getpass.getpass(prompt="REFRESH_TOKEN: ")
     print("Generating credentials file...")
     c = Credentials(client_id=client_id, client_secret=client_secret,
-                    refresh_token=refresh_token, profile="TEST")
+                    refresh_token=refresh_token)
     c.write_credentials()
     print("Done!\n")
 except KeyboardInterrupt:
