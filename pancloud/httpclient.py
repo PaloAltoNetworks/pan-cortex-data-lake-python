@@ -29,7 +29,7 @@ class HTTPClient(object):
         granular performance and reliability tuning.
 
         Parameters:
-            enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.HTTPError`. Defaults to ``False``.
+            enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.PanCloudError`. Defaults to ``False``.
             port (int): TCP port to append to URL. Defaults to ``443``.
             raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
             url (str): URL to send API requests to - gets combined with ``port`` and :meth:`~request` ``path`` parameter. Defaults to ``None``.
@@ -81,7 +81,8 @@ class HTTPClient(object):
             self.session.mount('http://', self.adapter)
 
             # Non-Requests key-word arguments
-            self.auto_refresh = kwargs.pop('auto_refresh', False)
+            self.auto_refresh = kwargs.pop('auto_refresh', True)
+            self.auto_retry = kwargs.pop('auto_retry', True)
             self.credentials = kwargs.pop('credentials', None)
             self.enforce_json = kwargs.pop(
                 'enforce_json', False
@@ -119,11 +120,54 @@ class HTTPClient(object):
 
     @staticmethod
     def _apply_credentials(headers, credentials):
+        """Update Authorization header.
+
+        Update request headers with latest `access_token`. Perform token
+        `refresh` if token is ``None``.
+
+        Args:
+            headers (dict): Request headers.
+            credentials (class): Read-only credentials.
+
+        Returns:
+            dict: Updated request headers.
+
+        """
         token = credentials.get_credentials().access_token
         if token is None:
             token = credentials.refresh(access_token=None, timeout=10)
         headers['Authorization'] = "Bearer {}".format(token)
         return headers
+
+    def _send_request(self, enforce_json, method, raise_for_status,
+                      url, **kwargs):
+        """Send HTTP request.
+
+        Args:
+             enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.PanCloudError`. Defaults to ``False``.
+             method (str): HTTP method.
+             raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
+             url (str): Request URL.
+             **kwargs (dict): Re-packed key-word arguments.
+
+         Returns:
+            requests.Response: Requests Response() object
+
+        """
+        r = self.session.request(method, url, **kwargs)
+        if raise_for_status:
+            r.raise_for_status()
+        if enforce_json:
+            if 'application/json' in self.session.headers.get(
+                'Accept', ''
+            ):
+                try:
+                    r.json()
+                except ValueError as e:
+                    raise PanCloudError(
+                        "Invalid JSON: {}".format(e)
+                    )
+        return r
 
     def request(self, **kwargs):
         """Generate HTTP request using given parameters.
@@ -158,7 +202,8 @@ class HTTPClient(object):
         verify = kwargs.pop('verify', None)
 
         # Non-Requests key-word arguments
-        auto_refresh = kwargs.pop('auto_refresh', False)
+        auto_refresh = kwargs.pop('auto_refresh', None) or self.auto_refresh
+        auto_retry = kwargs.pop('auto_retry', None) or self.auto_retry
         credentials = kwargs.pop(
             'credentials', None) or self.credentials
         enforce_json = kwargs.pop('enforce_json', self.enforce_json)
@@ -208,23 +253,21 @@ class HTTPClient(object):
 
         # Prepare and send the Request() and return Response()
         try:
-            r = self.session.request(method, url, **k)
-            if raise_for_status:
-                r.raise_for_status()
-            if enforce_json:
-                if 'application/json' in self.session.headers.get(
-                    'Accept', ''
-                ):
-                    try:
-                        r.json()
-                    except ValueError as e:
-                        raise PanCloudError(
-                            "Invalid JSON: {}".format(e)
-                        )
-            if credentials and auto_refresh:
-                if r.status_code == 401:
+            r = self._send_request(
+                enforce_json, method, raise_for_status, url, **k
+            )
+            if r.status_code == 401:
+                if credentials and auto_refresh:
                     token = credentials.get_credentials().access_token
                     credentials.refresh(access_token=token, timeout=10)
+                    h = self._apply_credentials(
+                        k['headers'], credentials)
+                    k['headers'] = h
+                    if auto_retry:
+                        r = self._send_request(
+                            enforce_json, method, raise_for_status, url,
+                            **k
+                        )
             return r
         except requests.RequestException as e:
             raise HTTPError(e)
