@@ -42,8 +42,8 @@ except ImportError:
 libpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(libpath, os.pardir)]
 
-from pancloud import HTTPClient, LoggingService, EventService, \
-    DirectorySyncService, __version__
+from pancloud import Credentials, HTTPClient, LoggingService, \
+    EventService, DirectorySyncService, __version__
 
 INDENT = 2
 LOGGING_SERVICE_EPOCH = 1504224000  # 2017-09-01T00:00:00+00:00
@@ -70,21 +70,74 @@ def main():
               file=sys.stderr)
         sys.exit(1)
 
+    if options['credentials']:
+        credentials_ = credentials(options)
+    else:
+        credentials_ = None
+
+    if options['http_client']:
+        httpclient_ = httpclient(options, credentials_)
+    else:
+        httpclient_ = None
+
     if options['logging_api']:
-        logging(options)
+        logging(options, httpclient_)
 
     if options['event_api']:
         if options['id'] is None:
             options['id'] = DEFAULT_EVENT_CHANNEL_ID
-        event(options)
+        event(options, httpclient_)
 
     if options['directory_sync_api']:
-        directory_sync(options)
+        directory_sync(options, httpclient_)
 
     sys.exit(0)
 
 
-def logging(options):
+def credentials(options):
+    def write_credentials(c, options):
+        action = inspect.stack()[0][3]
+        k = 'Credentials:write'
+
+        R = options['R']
+        try:
+            c.write_credentials(**R['R2_obj'][k])
+        except Exception as e:
+            print_exception(action, e)
+            sys.exit(1)
+
+    action = inspect.stack()[0][3]
+    k = 'Credentials'
+
+    R = options['R']
+    try:
+        x = Credentials(**R['R0_obj'][k])
+    except Exception as e:
+        print_exception(action, e)
+        sys.exit(1)
+
+    if options['write']:
+        write_credentials(x, options)
+
+    return x
+
+
+def httpclient(options, c):
+    action = inspect.stack()[0][3]
+    k = 'HTTPClient'
+
+    R = options['R']
+    try:
+        x = HTTPClient(credentials=c,
+                       **R['R0_obj'][k])
+    except Exception as e:
+        print_exception(action, e)
+        sys.exit(1)
+
+    return x
+
+
+def logging(options, session):
     def query(api, options):
         action = inspect.stack()[0][3]
         k = 'LoggingService:query'
@@ -171,14 +224,10 @@ def logging(options):
     action = inspect.stack()[0][3]
     k = 'LoggingService'
 
+    R = options['R']
     try:
-        R = options['R']
-        if options['http_client']:
-            session = HTTPClient(**R['R0_obj']['HTTPClient'])
-            api = LoggingService(session=session,
-                                 **R['R0_obj'][k])
-        else:
-            api = LoggingService(**R['R0_obj'][k])
+        api = LoggingService(session=session,
+                             **R['R0_obj'][k])
     except Exception as e:
         print_exception(action, e)
         sys.exit(1)
@@ -205,7 +254,7 @@ def logging(options):
         write(api, options)
 
 
-def event(options):
+def event(options, session):
     def generic(api, options, func, action, k):
         R = options['R']
         try:
@@ -286,14 +335,10 @@ def event(options):
     action = inspect.stack()[0][3]
     k = 'EventService'
 
+    R = options['R']
     try:
-        R = options['R']
-        if options['http_client']:
-            session = HTTPClient(**R['R0_obj']['HTTPClient'])
-            api = EventService(session=session,
-                               **R['R0_obj'][k])
-        else:
-            api = EventService(**R['R0_obj'][k])
+        api = EventService(session=session,
+                           **R['R0_obj'][k])
     except Exception as e:
         print_exception(action, e)
         sys.exit(1)
@@ -323,7 +368,7 @@ def event(options):
         nack(api, options)
 
 
-def directory_sync(options):
+def directory_sync(options, session):
     def generic(api, options, func, action, k):
         R = options['R']
         try:
@@ -383,14 +428,10 @@ def directory_sync(options):
     action = inspect.stack()[0][3]
     k = 'DirectorySyncService'
 
+    R = options['R']
     try:
-        R = options['R']
-        if options['http_client']:
-            session = HTTPClient(**R['R0_obj']['HTTPClient'])
-            api = DirectorySyncService(session=session,
-                                       **R['R0_obj'][k])
-        else:
-            api = DirectorySyncService(**R['R0_obj'][k])
+        api = DirectorySyncService(session=session,
+                                   **R['R0_obj'][k])
     except Exception as e:
         print_exception(action, e)
         sys.exit(1)
@@ -666,6 +707,7 @@ def parse_opts():
     options_R = {
         # class init **kwargs
         'R0': {
+            'Credentials': [],
             'HTTPClient': [],
             'LoggingService': [],
             'EventService': [],
@@ -687,6 +729,8 @@ def parse_opts():
         },
         # class method **kwargs
         'R2': {
+            'Credentials:write': [],
+
             'LoggingService:delete': [],
             'LoggingService:poll': [],
             'LoggingService:xpoll': [],
@@ -709,6 +753,7 @@ def parse_opts():
 
     options = {
         'R': options_R,
+        'credentials': False,
         'http_client': False,
         'logging_api': False,
         'directory_sync_api': False,
@@ -755,7 +800,7 @@ def parse_opts():
                       file=sys.stderr)
                 sys.exit(1)
 
-    short_options = 'HLDEJ:pj'
+    short_options = 'CHLDEJ:pj'
     long_options = [
         'delete', 'poll', 'xpoll', 'query', 'write',
         'start=', 'end=',
@@ -780,6 +825,9 @@ def parse_opts():
     for opt, arg in opts:
         if False:
             pass
+        elif opt == '-C':
+            options['credentials'] = True
+            last_c = 'Credentials'
         elif opt == '-H':
             options['http_client'] = True
             last_c = 'HTTPClient'
@@ -875,7 +923,7 @@ def parse_opts():
             assert False, 'unhandled option %s' % opt
 
     headers = None
-    if 'ACCESS_TOKEN' in os.environ:
+    if not options['credentials'] and 'ACCESS_TOKEN' in os.environ:
         headers = {
             'Authorization': 'Bearer %s' % os.environ['ACCESS_TOKEN'],
             'Content-Type': 'application/json',
@@ -930,6 +978,8 @@ def usage():
       --attributes        get directory attributes
       --id class          objectClass
     -H                    use HTTPClient() session
+    -C                    use Credentials() class
+      --write             write_credentials() method
     --R0 json             class constructor args (**kwargs)
     --R1 json             class method body/QUERY_STRING (data/params)
     --R2 json             class method args (**kwargs)
