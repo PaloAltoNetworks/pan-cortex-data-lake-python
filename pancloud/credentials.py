@@ -79,6 +79,10 @@ class Credentials(object):
         self.token_lock = Lock()
         self.token_url = token_url or TOKEN_URL
         self.token_revoke_url = token_revoke_url or REVOKE_URL
+        if not os.path.exists(os.path.join(
+            os.path.expanduser('~'), '.config')
+        ):
+            os.mkdir(os.path.join(os.path.expanduser('~'), '.config'))
         if not os.path.exists(os.path.dirname(self.path)):
             os.mkdir(os.path.dirname(self.path))
         self.db = TinyDB(self.path, sort_keys=True, indent=4,
@@ -353,6 +357,8 @@ class Credentials(object):
             int: Result of operation.
 
         """
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         c = self.get_credentials()
         credentials = {
             'profile': self.profile,
