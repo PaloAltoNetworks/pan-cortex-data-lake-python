@@ -65,11 +65,9 @@ class Credentials(object):
         self.auth_base_url = auth_base_url or BASE_URL
         self.client_id_ = client_id
         self.client_secret_ = client_secret
-        self.db_lock = RLock()
+        self.store_lock = RLock()
         self.environ = os.environ
         self.instance_id = instance_id
-        self.path = os.path.join(os.path.expanduser('~'), '.config',
-                                 'pancloud', 'credentials.json')
         self.profile = profile or 'default'
         self.redirect_uri = redirect_uri
         self.region = region
@@ -79,13 +77,7 @@ class Credentials(object):
         self.token_lock = Lock()
         self.token_url = token_url or TOKEN_URL
         self.token_revoke_url = token_revoke_url or REVOKE_URL
-        if not os.path.exists(os.path.dirname(self.path)):
-            try:
-                os.makedirs(os.path.dirname(self.path), 0o700)
-            except OSError as e:
-                raise PanCloudError("{}".format(e))
-        self.db = TinyDB(self.path, sort_keys=True, indent=4,
-                         default_table='profiles')
+        self.store = self._init_store()
         self.query = Query()
         with requests.Session() as self.session:
             self.session.auth = kwargs.pop('auth', self.session.auth)
@@ -126,6 +118,22 @@ class Credentials(object):
         return self.refresh_token_ or \
                self._resolve_credential('refresh_token')
 
+    @staticmethod
+    def _init_store():
+        path = os.path.join(
+            os.path.expanduser('~'), '.config', 'pancloud',
+            'credentials.json'
+        )
+        if not os.path.exists(os.path.dirname(path)):
+            try:
+                os.makedirs(os.path.dirname(path), 0o700)
+            except OSError as e:
+                raise PanCloudError("{}".format(e))
+        return TinyDB(
+            path, sort_keys=True, indent=4,
+            default_table='profiles'
+        )
+
     def _fetch_credential(self, credential):
         """Fetch credential from credentials file.
 
@@ -136,7 +144,7 @@ class Credentials(object):
             str, None: Fetched credential or ``None``.
 
         """
-        q = self.db.search(self.query.profile == self.profile)
+        q = self.store.search(self.query.profile == self.profile)
         try:
             return q[0].get(credential, '')
         except (AttributeError, ValueError, IndexError):
@@ -260,8 +268,8 @@ class Credentials(object):
             int: Result of operation.
 
         """
-        with self.db_lock:
-            return self.db.remove(self.query.profile == profile)
+        with self.store_lock:
+            return self.store.remove(self.query.profile == profile)
 
     def refresh(self, timeout=None, access_token=None):
         """Refresh access token and renew refresh token.
@@ -363,8 +371,8 @@ class Credentials(object):
             'client_secret': self.client_secret_ or c.client_secret,
             'refresh_token': self.refresh_token_ or c.refresh_token
         }
-        with self.db_lock:
-            return self.db.upsert(
+        with self.store_lock:
+            return self.store.upsert(
                 credentials, self.query.profile == self.profile
             )
 
