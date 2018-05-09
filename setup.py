@@ -38,7 +38,7 @@ test_requirements = [
 
 setup(
     name='pancloud',
-    version='1.0.3',
+    version='1.1.0',
     description="Python idiomatic SDK for the Palo Alto Networks Application Framework.",
     long_description=readme + '\n\n' + history,
     author="Steven Serrata",
@@ -64,4 +64,7 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     setup_requires=setup_requirements,
+    scripts=[
+        'bin/summit.py'
+    ]
 )
