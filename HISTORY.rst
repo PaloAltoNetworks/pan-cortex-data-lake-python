@@ -16,7 +16,7 @@ History
 * Removed logging `poll_all()` method and example script.
 * Now checking if `sequence_no` is `None` before incrementing in logging `iter_poll()` method.
 * Added event `xpoll()` method to support iterating through events.
-* Introducing `summit.py`, and command-line interface for `pancloud` repo (future plans to copy to PATH).
+* Introducing `summit.py`, a command-line interface for `pancloud`.
 * Added `credentials` support to `summit.py` to enable writing `credentials.json` file and passing `Credentials` with requests.
 * Updated example scripts library to incorporate new credentials feature.
 
@@ -49,5 +49,3 @@ History
 ------------------
 
 * First release.
-
-
