@@ -30,8 +30,8 @@ class Credentials(object):
 
     def __init__(self, auth_base_url=None, client_id=None, client_secret=None,
                  instance_id=None, profile=None, redirect_uri=None,
-                 region=None, refresh_token=None, scope=None, token_url=None,
-                 token_revoke_url=None, **kwargs):
+                 region=None, refresh_token=None, scope=None, timeout=None,
+                 token_url=None, token_revoke_url=None, **kwargs):
         """Persist Session() and credentials attributes.
 
         Built on top of the ``Requests`` library, ``Credentials`` is an
@@ -56,6 +56,7 @@ class Credentials(object):
             region (str): Region. Defaults to ``None``.
             refresh_token (str): OAuth2 refresh token. Defaults to ``None``.
             scope (str): OAuth2 scope. Defaults to ``None``.
+            timeout (float or tuple): Connect/read timeout in seconds as float or (connect timeout, read timeout) tuple.
             token_url (str): Refresh URL. Defaults to ``None``.
             token_revoke_url (str): Revoke URL. Defaults to ``None``.
             **kwargs: Supported :class:`~requests.Session` parameters.
@@ -74,6 +75,7 @@ class Credentials(object):
         self.refresh_token_ = refresh_token
         self.scope = scope
         self.state = uuid.uuid4()
+        self.timeout = timeout
         self.token_lock = Lock()
         self.token_url = token_url or TOKEN_URL
         self.token_revoke_url = token_revoke_url or REVOKE_URL
@@ -271,11 +273,10 @@ class Credentials(object):
         with self.store_lock:
             return self.store.remove(self.query.profile == profile)
 
-    def refresh(self, timeout=None, access_token=None):
+    def refresh(self, access_token=None):
         """Refresh access token and renew refresh token.
 
         Args:
-            timeout (int): HTTP timeout. Defaults to ``None``.
             access_token (str): Access token to refresh. Defaults to ``None``.
 
         Returns:
@@ -294,7 +295,7 @@ class Credentials(object):
                                 'client_secret': c.client_secret,
                                 'refresh_token': c.refresh_token,
                             },
-                            timeout=timeout
+                            timeout=self.timeout
                         )
                         if not r.ok:
                             raise PanCloudError(
@@ -319,7 +320,7 @@ class Credentials(object):
                             "Missing one or more required credentials"
                         )
 
-    def revoke_access_token(self, timeout=None):
+    def revoke_access_token(self):
         """Revoke access token."""
         c = self.get_credentials()
         r = self.session.post(
@@ -330,14 +331,14 @@ class Credentials(object):
                 'token': c.access_token,
                 'token_type_hint': 'access_token'
             },
-            timeout=timeout
+            timeout=self.timeout
         )
         if not r.ok:
             raise PanCloudError(
                 '%s %s: %s' % (r.status_code, r.reason, r.text)
             )
 
-    def revoke_refresh_token(self, timeout=None):
+    def revoke_refresh_token(self):
         """Revoke refresh token."""
         c = self.get_credentials()
         r = self.session.post(
@@ -348,7 +349,7 @@ class Credentials(object):
                 'token': c.refresh_token,
                 'token_type_hint': 'refresh_token'
             },
-            timeout=timeout
+            timeout=self.timeout
         )
         if not r.ok:
             raise PanCloudError(
