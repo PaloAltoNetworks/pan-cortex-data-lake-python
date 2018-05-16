@@ -37,6 +37,29 @@ Logging Service
     :undoc-members:
     :show-inheritance:
 
+Credentials
+-----------
+
+.. automodule:: pancloud.credentials
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Storage Adapter
+---------------
+
+.. automodule:: pancloud.adapters.adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+TinyDB Store
+------------
+
+.. automodule:: pancloud.adapters.tinydb_adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Exceptions
 ----------

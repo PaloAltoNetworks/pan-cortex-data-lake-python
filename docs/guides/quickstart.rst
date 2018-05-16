@@ -12,20 +12,18 @@ Let's start with a basic example.
 Querying Logging Service
 ------------------------
 
-(example below assumes an ``ACCESS_TOKEN`` has been properly :ref:`exported <credentials>`)
+(example below assumes a ``credentials.json`` file has been properly :ref:`generated <credentials>`)
 
-Start by importing :class:`~pancloud.logging.LoggingService`::
+Start by importing :class:`~pancloud.logging.LoggingService` and :class:`~pancloud.credentials.Credentials`::
 
     >>> from pancloud import LoggingService
+    >>> from pancloud import Credentials
 
 Next, let's construct a :class:`~pancloud.logging.LoggingService` instance::
 
     >>> ls = LoggingService(
     >>>     url="https://api.us.paloaltonetoworks.com",
-    >>>     headers={
-    >>>        'Authorization': 'Bearer {}'.format(access_token),
-    >>>        "Content-Type": "application/json",
-    >>>        "Accept": "application/json"
+    >>>     credentials=Credentials()
     >>>    }
     >>> )
 
@@ -73,11 +71,7 @@ What if you want to strictly enforce proper JSON encoding?
 
     >>> ls = LoggingService(
     >>>     url="https://api.us.paloaltonetoworks.com",
-    >>>     headers={
-    >>>        'Authorization': 'Bearer {}'.format(access_token),
-    >>>        "Content-Type": "application/json",
-    >>>        "Accept": "application/json"
-    >>>     },
+    >>>     credentials=Credentials(),
     >>>     enforce_json=True
     >>> )
 
@@ -91,11 +85,7 @@ you can tell ``pancloud`` to raise a :exc:`~pancloud.exceptions.HTTPError` excep
 
     >>> ls = LoggingService(
     >>>     url="https://api.us.paloaltonetoworks.com",
-    >>>     headers={
-    >>>        'Authorization': 'Bearer {}'.format(access_token),
-    >>>        "Content-Type": "application/json",
-    >>>        "Accept": "application/json"
-    >>>     },
+    >>>     credentials=Credentials(),
     >>>     raise_for_status=True
     >>> )
 
