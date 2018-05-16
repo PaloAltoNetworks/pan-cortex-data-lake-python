@@ -17,6 +17,7 @@ pytest-runner = ">=\"2.11.1\""
 [packages]
 requests = "*"
 tinydb = "*"
+six = "*"
 
 [requires]
 python_version = "3.6"
