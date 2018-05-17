@@ -4,7 +4,6 @@
 """Palo Alto Networks Cloud Python SDK setup script."""
 
 from setuptools import setup, find_packages
-import socket
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -12,21 +11,8 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-if hasattr(socket, 'ssl'):
-    requirements = [
-        'requests',
-        'requests-oauthlib',
-        'cffi',
-        'cryptography'
-    ]
-else:
-    requirements = [
-        'requests',
-        'requests-oauthlib',
-        'pyopenssl',
-        'cffi',
-        'cryptography'
-    ]
+with open('requirements.txt') as requirements_file:
+    requirements = requirements_file.read().splitlines()
 
 setup_requirements = [
     'pytest-runner'
