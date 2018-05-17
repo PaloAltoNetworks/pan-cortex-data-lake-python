@@ -5,11 +5,11 @@ from __future__ import absolute_import
 
 from abc import ABCMeta, abstractmethod
 
-
+# Python 2.7 and 3.5+ compatibility
 ABC = ABCMeta('ABC', (object,), {'__slots__': ()})
 
 
-class StorageAdapter(ABC):
+class StorageAdapter(ABC):  # enforce StorageAdapter interface
     """A storage adapter abstract base class."""
 
     @abstractmethod
