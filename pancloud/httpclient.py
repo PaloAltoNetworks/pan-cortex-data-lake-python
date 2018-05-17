@@ -271,4 +271,3 @@ class HTTPClient(object):
             return r
         except requests.RequestException as e:
             raise HTTPError(e)
-
