@@ -4,11 +4,12 @@
 from __future__ import absolute_import
 
 from abc import ABCMeta, abstractmethod
-import six
 
 
-@six.add_metaclass(ABCMeta)
-class StorageAdapter:
+ABC = ABCMeta('ABC', (object,), {'__slots__': ()})
+
+
+class StorageAdapter(ABC):
     """A storage adapter abstract base class."""
 
     @abstractmethod
