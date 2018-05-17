@@ -17,8 +17,8 @@ Obtaining and Using Tokens
 --------------------------
 
 Work with your Developer Relations representative to register your
-application and receive the credentials needed to obtain an ``ACCESS_TOKEN``.
-You'll need a ``CLIENT_ID``, ``CLIENT_SECRET``, and ``REFRESH_TOKEN``.
+application and receive the credentials needed to obtain an ``access_token``.
+You'll need a ``client_id``, ``client_secret``, and ``refresh_token``.
 ``API Explorer`` may optionally be used to obtain these credentials.
 
 Once acquired, you can generate a ``credentials.json`` file using the
@@ -47,8 +47,8 @@ credentials_generate.py:
 
     $ ./credentials_generate.py
 
-    Note: The script will prompt for CLIENT_ID, CLIENT_SECRET
-    and REFRESH_TOKEN.
+    Note: The script will prompt for ``client_id``, ``client_secret``
+    and ``refresh_token``.
 
 
 Once your ``credentials.json`` file is generated, you should be ready
@@ -69,9 +69,9 @@ is outlined below:
     * CLIENT_ID
     * CLIENT_SECRET
 * Credentials file (~/.config/pancloud/credentials.json)
-    * REFRESH_TOKEN
-    * CLIENT_ID
-    * CLIENT_SECRET
+    * ``refresh_token``
+    * ``client_id``
+    * ``client_secret``
 
 Note: The ``Credentials`` object supports ``profiles`` which can be
 used to conveniently switch between developer environments.
@@ -81,7 +81,7 @@ Auto-refresh/Auto-retry
 By default, ``Credentials`` supports ``auto_refresh`` and ``auto_retry``
 when valid credentials are present.
 
-``pancloud`` will auto-refresh and apply the ``accesss token`` to the
+``pancloud`` will auto-refresh and apply the ``access_token`` to the
 ``"Authorization: Bearer"`` header under the following conditions:
 
 * ``auto_refresh`` is set to ``True``.
@@ -94,13 +94,13 @@ Additionally, ``pancloud`` will ``auto_retry`` a request if an
 Access Token Caching
 --------------------
 By default, ``Credentials`` supports caching ``access tokens`` by writing the
-most recent ``access token`` to the credentials store. The desired effect
+most recent ``access_token`` to the credentials store. The desired effect
 of caching ``access tokens`` is to limit the number of times a token
 refresh is required.
 
 For example, if your application implements concurrency,
 there might be situations where a burst of activity leads to multiple clients
-requesting a token refresh. By caching the ``access token``, ``pancloud``
+requesting a token refresh. By caching the ``access_token``, ``pancloud``
 can instruct these clients to check the credentials store first, before
 attempting to communicate with the token endpoint to perform a refresh.
 
