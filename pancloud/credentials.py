@@ -121,16 +121,16 @@ class Credentials(object):
                self._resolve_credential('refresh_token')
 
     def _init_adapter(self):
-        module_path = self.adapter.rsplit('.', 1)[0]  # extracts 'pancloud.adapters' from 'pancloud.adapters.TinyDBStore'
-        adapter = self.adapter.split('.')[-1]  # extracts 'TinyDBStore' from 'pancloud.adapters.TinyDBStore'
+        module_path = self.adapter.rsplit('.', 1)[0]
+        adapter = self.adapter.split('.')[-1]
         try:
-            __import__(module_path)  # similar to 'import pancloud.adapters' using "dunder" method
+            __import__(module_path)
         except ImportError as e:
             raise PanCloudError('Module import error: %s: %s' %
                                 (module_path, e))
 
         try:
-            class_ = getattr(sys.modules[module_path], adapter)  # gets module attribute 'TinyDBStore', similar to 'from pancloud.adapters import TinyDBStore'
+            class_ = getattr(sys.modules[module_path], adapter)
         except AttributeError:
             raise PanCloudError('Class not found: %s' % adapter)
 
