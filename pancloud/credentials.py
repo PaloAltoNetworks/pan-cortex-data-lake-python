@@ -65,7 +65,7 @@ class Credentials(object):
         """
         self.access_token_ = None
         self.auth_base_url = auth_base_url or BASE_URL
-        self.cache_token = cache_token
+        self.cache_token_ = cache_token
         self.client_id_ = client_id
         self.client_secret_ = client_secret
         self.environ = os.environ
@@ -104,6 +104,10 @@ class Credentials(object):
     @property
     def access_token(self):
         return self.access_token_
+
+    @property
+    def cache_token(self):
+        return self.cache_token_
 
     @property
     def client_id(self):
@@ -235,7 +239,11 @@ class Credentials(object):
             class: Read-only credentials.
 
         """
-        access_token = self.access_token_
+        if self.cache_token:
+            access_token = self._resolve_credential(
+                'access_token') or self.access_token_
+        else:
+            access_token = self.access_token_
         client_id = self.client_id_ or self._resolve_credential(
             'client_id')
         client_secret = self.client_secret_ or self._resolve_credential(
@@ -355,6 +363,6 @@ class Credentials(object):
         c = self.get_credentials()
         return self.storage().write_credentials(
             credentials=c, profile=self.profile,
-            cache_token=self.cache_token
+            cache_token=self.cache_token_
         )
 
