@@ -269,7 +269,7 @@ class LoggingService(object):
 
             self._debug('hits: %d', len(hits))
             for x in hits:
-                yield x['_source']
+                yield x
 
             if r_json['queryStatus'] == 'JOB_FINISHED':
                 if delete_query:
