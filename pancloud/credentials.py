@@ -75,7 +75,8 @@ class Credentials(object):
         self.refresh_token_ = refresh_token
         self.scope = scope
         self.state = uuid.uuid4()
-        self.adapter = storage_adapter or 'pancloud.adapters.TinyDBStore'
+        self.adapter = storage_adapter or \
+                       'pancloud.adapters.tinydb_adapter.TinyDBStore'
         self.storage = self._init_adapter()
         self.token_lock = Lock()
         self.token_url = token_url or TOKEN_URL
