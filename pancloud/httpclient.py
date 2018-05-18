@@ -253,11 +253,6 @@ class HTTPClient(object):
 
         # Prepare and send the Request() and return Response()
         try:
-            if credentials:
-                if credentials.cache_token:
-                    h = self._apply_credentials(
-                        k['headers'], credentials)
-                    k['headers'] = h
             r = self._send_request(
                 enforce_json, method, raise_for_status, url, **k
             )
