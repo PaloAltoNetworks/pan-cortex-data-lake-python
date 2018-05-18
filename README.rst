@@ -79,7 +79,7 @@ OAuth 2.0 and fetch tokens.
 
 For more information visit the following RTD page::
 
-    https://pancloud.readthedocs.io/en/latest/guides/credentials.html
+https://pancloud.readthedocs.io/en/latest/guides/credentials.html
 
 Example
 -------
