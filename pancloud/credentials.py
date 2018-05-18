@@ -4,12 +4,12 @@
 from __future__ import absolute_import
 
 import os
+import sys
 import uuid
 from collections import namedtuple
-from threading import Lock, RLock
+from threading import Lock
 
 import requests
-from tinydb import TinyDB, Query
 
 from .exceptions import UnexpectedKwargsError, PanCloudError, \
     PartialCredentialsError
@@ -30,8 +30,9 @@ class Credentials(object):
 
     def __init__(self, auth_base_url=None, client_id=None, client_secret=None,
                  instance_id=None, profile=None, redirect_uri=None,
-                 region=None, refresh_token=None, scope=None, token_url=None,
-                 token_revoke_url=None, **kwargs):
+                 region=None, refresh_token=None, scope=None,
+                 storage_adapter=None, token_url=None, token_revoke_url=None,
+                 **kwargs):
         """Persist Session() and credentials attributes.
 
         Built on top of the ``Requests`` library, ``Credentials`` is an
@@ -44,10 +45,11 @@ class Credentials(object):
             1) Service object
             2) HTTPClient session
             3) Environment variables
-            4) Credentials file
+            4) Credentials file/token store
 
         Args:
             auth_base_url (str): IdP base authorization URL. Default to ``None``.
+            cache_token (bool): If ``True``, stores ``access_token`` in token store. Defaults to ``True``.
             client_id (str): OAuth2 client ID. Defaults to ``None``.
             client_secret (str): OAuth2 client secret. Defaults to ``None``.
             instance_id (str): Instance ID. Defaults to ``None``.
@@ -65,28 +67,20 @@ class Credentials(object):
         self.auth_base_url = auth_base_url or BASE_URL
         self.client_id_ = client_id
         self.client_secret_ = client_secret
-        self.db_lock = RLock()
         self.environ = os.environ
         self.instance_id = instance_id
-        self.path = os.path.join(os.path.expanduser('~'), '.config',
-                                 'pancloud', 'credentials.json')
         self.profile = profile or 'default'
         self.redirect_uri = redirect_uri
         self.region = region
         self.refresh_token_ = refresh_token
         self.scope = scope
         self.state = uuid.uuid4()
+        self.adapter = storage_adapter or \
+                       'pancloud.adapters.tinydb_adapter.TinyDBStore'
+        self.storage = self._init_adapter()
         self.token_lock = Lock()
         self.token_url = token_url or TOKEN_URL
         self.token_revoke_url = token_revoke_url or REVOKE_URL
-        if not os.path.exists(os.path.dirname(self.path)):
-            try:
-                os.makedirs(os.path.dirname(self.path), 0o700)
-            except OSError as e:
-                raise PanCloudError("{}".format(e))
-        self.db = TinyDB(self.path, sort_keys=True, indent=4,
-                         default_table='profiles')
-        self.query = Query()
         with requests.Session() as self.session:
             self.session.auth = kwargs.pop('auth', self.session.auth)
             self.session.cert = kwargs.pop('cert', self.session.cert)
@@ -130,21 +124,21 @@ class Credentials(object):
         return self.refresh_token_ or \
                self._resolve_credential('refresh_token')
 
-    def _fetch_credential(self, credential):
-        """Fetch credential from credentials file.
-
-        Args:
-            credential (str): Credential to fetch.
-
-        Returns:
-            str, None: Fetched credential or ``None``.
-
-        """
-        q = self.db.search(self.query.profile == self.profile)
+    def _init_adapter(self):
+        module_path = self.adapter.rsplit('.', 1)[0]
+        adapter = self.adapter.split('.')[-1]
         try:
-            return q[0].get(credential, '')
-        except (AttributeError, ValueError, IndexError):
-            return
+            __import__(module_path)
+        except ImportError as e:
+            raise PanCloudError('Module import error: %s: %s' %
+                                (module_path, e))
+
+        try:
+            class_ = getattr(sys.modules[module_path], adapter)
+        except AttributeError:
+            raise PanCloudError('Class not found: %s' % adapter)
+
+        return class_  # Returns 'TinyDBStore' as class
 
     def _resolve_credential(self, credential):
         """Resolve credential from environ or credentials file.
@@ -157,7 +151,9 @@ class Credentials(object):
 
         """
         return os.getenv(credential.upper()) \
-            or self._fetch_credential(credential)
+            or self.storage().fetch_credential(
+            credential=credential, profile=self.profile
+        )
 
     def fetch_tokens(self, code=None, redirect_uri=None):
         """Fetch tokens from token URL.
@@ -264,8 +260,7 @@ class Credentials(object):
             int: Result of operation.
 
         """
-        with self.db_lock:
-            return self.db.remove(self.query.profile == profile)
+        return self.storage().remove_profile(profile=profile)
 
     def refresh(self, timeout=None, access_token=None):
         """Refresh access token and renew refresh token.
@@ -309,6 +304,7 @@ class Credentials(object):
                                 'error'
                             ):
                                 raise PanCloudError(r.text)
+                            self.write_credentials()
                         return self.access_token_
                     else:
                         raise PartialCredentialsError(
@@ -361,14 +357,6 @@ class Credentials(object):
 
         """
         c = self.get_credentials()
-        credentials = {
-            'profile': self.profile,
-            'client_id': self.client_id_ or c.client_id,
-            'client_secret': self.client_secret_ or c.client_secret,
-            'refresh_token': self.refresh_token_ or c.refresh_token
-        }
-        with self.db_lock:
-            return self.db.upsert(
-                credentials, self.query.profile == self.profile
-            )
-
+        return self.storage().write_credentials(
+            credentials=c, profile=self.profile
+        )
