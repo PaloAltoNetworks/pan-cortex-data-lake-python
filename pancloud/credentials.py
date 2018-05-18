@@ -355,4 +355,3 @@ class Credentials(object):
         return self.storage().write_credentials(
             credentials=c, profile=self.profile
         )
-
