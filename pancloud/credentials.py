@@ -103,20 +103,24 @@ class Credentials(object):
 
     @property
     def access_token(self):
+        """Get access_token"""
         return self.access_token_
 
     @property
     def client_id(self):
+        """Get client_id"""
         return self.client_id_ or \
                self._resolve_credential('client_id')
 
     @property
     def client_secret(self):
+        """Get client_secret"""
         return self.client_secret_ or \
                self._resolve_credential('client_secret')
 
     @property
     def refresh_token(self):
+        """Get refresh_token"""
         return self.refresh_token_ or \
                self._resolve_credential('refresh_token')
 

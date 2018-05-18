@@ -14,8 +14,9 @@ Release v\ |version|. (:ref:`Installation <installation>`)
 Welcome to pancloud's documentation!
 ====================================
 
-The Palo Alto Networks Cloud Python SDK, or ``pancloud``, was created to assist 3rd-party developers with
-programmatically interacting with the various APIs implemented by the Palo Alto Networks Application Framework.
+The Palo Alto Networks Cloud Python SDK, or ``pancloud``, was created to assist developers with
+programmatically interacting with the Palo Alto Networks Application Framework.
+
 The primary goal is to provide full, low-level API coverage for the following Application Framework services:
 
     - Logging Service
@@ -24,18 +25,18 @@ The primary goal is to provide full, low-level API coverage for the following Ap
 
 The secondary goal is to provide coverage, in the form of helpers, for common tasks/operations.
 
-    - Log pagination
-    - OAuth and token refreshing
-    - Response validation
-    - Log schema enforcement
+    - Log/event pagination
+    - OAuth 2.0 and token refreshing
     - More, coming soon.
 
 * Free software: ISC license
 
-User Guide
-----------
+The User Guide
+--------------
 
-Instructions for how to leverage ``pancloud`` in your Application Framework developer projects.
+Instructions for how to get started using ``pancloud`` and some additional
+background on how ``Credentials`` works. You'll also find a few blurbs on how
+to install and contribute to ``pancloud``, as well as the version history.
 
 .. toctree::
    :maxdepth: 2
@@ -46,15 +47,19 @@ Instructions for how to leverage ``pancloud`` in your Application Framework deve
    history
    contributing
 
-API Reference
--------------
+The API Reference Guide
+-----------------------
+
+Explore ``pancloud's`` API to learn more about the various classes, methods,
+modules and functions you can leverage in your developer projects.
+
 .. toctree::
    :maxdepth: 2
 
    source/pancloud
 
-Indices and tables
-==================
+Indices and Tables
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
