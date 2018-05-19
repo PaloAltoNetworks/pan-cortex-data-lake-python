@@ -160,8 +160,11 @@ def logging(options, session):
             sys.exit(1)
 
         print_status(action, r, options)
-        print_response(r, options)
+        json_ = print_response(r, options)
         exit_for_http_status(r)
+
+        if json_ is not None and options['id'] is None and 'queryId' in json_:
+            options['id'] = json_['queryId']
 
     def poll(api, options):
         action = inspect.stack()[0][3]
@@ -575,6 +578,7 @@ def print_response(r, options):
             sys.exit(1)
 
         print_response_body(options, obj)
+        return obj
     else:
         print('WARNING: Response Content-Type:', x, file=sys.stderr)
 
@@ -807,7 +811,7 @@ def parse_opts():
         'id=', 'seq=',
         'set', 'get', 'ack', 'nack', 'follow',
         'count', 'domains', 'attributes',
-        'R0=', 'R1=', 'R2=', 'R3=',
+        'R0=', 'R1=', 'R2=',
         'debug=', 'version', 'help',
     ]
 
