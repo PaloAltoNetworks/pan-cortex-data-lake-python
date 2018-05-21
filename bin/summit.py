@@ -325,6 +325,10 @@ def event(options, session):
             print_exception(action, e)
             sys.exit(1)
 
+        print_status(action, r, options)
+        print_response(r, options)
+        exit_for_http_status(r)
+
     def ack(api, options):
         action = inspect.stack()[0][3]
         k = 'EventService:ack'
