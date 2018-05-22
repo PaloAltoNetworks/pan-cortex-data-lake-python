@@ -144,9 +144,9 @@ def logging(options, session):
 
         R = options['R']
         x = R['R1_obj'][k].copy()
-        if options['start_seconds']:
+        if options['start_seconds'] is not None:
             x['startTime'] = options['start_seconds']
-        if options['end_seconds']:
+        if options['end_seconds'] is not None:
             x['endTime'] = options['end_seconds']
 
         if options['debug'] > 2:
