@@ -19,6 +19,7 @@
 # This summit is in the cloud.
 
 from __future__ import print_function
+from collections import defaultdict
 import datetime
 import getopt
 import inspect
@@ -97,7 +98,7 @@ def main():
 def credentials(options):
     def write_credentials(c, options):
         action = inspect.stack()[0][3]
-        k = 'Credentials:write'
+        k = 'Credentials.write'
 
         R = options['R']
         try:
@@ -140,7 +141,7 @@ def httpclient(options, c):
 def logging(options, session):
     def query(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:query'
+        k = 'LoggingService.query'
 
         R = options['R']
         x = R['R1_obj'][k].copy()
@@ -168,7 +169,7 @@ def logging(options, session):
 
     def poll(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:poll'
+        k = 'LoggingService.poll'
 
         R = options['R']
         try:
@@ -186,7 +187,7 @@ def logging(options, session):
 
     def xpoll(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:poll'
+        k = 'LoggingService.xpoll'
 
         R = options['R']
         try:
@@ -203,7 +204,7 @@ def logging(options, session):
 
     def delete(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:delete'
+        k = 'LoggingService.delete'
 
         R = options['R']
         try:
@@ -219,7 +220,7 @@ def logging(options, session):
 
     def write(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:write'
+        k = 'LoggingService.write'
 
         R = options['R']
         print(action, 'not implemented')
@@ -273,7 +274,7 @@ def event(options, session):
 
     def set_filters(api, options):
         action = inspect.stack()[0][3]
-        k = 'EventService:set_filters'
+        k = 'EventService.set_filters'
 
         R = options['R']
         try:
@@ -290,12 +291,12 @@ def event(options, session):
 
     def get_filters(api, options):
         action = inspect.stack()[0][3]
-        k = 'EventService:get_filters'
+        k = 'EventService.get_filters'
         generic(api, options, api.get_filters, action, k)
 
     def xpoll(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:xpoll'
+        k = 'EventService.xpoll'
 
         R = options['R']
         try:
@@ -314,7 +315,7 @@ def event(options, session):
 
     def poll(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:poll'
+        k = 'EventService.poll'
 
         R = options['R']
         try:
@@ -331,12 +332,12 @@ def event(options, session):
 
     def ack(api, options):
         action = inspect.stack()[0][3]
-        k = 'EventService:ack'
+        k = 'EventService.ack'
         generic(api, options, api.ack, action, k)
 
     def nack(api, options):
         action = inspect.stack()[0][3]
-        k = 'EventService:nack'
+        k = 'EventService.nack'
         generic(api, options, api.nack, action, k)
 
     action = inspect.stack()[0][3]
@@ -390,7 +391,7 @@ def directory_sync(options, session):
 
     def query(api, options):
         action = inspect.stack()[0][3]
-        k = 'DirectorySyncService:query'
+        k = 'DirectorySyncService.query'
 
         R = options['R']
         try:
@@ -407,7 +408,7 @@ def directory_sync(options, session):
 
     def count(api, options):
         action = inspect.stack()[0][3]
-        k = 'DirectorySyncService:count'
+        k = 'DirectorySyncService.count'
 
         R = options['R']
         try:
@@ -424,12 +425,12 @@ def directory_sync(options, session):
 
     def domains(api, options):
         action = inspect.stack()[0][3]
-        k = 'DirectorySyncService:domains'
+        k = 'DirectorySyncService.domains'
         generic(api, options, api.domains, action, k)
 
     def attributes(api, options):
         action = inspect.stack()[0][3]
-        k = 'DirectorySyncService:attributes'
+        k = 'DirectorySyncService.attributes'
         generic(api, options, api.attributes, action, k)
 
     action = inspect.stack()[0][3]
@@ -714,49 +715,12 @@ def process_time(x):
 def parse_opts():
     options_R = {
         # class init **kwargs
-        'R0': {
-            'Credentials': [],
-            'HTTPClient': [],
-            'LoggingService': [],
-            'EventService': [],
-            'DirectorySyncService': [],
-        },
+        'R0': defaultdict(list),
         # class method data/params
         # XXX can't have data and params
-        'R1': {
-            'LoggingService:query': [],
-            'LoggingService:poll': [],
-            'LoggingService:xpoll': [],
-
-            'EventService:set_filters': [],
-            'EventService:poll': [],
-            'EventService:xpoll': [],
-
-            'DirectorySyncService:query': [],
-            'DirectorySyncService:count': [],
-        },
+        'R1': defaultdict(list),
         # class method **kwargs
-        'R2': {
-            'Credentials:write': [],
-
-            'LoggingService:delete': [],
-            'LoggingService:poll': [],
-            'LoggingService:xpoll': [],
-            'LoggingService:query': [],
-            'LoggingService:write': [],
-
-            'EventService:set_filters': [],
-            'EventService:get_filters': [],
-            'EventService:ack': [],
-            'EventService:nack': [],
-            'EventService:poll': [],
-            'EventService:xpoll': [],
-
-            'DirectorySyncService:query': [],
-            'DirectorySyncService:count': [],
-            'DirectorySyncService:domains': [],
-            'DirectorySyncService:attributes': [],
-        },
+        'R2': defaultdict(list),
     }
 
     options = {
@@ -793,20 +757,18 @@ def parse_opts():
 
     def _options_R(k, last_c, last_m, arg):
         if k == 'R0':
-            if last_c in options_R[k]:
-                options_R[k][last_c].append(process_arg(arg))
-            else:
+            if last_c is None:
                 print('--%s has no class context' % k, file=sys.stderr)
                 sys.exit(1)
+            options_R[k][last_c].append(process_arg(arg))
 
         elif k in ['R1', 'R2']:
-            x = '%s:%s' % (last_c, last_m)
-            if x in options_R[k]:
-                options_R[k][x].append(process_arg(arg))
-            else:
-                print('--%s has no class:method context: %s' % (k, x),
+            x = '%s.%s' % (last_c, last_m)
+            if last_c is None or last_m is None:
+                print('--%s has no class.method context: %s' % (k, x),
                       file=sys.stderr)
                 sys.exit(1)
+            options_R[k][x].append(process_arg(arg))
 
     short_options = 'CHLDEJ:pj'
     long_options = [
@@ -827,8 +789,8 @@ def parse_opts():
         print(error, file=sys.stderr)
         sys.exit(1)
 
-    last_c = ''  # class
-    last_m = ''  # method
+    last_c = None  # class
+    last_m = None  # method
 
     for opt, arg in opts:
         if False:
@@ -942,7 +904,7 @@ def parse_opts():
         init = None
         if k == 'R0' and headers is not None:
             init = {'headers': headers}
-        options_R[k + '_obj'] = {}
+        options_R[k + '_obj'] = defaultdict(dict)
         for x in options_R[k].keys():
             options_R[k + '_obj'][x] =\
                 process_json_args(options_R[k][x], init)
