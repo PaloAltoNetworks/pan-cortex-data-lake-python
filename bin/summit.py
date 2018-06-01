@@ -19,6 +19,7 @@
 # This summit is in the cloud.
 
 from __future__ import print_function
+from collections import defaultdict
 import datetime
 import getopt
 import inspect
@@ -97,7 +98,7 @@ def main():
 def credentials(options):
     def write_credentials(c, options):
         action = inspect.stack()[0][3]
-        k = 'Credentials:write'
+        k = 'Credentials.write'
 
         R = options['R']
         try:
@@ -140,7 +141,7 @@ def httpclient(options, c):
 def logging(options, session):
     def query(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:query'
+        k = 'LoggingService.query'
 
         R = options['R']
         x = R['R1_obj'][k].copy()
@@ -160,7 +161,7 @@ def logging(options, session):
             sys.exit(1)
 
         print_status(action, r, options)
-        json_ = print_response(r, options)
+        json_ = print_response(r, options, k)
         exit_for_http_status(r)
 
         if json_ is not None and options['id'] is None and 'queryId' in json_:
@@ -168,7 +169,7 @@ def logging(options, session):
 
     def poll(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:poll'
+        k = 'LoggingService.poll'
 
         R = options['R']
         try:
@@ -181,12 +182,12 @@ def logging(options, session):
             sys.exit(1)
 
         print_status(action, r, options)
-        print_response(r, options)
+        print_response(r, options, k)
         exit_for_http_status(r)
 
     def xpoll(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:poll'
+        k = 'LoggingService.xpoll'
 
         R = options['R']
         try:
@@ -195,7 +196,7 @@ def logging(options, session):
                                delete_query=options['delete'],
                                params=R['R1_obj'][k],
                                **R['R2_obj'][k]):
-                print_response_body(options, x)
+                print_response_body(options, k, x)
 
         except Exception as e:
             print_exception(action, e)
@@ -203,7 +204,7 @@ def logging(options, session):
 
     def delete(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:delete'
+        k = 'LoggingService.delete'
 
         R = options['R']
         try:
@@ -214,12 +215,12 @@ def logging(options, session):
             sys.exit(1)
 
         print_status(action, r, options)
-        print_response(r, options)
+        print_response(r, options, k)
         exit_for_http_status(r)
 
     def write(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:write'
+        k = 'LoggingService.write'
 
         R = options['R']
         print(action, 'not implemented')
@@ -268,12 +269,12 @@ def event(options, session):
             sys.exit(1)
 
         print_status(action, r, options)
-        print_response(r, options)
+        print_response(r, options, k)
         exit_for_http_status(r)
 
     def set_filters(api, options):
         action = inspect.stack()[0][3]
-        k = 'EventService:set_filters'
+        k = 'EventService.set_filters'
 
         R = options['R']
         try:
@@ -285,17 +286,17 @@ def event(options, session):
             sys.exit(1)
 
         print_status(action, r, options)
-        print_response(r, options)
+        print_response(r, options, k)
         exit_for_http_status(r)
 
     def get_filters(api, options):
         action = inspect.stack()[0][3]
-        k = 'EventService:get_filters'
+        k = 'EventService.get_filters'
         generic(api, options, api.get_filters, action, k)
 
     def xpoll(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:xpoll'
+        k = 'EventService.xpoll'
 
         R = options['R']
         try:
@@ -307,14 +308,14 @@ def event(options, session):
                 print('%s:' % action, end='', file=sys.stderr)
                 event_print_status(options, [x])
                 print(file=sys.stderr)
-                print_response_body(options, x)
+                print_response_body(options, k, x)
         except Exception as e:
             print_exception(action, e)
             sys.exit(1)
 
     def poll(api, options):
         action = inspect.stack()[0][3]
-        k = 'LoggingService:poll'
+        k = 'EventService.poll'
 
         R = options['R']
         try:
@@ -326,17 +327,17 @@ def event(options, session):
             sys.exit(1)
 
         print_status(action, r, options)
-        print_response(r, options)
+        print_response(r, options, k)
         exit_for_http_status(r)
 
     def ack(api, options):
         action = inspect.stack()[0][3]
-        k = 'EventService:ack'
+        k = 'EventService.ack'
         generic(api, options, api.ack, action, k)
 
     def nack(api, options):
         action = inspect.stack()[0][3]
-        k = 'EventService:nack'
+        k = 'EventService.nack'
         generic(api, options, api.nack, action, k)
 
     action = inspect.stack()[0][3]
@@ -385,12 +386,12 @@ def directory_sync(options, session):
             sys.exit(1)
 
         print_status(action, r, options)
-        print_response(r, options)
+        print_response(r, options, k)
         exit_for_http_status(r)
 
     def query(api, options):
         action = inspect.stack()[0][3]
-        k = 'DirectorySyncService:query'
+        k = 'DirectorySyncService.query'
 
         R = options['R']
         try:
@@ -402,12 +403,12 @@ def directory_sync(options, session):
             sys.exit(1)
 
         print_status(action, r, options)
-        print_response(r, options)
+        print_response(r, options, k)
         exit_for_http_status(r)
 
     def count(api, options):
         action = inspect.stack()[0][3]
-        k = 'DirectorySyncService:count'
+        k = 'DirectorySyncService.count'
 
         R = options['R']
         try:
@@ -419,17 +420,17 @@ def directory_sync(options, session):
             sys.exit(1)
 
         print_status(action, r, options)
-        print_response(r, options)
+        print_response(r, options, k)
         exit_for_http_status(r)
 
     def domains(api, options):
         action = inspect.stack()[0][3]
-        k = 'DirectorySyncService:domains'
+        k = 'DirectorySyncService.domains'
         generic(api, options, api.domains, action, k)
 
     def attributes(api, options):
         action = inspect.stack()[0][3]
-        k = 'DirectorySyncService:attributes'
+        k = 'DirectorySyncService.attributes'
         generic(api, options, api.attributes, action, k)
 
     action = inspect.stack()[0][3]
@@ -561,7 +562,7 @@ def directory_sync_print_status(options, x):
               file=sys.stderr)
 
 
-def print_response(r, options):
+def print_response(r, options, k):
     if options['debug'] > 2:
         print(pprint.pformat(dict(r.headers), indent=INDENT),
               file=sys.stderr)
@@ -581,21 +582,30 @@ def print_response(r, options):
             print(e, file=sys.stderr)
             sys.exit(1)
 
-        print_response_body(options, obj)
+        print_response_body(options, k, obj)
         return obj
     else:
         print('WARNING: Response Content-Type:', x, file=sys.stderr)
 
 
-def print_response_body(options, x):
-        if options['jmespath'] is not None:
-            x = jmespath_search(options['jmespath'], x)
+def print_response_body(options, k, x):
+    if k in options['print']:
+        print_ = options['print'][k]
+    else:
+        k_, _ = k.split('.')
+        if k_ in options['print']:
+            print_ = options['print'][k_]
+        else:
+            return
 
-        if options['print_json']:
-            print_json(x)
+    if print_['jmespath'] is not None:
+        x = jmespath_search(print_['jmespath'], x)
 
-        if options['print_python']:
-            print_python(x)
+    if print_['print_json']:
+        print_json(x)
+
+    if print_['print_python']:
+        print_python(x)
 
 
 def exit_for_http_status(r):
@@ -649,27 +659,28 @@ def process_arg(x):
 
 
 def process_json_args(args, init=None):
-        obj = init or {}
-        for r in args:
-            try:
-                x = json.loads(r)
-            except ValueError as e:
-                print('%s: %s' % (e, r), file=sys.stderr)
-                sys.exit(1)
-            obj.update(x)
-
-        # XXX used for debug only
+    obj = init or {}
+    for r in args:
         try:
-            json_arg = json.dumps(obj, indent=INDENT)
+            x = json.loads(r)
         except ValueError as e:
-            print(e, file=sys.stderr)
+            print('%s: %s' % (e, r), file=sys.stderr)
             sys.exit(1)
 
-        if debug > 1 and obj:
-            print(pprint.pformat(obj, indent=INDENT), file=sys.stderr)
-            print(json_arg, file=sys.stderr)
+        obj.update(x)
 
-        return obj
+    # XXX used for debug only
+    try:
+        json_arg = json.dumps(obj, indent=INDENT)
+    except ValueError as e:
+        print(e, file=sys.stderr)
+        sys.exit(1)
+
+    if debug > 1 and obj:
+        print(pprint.pformat(obj, indent=INDENT), file=sys.stderr)
+        print(json_arg, file=sys.stderr)
+
+    return obj
 
 
 def process_time(x):
@@ -714,53 +725,28 @@ def process_time(x):
 def parse_opts():
     options_R = {
         # class init **kwargs
-        'R0': {
-            'Credentials': [],
-            'HTTPClient': [],
-            'LoggingService': [],
-            'EventService': [],
-            'DirectorySyncService': [],
-        },
+        'R0': defaultdict(list),
         # class method data/params
         # XXX can't have data and params
-        'R1': {
-            'LoggingService:query': [],
-            'LoggingService:poll': [],
-            'LoggingService:xpoll': [],
-
-            'EventService:set_filters': [],
-            'EventService:poll': [],
-            'EventService:xpoll': [],
-
-            'DirectorySyncService:query': [],
-            'DirectorySyncService:count': [],
-        },
+        'R1': defaultdict(list),
         # class method **kwargs
-        'R2': {
-            'Credentials:write': [],
-
-            'LoggingService:delete': [],
-            'LoggingService:poll': [],
-            'LoggingService:xpoll': [],
-            'LoggingService:query': [],
-            'LoggingService:write': [],
-
-            'EventService:set_filters': [],
-            'EventService:get_filters': [],
-            'EventService:ack': [],
-            'EventService:nack': [],
-            'EventService:poll': [],
-            'EventService:xpoll': [],
-
-            'DirectorySyncService:query': [],
-            'DirectorySyncService:count': [],
-            'DirectorySyncService:domains': [],
-            'DirectorySyncService:attributes': [],
-        },
+        'R2': defaultdict(list),
     }
+
+    options_print = defaultdict(
+        lambda: defaultdict(
+            dict,
+            {
+                'jmespath': None,
+                'print_python': False,
+                'print_json': False,
+            }
+        )
+    )
 
     options = {
         'R': options_R,
+        'print': options_print,
         'credentials': False,
         'http_client': False,
         'logging_api': False,
@@ -785,28 +771,45 @@ def parse_opts():
         'count': False,
         'domains': False,
         'attributes': False,
-        'jmespath': None,
-        'print_python': False,
-        'print_json': False,
         'debug': 0,
         }
 
-    def _options_R(k, last_c, last_m, arg):
-        if k == 'R0':
-            if last_c in options_R[k]:
-                options_R[k][last_c].append(process_arg(arg))
-            else:
-                print('--%s has no class context' % k, file=sys.stderr)
+    def _options_R(opt, last_c, last_m, arg):
+        if opt == 'R0':
+            if last_c is None:
+                print('--%s has no class context' % opt, file=sys.stderr)
                 sys.exit(1)
+            options_R[opt][last_c].append(process_arg(arg))
 
-        elif k in ['R1', 'R2']:
-            x = '%s:%s' % (last_c, last_m)
-            if x in options_R[k]:
-                options_R[k][x].append(process_arg(arg))
-            else:
-                print('--%s has no class:method context: %s' % (k, x),
+        elif opt in ['R1', 'R2']:
+            x = '%s.%s' % (last_c, last_m)
+            if last_c is None or last_m is None:
+                print('--%s has no class.method context: %s' % (opt, x),
                       file=sys.stderr)
                 sys.exit(1)
+            options_R[opt][x].append(process_arg(arg))
+
+    def _options_print(opt, last_c, last_m, arg):
+        x = '%s.%s' % (last_c, last_m)
+        if last_c and last_m:
+            pass
+        elif last_c:
+            x = last_c
+        else:
+            print('-%s has no class.method context: %s' % (opt, x),
+                  file=sys.stderr)
+            sys.exit(1)
+
+        if opt == 'J':
+            if not have_jmespath:
+                print('Install JMESPath for -J support: http://jmespath.org/',
+                      file=sys.stderr)
+                sys.exit(1)
+            options_print[x]['jmespath'] = arg
+        elif opt == 'p':
+            options_print[x]['print_python'] = True
+        elif opt == 'j':
+            options_print[x]['print_json'] = True
 
     short_options = 'CHLDEJ:pj'
     long_options = [
@@ -827,8 +830,8 @@ def parse_opts():
         print(error, file=sys.stderr)
         sys.exit(1)
 
-    last_c = ''  # class
-    last_m = ''  # method
+    last_c = None  # class
+    last_m = None  # method
 
     for opt, arg in opts:
         if False:
@@ -898,16 +901,8 @@ def parse_opts():
             last_m = 'attributes'
         elif opt in ['--R0', '--R1', '--R2']:
             _options_R(opt[2:], last_c, last_m, arg)
-        elif opt == '-J':
-            if not have_jmespath:
-                print('Install JMESPath for -J support: http://jmespath.org/',
-                      file=sys.stderr)
-                sys.exit(1)
-            options['jmespath'] = arg
-        elif opt == '-p':
-            options['print_python'] = True
-        elif opt == '-j':
-            options['print_json'] = True
+        elif opt in ['-p', '-j', '-J']:
+            _options_print(opt[1:], last_c, last_m, arg)
         elif opt == '--debug':  # XXX positional
             try:
                 options['debug'] = int(arg)
@@ -942,7 +937,7 @@ def parse_opts():
         init = None
         if k == 'R0' and headers is not None:
             init = {'headers': headers}
-        options_R[k + '_obj'] = {}
+        options_R[k + '_obj'] = defaultdict(dict)
         for x in options_R[k].keys():
             options_R[k + '_obj'][x] =\
                 process_json_args(options_R[k][x], init)
@@ -996,6 +991,8 @@ def usage():
     -J expression         JMESPath expression for JSON response data
     -p                    print response in Python to stdout
     -j                    print response in JSON to stdout
+                          multiple -[Jpj]'s allowed
+                          context/order dependent on previous class, method
     --debug level         enable debug level up to 3
     --version             display version
     --help                display usage
