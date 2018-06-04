@@ -27,6 +27,7 @@ import json
 import logging as logging_
 import os
 import pprint
+import requests
 import sys
 try:
     import jmespath
@@ -120,7 +121,47 @@ def credentials(options):
     if options['write']:
         write_credentials(x, options)
 
+    methods(options, x)
+
     return x
+
+
+def methods(options, class_):
+    name = class_.__class__.__name__
+    for method in options['m'][name]:
+        k = '%s.%s' % (name, method)
+        try:
+            method_ = class_.__class__.__dict__[method]
+        except KeyError:
+            print('no class.method: %s' % k, file=sys.stderr)
+            sys.exit(1)
+
+        # if @property decorated call getter
+        if isinstance(method_, property):
+            method_ = method_.fget
+
+        if not hasattr(method_, '__call__'):
+            print('not callable: %s' % k, file=sys.stderr)
+            sys.exit(1)
+
+        R = options['R']
+        try:
+            x = method_(class_, **R['R2_obj'][k])
+        except Exception as e:
+            print_exception(k, e)
+            sys.exit(1)
+
+        if x is not None:
+            if isinstance(x, requests.models.Response):
+                print_status(k, x, options)
+                print_response(x, options, k)
+                exit_for_http_status(x)
+            else:
+                print('%s:' % k)
+                print(x)
+
+        else:
+            print(k)
 
 
 def httpclient(options, c):
@@ -134,6 +175,8 @@ def httpclient(options, c):
     except Exception as e:
         print_exception(action, e)
         sys.exit(1)
+
+    methods(options, x)
 
     return x
 
@@ -257,6 +300,8 @@ def logging(options, session):
     if options['write']:
         write(api, options)
 
+    methods(options, api)
+
 
 def event(options, session):
     def generic(api, options, func, action, k):
@@ -375,6 +420,8 @@ def event(options, session):
     if options['nack']:
         nack(api, options)
 
+    methods(options, api)
+
 
 def directory_sync(options, session):
     def generic(api, options, func, action, k):
@@ -458,6 +505,8 @@ def directory_sync(options, session):
 
     if options['attributes']:
         attributes(api, options)
+
+    methods(options, api)
 
 
 def print_exception(action, e):
@@ -733,6 +782,8 @@ def parse_opts():
         'R2': defaultdict(list),
     }
 
+    options_m = defaultdict(list)
+
     options_print = defaultdict(
         lambda: defaultdict(
             dict,
@@ -746,6 +797,7 @@ def parse_opts():
 
     options = {
         'R': options_R,
+        'm': options_m,
         'print': options_print,
         'credentials': False,
         'http_client': False,
@@ -789,6 +841,13 @@ def parse_opts():
                 sys.exit(1)
             options_R[opt][x].append(process_arg(arg))
 
+    def _options_m(last_c, arg):
+        if last_c is None:
+            print('-m has no class context', file=sys.stderr)
+            sys.exit(1)
+
+        options_m[last_c].append(arg)
+
     def _options_print(opt, last_c, last_m, arg):
         x = '%s.%s' % (last_c, last_m)
         if last_c and last_m:
@@ -811,7 +870,7 @@ def parse_opts():
         elif opt == 'j':
             options_print[x]['print_json'] = True
 
-    short_options = 'CHLDEJ:pj'
+    short_options = 'CHLDEm:J:pj'
     long_options = [
         'delete', 'poll', 'xpoll', 'query', 'write',
         'start=', 'end=',
@@ -901,6 +960,9 @@ def parse_opts():
             last_m = 'attributes'
         elif opt in ['--R0', '--R1', '--R2']:
             _options_R(opt[2:], last_c, last_m, arg)
+        elif opt == '-m':
+            _options_m(last_c, arg)
+            last_m = arg
         elif opt in ['-p', '-j', '-J']:
             _options_print(opt[1:], last_c, last_m, arg)
         elif opt == '--debug':  # XXX positional
@@ -983,16 +1045,16 @@ def usage():
     -H                    use HTTPClient() session
     -C                    use Credentials() class
       --write             write_credentials() method
+    -m method             invoke class method
+                          multiple -m's allowed
     --R0 json             class constructor args (**kwargs)
     --R1 json             class method body/QUERY_STRING (data/params)
     --R2 json             class method args (**kwargs)
                           multiple --R[012]'s allowed, will be merged
-                          context/order dependent on previous class, method
     -J expression         JMESPath expression for JSON response data
     -p                    print response in Python to stdout
     -j                    print response in JSON to stdout
                           multiple -[Jpj]'s allowed
-                          context/order dependent on previous class, method
     --debug level         enable debug level up to 3
     --version             display version
     --help                display usage
