@@ -28,11 +28,11 @@ ReadOnlyCredentials = namedtuple(
 class Credentials(object):
     """An Application Framework credentials object."""
 
-    def __init__(self, auth_base_url=None, client_id=None, client_secret=None,
-                 instance_id=None, profile=None, redirect_uri=None,
-                 region=None, refresh_token=None, scope=None,
-                 storage_adapter=None, token_url=None, token_revoke_url=None,
-                 **kwargs):
+    def __init__(self, auth_base_url=None, cache_token=True,
+                 client_id=None, client_secret=None, instance_id=None,
+                 profile=None, redirect_uri=None, region=None,
+                 refresh_token=None, scope=None, storage_adapter=None,
+                 token_url=None, token_revoke_url=None, **kwargs):
         """Persist Session() and credentials attributes.
 
         Built on top of the ``Requests`` library, ``Credentials`` is an
@@ -65,6 +65,7 @@ class Credentials(object):
         """
         self.access_token_ = None
         self.auth_base_url = auth_base_url or BASE_URL
+        self.cache_token_ = cache_token
         self.client_id_ = client_id
         self.client_secret_ = client_secret
         self.environ = os.environ
@@ -105,6 +106,10 @@ class Credentials(object):
     def access_token(self):
         """Get access_token"""
         return self.access_token_
+
+    @property
+    def cache_token(self):
+        return self.cache_token_
 
     @property
     def client_id(self):
@@ -239,7 +244,11 @@ class Credentials(object):
             class: Read-only credentials.
 
         """
-        access_token = self.access_token_
+        if self.cache_token:
+            access_token = self._resolve_credential(
+                'access_token') or self.access_token_
+        else:
+            access_token = self.access_token_
         client_id = self.client_id_ or self._resolve_credential(
             'client_id')
         client_secret = self.client_secret_ or self._resolve_credential(
@@ -358,5 +367,6 @@ class Credentials(object):
         """
         c = self.get_credentials()
         return self.storage().write_credentials(
-            credentials=c, profile=self.profile
+            credentials=c, profile=self.profile,
+            cache_token=self.cache_token_
         )

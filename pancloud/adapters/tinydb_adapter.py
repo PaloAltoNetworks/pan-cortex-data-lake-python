@@ -64,12 +64,14 @@ class TinyDBStore(StorageAdapter):
         with self.db:
             return self.db.remove(self.query.profile == profile)
 
-    def write_credentials(self, credentials=None, profile=None):
+    def write_credentials(self, credentials=None, profile=None,
+                          cache_token=None):
         """Write credentials.
 
         Write credentials to credentials file. Performs ``upsert``.
 
         Args:
+            cache_token (bool): If ``True``, stores ``access_token`` in token store. Defaults to ``True``.
             credentials (class): Read-only credentials.
             profile (str): Credentials profile. Defaults to ``'default'``.
 
@@ -83,6 +85,8 @@ class TinyDBStore(StorageAdapter):
             'client_secret': credentials.client_secret,
             'refresh_token': credentials.refresh_token
         }
+        if cache_token:
+            d.update({'access_token': credentials.access_token})
         with self.lock:
             return self.db.upsert(
                 d, self.query.profile == profile
