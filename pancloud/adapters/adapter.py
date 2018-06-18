@@ -45,12 +45,14 @@ class StorageAdapter(ABC):  # enforce StorageAdapter interface
         pass
 
     @abstractmethod
-    def write_credentials(self, credentials=None, profile=None):
+    def write_credentials(self, credentials=None, profile=None,
+                          cache_token=None):
         """Write credentials.
 
         Write credentials to store.
 
         Args:
+            cache_token (bool): If ``True``, stores ``access_token`` in token store. Defaults to ``True``.
             credentials (class): Read-only credentials.
             profile (str): Credentials profile. Defaults to ``'default'``.
 
