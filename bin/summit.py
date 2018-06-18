@@ -22,7 +22,6 @@ from __future__ import print_function
 from collections import defaultdict
 import datetime
 import getopt
-import inspect
 import json
 import logging as logging_
 import os
@@ -98,24 +97,28 @@ def main():
 
 def credentials(options):
     def write_credentials(c, options):
-        action = inspect.stack()[0][3]
-        k = 'Credentials.write'
+        k = 'Credentials.write_credentials'
 
         R = options['R']
         try:
-            c.write_credentials(**R['R2_obj'][k])
+            x = c.write_credentials(**R['R2_obj'][k])
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
-    action = inspect.stack()[0][3]
+        if x is not None:
+            print('%s:' % k)
+            print(x)
+        else:
+            print(k)
+
     k = 'Credentials'
 
     R = options['R']
     try:
         x = Credentials(**R['R0_obj'][k])
     except Exception as e:
-        print_exception(action, e)
+        print_exception(k, e)
         sys.exit(1)
 
     if options['write']:
@@ -165,7 +168,6 @@ def methods(options, class_):
 
 
 def httpclient(options, c):
-    action = inspect.stack()[0][3]
     k = 'HTTPClient'
 
     R = options['R']
@@ -173,7 +175,7 @@ def httpclient(options, c):
         x = HTTPClient(credentials=c,
                        **R['R0_obj'][k])
     except Exception as e:
-        print_exception(action, e)
+        print_exception(k, e)
         sys.exit(1)
 
     methods(options, x)
@@ -183,7 +185,6 @@ def httpclient(options, c):
 
 def logging(options, session):
     def query(api, options):
-        action = inspect.stack()[0][3]
         k = 'LoggingService.query'
 
         R = options['R']
@@ -200,10 +201,10 @@ def logging(options, session):
         try:
             r = api.query(data=x, **R['R2_obj'][k])
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
-        print_status(action, r, options)
+        print_status(k, r, options)
         json_ = print_response(r, options, k)
         exit_for_http_status(r)
 
@@ -211,7 +212,6 @@ def logging(options, session):
             options['id'] = json_['queryId']
 
     def poll(api, options):
-        action = inspect.stack()[0][3]
         k = 'LoggingService.poll'
 
         R = options['R']
@@ -221,15 +221,14 @@ def logging(options, session):
                          params=R['R1_obj'][k],
                          **R['R2_obj'][k])
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
-        print_status(action, r, options)
+        print_status(k, r, options)
         print_response(r, options, k)
         exit_for_http_status(r)
 
     def xpoll(api, options):
-        action = inspect.stack()[0][3]
         k = 'LoggingService.xpoll'
 
         R = options['R']
@@ -242,11 +241,10 @@ def logging(options, session):
                 print_response_body(options, k, x)
 
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
     def delete(api, options):
-        action = inspect.stack()[0][3]
         k = 'LoggingService.delete'
 
         R = options['R']
@@ -254,21 +252,19 @@ def logging(options, session):
             r = api.delete(query_id=options['id'],
                            **R['R2_obj'][k])
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
-        print_status(action, r, options)
+        print_status(k, r, options)
         print_response(r, options, k)
         exit_for_http_status(r)
 
     def write(api, options):
-        action = inspect.stack()[0][3]
         k = 'LoggingService.write'
 
         R = options['R']
-        print(action, 'not implemented')
+        print(k, 'not implemented')
 
-    action = inspect.stack()[0][3]
     k = 'LoggingService'
 
     R = options['R']
@@ -276,7 +272,7 @@ def logging(options, session):
         api = LoggingService(session=session,
                              **R['R0_obj'][k])
     except Exception as e:
-        print_exception(action, e)
+        print_exception(k, e)
         sys.exit(1)
 
     if options['debug'] > 0:
@@ -304,21 +300,20 @@ def logging(options, session):
 
 
 def event(options, session):
-    def generic(api, options, func, action, k):
+    def generic(api, options, func, k):
         R = options['R']
         try:
             r = func(channel_id=options['id'],
                      **R['R2_obj'][k])
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
-        print_status(action, r, options)
+        print_status(k, r, options)
         print_response(r, options, k)
         exit_for_http_status(r)
 
     def set_filters(api, options):
-        action = inspect.stack()[0][3]
         k = 'EventService.set_filters'
 
         R = options['R']
@@ -327,20 +322,18 @@ def event(options, session):
                                 data=R['R1_obj'][k],
                                 **R['R2_obj'][k])
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
-        print_status(action, r, options)
+        print_status(k, r, options)
         print_response(r, options, k)
         exit_for_http_status(r)
 
     def get_filters(api, options):
-        action = inspect.stack()[0][3]
         k = 'EventService.get_filters'
-        generic(api, options, api.get_filters, action, k)
+        generic(api, options, api.get_filters, k)
 
     def xpoll(api, options):
-        action = inspect.stack()[0][3]
         k = 'EventService.xpoll'
 
         R = options['R']
@@ -350,16 +343,15 @@ def event(options, session):
                                ack=options['ack'],
                                follow=options['follow'],
                                **R['R2_obj'][k]):
-                print('%s:' % action, end='', file=sys.stderr)
+                print('%s:' % k, end='', file=sys.stderr)
                 event_print_status(options, [x])
                 print(file=sys.stderr)
                 print_response_body(options, k, x)
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
     def poll(api, options):
-        action = inspect.stack()[0][3]
         k = 'EventService.poll'
 
         R = options['R']
@@ -368,24 +360,21 @@ def event(options, session):
                          data=R['R1_obj'][k],
                          **R['R2_obj'][k])
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
-        print_status(action, r, options)
+        print_status(k, r, options)
         print_response(r, options, k)
         exit_for_http_status(r)
 
     def ack(api, options):
-        action = inspect.stack()[0][3]
         k = 'EventService.ack'
-        generic(api, options, api.ack, action, k)
+        generic(api, options, api.ack, k)
 
     def nack(api, options):
-        action = inspect.stack()[0][3]
         k = 'EventService.nack'
-        generic(api, options, api.nack, action, k)
+        generic(api, options, api.nack, k)
 
-    action = inspect.stack()[0][3]
     k = 'EventService'
 
     R = options['R']
@@ -393,7 +382,7 @@ def event(options, session):
         api = EventService(session=session,
                            **R['R0_obj'][k])
     except Exception as e:
-        print_exception(action, e)
+        print_exception(k, e)
         sys.exit(1)
 
     if options['debug'] > 0:
@@ -424,20 +413,19 @@ def event(options, session):
 
 
 def directory_sync(options, session):
-    def generic(api, options, func, action, k):
+    def generic(api, options, func, k):
         R = options['R']
         try:
             r = func(**R['R2_obj'][k])
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
-        print_status(action, r, options)
+        print_status(k, r, options)
         print_response(r, options, k)
         exit_for_http_status(r)
 
     def query(api, options):
-        action = inspect.stack()[0][3]
         k = 'DirectorySyncService.query'
 
         R = options['R']
@@ -446,15 +434,14 @@ def directory_sync(options, session):
                           data=R['R1_obj'][k],
                           **R['R2_obj'][k])
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
-        print_status(action, r, options)
+        print_status(k, r, options)
         print_response(r, options, k)
         exit_for_http_status(r)
 
     def count(api, options):
-        action = inspect.stack()[0][3]
         k = 'DirectorySyncService.count'
 
         R = options['R']
@@ -463,24 +450,21 @@ def directory_sync(options, session):
                           params=R['R1_obj'][k],
                           **R['R2_obj'][k])
         except Exception as e:
-            print_exception(action, e)
+            print_exception(k, e)
             sys.exit(1)
 
-        print_status(action, r, options)
+        print_status(k, r, options)
         print_response(r, options, k)
         exit_for_http_status(r)
 
     def domains(api, options):
-        action = inspect.stack()[0][3]
         k = 'DirectorySyncService.domains'
-        generic(api, options, api.domains, action, k)
+        generic(api, options, api.domains, k)
 
     def attributes(api, options):
-        action = inspect.stack()[0][3]
         k = 'DirectorySyncService.attributes'
-        generic(api, options, api.attributes, action, k)
+        generic(api, options, api.attributes, k)
 
-    action = inspect.stack()[0][3]
     k = 'DirectorySyncService'
 
     R = options['R']
@@ -488,7 +472,7 @@ def directory_sync(options, session):
         api = DirectorySyncService(session=session,
                                    **R['R0_obj'][k])
     except Exception as e:
-        print_exception(action, e)
+        print_exception(k, e)
         sys.exit(1)
 
     if options['debug'] > 0:
@@ -924,7 +908,10 @@ def parse_opts():
             last_m = 'query'
         elif opt == '--write':
             options['write'] = True
-            last_m = 'write'
+            if last_c == 'Credentials':
+                last_m = 'write_credentials'
+            else:
+                last_m = 'write'
         elif opt == '--start':
             options['start'] = arg
             options['start_seconds'] = process_time(arg)
