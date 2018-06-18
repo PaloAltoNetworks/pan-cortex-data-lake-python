@@ -300,3 +300,37 @@ class LoggingService(object):
         for x in self.xpoll(query_id, sequence_no, params, delete_query,
                             **kwargs):
             yield x
+
+    def write(self, vendor_id=None, log_type=None, data=None, **kwargs):
+        """Write log records to the Logging Service.
+
+        This API requires a JSON array in its request body, each element
+        of which represents a single log record. Log records are
+        provided as JSON objects. Every log record must include the
+        primary timestamp field that you identified when you registered
+        your app. Every log record must also identify the log type.
+
+        Args:
+            vendor_id (str): Vendor ID.
+            log_type (str): Log type.
+            data (dict): Payload/request dictionary.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
+
+        Returns:
+            requests.Response: Requests Response() object.
+
+        Examples:
+            Refer to ``logging_write.py`` example.
+
+        """
+        path = "/logging-service/v1/logs/{}/{}".format(
+            vendor_id, log_type
+        )
+        r = self._httpclient.request(
+            method="POST",
+            url=self.url,
+            data=data,
+            path=path,
+            **kwargs
+        )
+        return r
