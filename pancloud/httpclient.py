@@ -235,7 +235,7 @@ class HTTPClient(object):
                   'timeout']:
             if x in kwargs and x == 'data':
                 d = kwargs.pop(x)
-                if type(d) is dict:
+                if type(d) is dict or type(d) is list:
                     k[x] = json.dumps(d)  # convert to str
                 else:  # let requests handle the form-encoding
                     k[x] = d
