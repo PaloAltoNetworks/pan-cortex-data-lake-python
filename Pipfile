@@ -13,6 +13,7 @@ Sphinx = ">=\"1.4.8\""
 PyYAML = ">=\"3.11\""
 pytest = ">=\"2.9.2\""
 pytest-runner = ">=\"2.11.1\""
+sphinxcontrib-napoleon = "*"
 
 [packages]
 requests = "*"

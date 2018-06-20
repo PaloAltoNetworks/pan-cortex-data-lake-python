@@ -2,6 +2,22 @@
 History
 =======
 
+1.2.0 (2018-06-20)
+------------------
+
+* Updated README.rst
+* Updated RTD API Reference.
+* Added `pancloud` to requirements_dev.txt
+* Added docstrings to `Credentials` property methods.
+* Changed logging xpoll() to return entire log entry instead of just `_source` dictionary.
+* Added `Credentials` Storage Adapter feature and moved `TinyDB` code to `tinydb_adapter.py`, the default storage adapter.
+* Automatically carry `queryId` from `logging --query` response to `--id` in subsequent `--poll`, `--xpoll` and `--delete` in `summit.py`.
+* Various bug fixes and improvements to `summit.py`.
+* Added support for caching `access_token` in credentials store.
+* Added `write()` method to `LoggingService` class to support writing logs.
+* Fixed issues with `Credentials` `get_authorization_url` and `fetch_tokens` methods.
+* Added `logging_write.py` to examples.
+
 1.1.0 (2018-05-08)
 ------------------
 
