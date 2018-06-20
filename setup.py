@@ -30,7 +30,7 @@ setup(
     author="Steven Serrata",
     author_email='sserrata@paloaltonetworks.com',
     url='https://github.com/PaloAltoNetworks/pancloud',
-    packages=find_packages(include=['pancloud']),
+    packages=find_packages(include=['pancloud', 'pancloud.adapters']),
     include_package_data=True,
     install_requires=requirements,
     license="ISC license",
