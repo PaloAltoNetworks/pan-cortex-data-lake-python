@@ -2,6 +2,12 @@
 History
 =======
 
+1.2.1 (2018-06-20)
+------------------
+
+* Added requirements.txt to MANIFEST.in to address build issues with PyPI package.
+* Fixed issue in README.rst that prevented PyPI from properly rendering.
+
 1.2.0 (2018-06-20)
 ------------------
 
