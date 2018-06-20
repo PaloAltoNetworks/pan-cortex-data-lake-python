@@ -202,11 +202,13 @@ class Credentials(object):
                 raise PanCloudError(r.text)
             return r.json()
 
-    def get_authorization_url(self, instance_id=None, redirect_uri=None,
-                              region=None, scope=None, state=None):
+    def get_authorization_url(self, client_id=None, instance_id=None,
+                              redirect_uri=None, region=None, scope=None,
+                              state=None):
         """Generate authorization URL.
 
         Args:
+            client_id (str): OAuth2 client ID. Defaults to ``None``.
             instance_id (str): App Instance ID. Defaults to ``None``.
             redirect_uri (str): Redirect URI. Defaults to ``None``.
             region (str): App Region. Defaults to ``None``.
@@ -217,17 +219,17 @@ class Credentials(object):
             str, str: Auth URL, state
 
         """
+        client_id = client_id or self.client_id
         instance_id = instance_id or self.instance_id
         redirect_uri = redirect_uri or self.redirect_uri
         region = region or self.region
         scope = scope or self.scope
         state = state or self.state
-        c = self.get_credentials()
         return requests.Request(
             'GET',
             self.auth_base_url,
             params={
-                'client_id': c.client_id,
+                'client_id': client_id,
                 'instance_id': instance_id,
                 'redirect_uri': redirect_uri,
                 'region': region,
