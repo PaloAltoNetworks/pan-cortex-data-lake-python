@@ -2,6 +2,11 @@
 History
 =======
 
+1.2.2 (2018-06-20)
+------------------
+
+* Added pancloud.adapters to find_packages include list to resolve issue with PyPI package.
+
 1.2.1 (2018-06-20)
 ------------------
 
