@@ -77,7 +77,7 @@ You'll need a `client_id`, `client_secret`, and `refresh_token`.
 `API Explorer <https://github.com/PaloAltoNetworks/apiexplorer>`__ may optionally be used to perform
 OAuth 2.0 and fetch tokens.
 
-For more information visit the following RTD page:: `Credentials <https://pancloud.readthedocs.io/en/latest/guides/credentials.html>`__
+For more information visit the following RTD page: `Credentials <https://pancloud.readthedocs.io/en/latest/guides/credentials.html>`__
 
 Example
 -------
