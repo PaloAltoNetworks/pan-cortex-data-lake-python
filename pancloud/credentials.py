@@ -105,6 +105,9 @@ class Credentials(object):
     @property
     def access_token(self):
         """Get access_token"""
+        if self.cache_token:
+            return self.access_token_ or \
+                   self._resolve_credential('access_token')
         return self.access_token_
 
     @property
