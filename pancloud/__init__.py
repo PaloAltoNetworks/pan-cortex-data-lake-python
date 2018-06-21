@@ -11,4 +11,4 @@ from .logging import LoggingService
 from .credentials import Credentials
 
 __author__ = 'Palo Alto Networks'
-__version__ = '1.2.2'
+__version__ = '1.2.3'

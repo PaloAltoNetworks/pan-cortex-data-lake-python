@@ -2,6 +2,13 @@
 History
 =======
 
+1.2.3 (2018-06-21)
+------------------
+
+* Reversed the `access_token` lookup order in get_credentials() method.
+* Added `_resolve_credential()` to `access_token()` property method to support token caching.
+* Now comparing passed `access_token` in `refresh()` method to value returned by property method.
+
 1.2.2 (2018-06-20)
 ------------------
 

@@ -105,6 +105,9 @@ class Credentials(object):
     @property
     def access_token(self):
         """Get access_token"""
+        if self.cache_token:
+            return self.access_token_ or \
+                   self._resolve_credential('access_token')
         return self.access_token_
 
     @property
@@ -255,8 +258,8 @@ class Credentials(object):
 
         """
         if self.cache_token:
-            access_token = self._resolve_credential(
-                'access_token') or self.access_token_
+            access_token = self.access_token_ or \
+                           self._resolve_credential('access_token')
         else:
             access_token = self.access_token_
         client_id = self.client_id_ or self._resolve_credential(
@@ -294,7 +297,7 @@ class Credentials(object):
         """
         if not self.token_lock.locked():
             with self.token_lock:
-                if access_token == self.access_token_ or access_token is None:
+                if access_token == self.access_token or access_token is None:
                     c = self.get_credentials()
                     if c.client_id and c.client_secret and c.refresh_token:
                         r = self.session.post(
