@@ -297,7 +297,7 @@ class Credentials(object):
         """
         if not self.token_lock.locked():
             with self.token_lock:
-                if access_token == self.access_token_ or access_token is None:
+                if access_token == self.access_token or access_token is None:
                     c = self.get_credentials()
                     if c.client_id and c.client_secret and c.refresh_token:
                         r = self.session.post(
