@@ -33,6 +33,7 @@ class TestLoggingService:
         LoggingService(url=TARPIT).delete
         LoggingService(url=TARPIT).iter_poll
         LoggingService(url=TARPIT).xpoll
+        LoggingService(url=TARPIT).write
 
     def test_required_kwargs(self):
         with pytest.raises(RequiredKwargsError):
