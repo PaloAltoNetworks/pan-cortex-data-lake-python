@@ -233,13 +233,7 @@ class HTTPClient(object):
         # Request() overrides
         for x in ['allow_redirects', 'data', 'json', 'method',
                   'timeout']:
-            if x in kwargs and x == 'data':
-                d = kwargs.pop(x)
-                if type(d) is dict or type(d) is list:
-                    k[x] = json.dumps(d)  # convert to str
-                else:  # let requests handle the form-encoding
-                    k[x] = d
-            elif x in kwargs:
+            if x in kwargs:
                 k[x] = kwargs.pop(x)
 
         # Handle invalid kwargs
