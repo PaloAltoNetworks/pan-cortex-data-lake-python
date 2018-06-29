@@ -18,6 +18,7 @@ language: python
 python:
 - pypy3
 - pypy
+- 3.7
 - 3.6
 - 3.5
 - 2.7
