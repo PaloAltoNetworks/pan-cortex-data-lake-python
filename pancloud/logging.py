@@ -172,7 +172,7 @@ class LoggingService(object):
         )
         return r
 
-    def query(self, data=None, **kwargs):  # pragma: no cover
+    def query(self, json=None, **kwargs):  # pragma: no cover
         """Generate a query that retrieves log records.
 
         Creates a query within the Logging Service that returns 0 or
@@ -181,7 +181,7 @@ class LoggingService(object):
         using :meth:`poll`, :meth:`iter_poll`, :meth:`poll_all` or :meth:`xpoll`.
 
         Args:
-            data (dict): Payload/request dictionary.
+            json (dict, list): Payload/request dictionary.
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
@@ -195,7 +195,7 @@ class LoggingService(object):
         r = self._httpclient.request(
             method="POST",
             url=self.url,
-            data=data,
+            json=json,
             path=path,
             **kwargs
         )
@@ -301,7 +301,7 @@ class LoggingService(object):
                             **kwargs):
             yield x
 
-    def write(self, vendor_id=None, log_type=None, data=None, **kwargs):
+    def write(self, vendor_id=None, log_type=None, json=None, **kwargs):
         """Write log records to the Logging Service.
 
         This API requires a JSON array in its request body, each element
@@ -313,7 +313,7 @@ class LoggingService(object):
         Args:
             vendor_id (str): Vendor ID.
             log_type (str): Log type.
-            data (dict): Payload/request dictionary.
+            json (dict, list): Payload/request dictionary.
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
@@ -329,7 +329,7 @@ class LoggingService(object):
         r = self._httpclient.request(
             method="POST",
             url=self.url,
-            data=data,
+            json=json,
             path=path,
             **kwargs
         )
