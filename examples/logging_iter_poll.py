@@ -72,5 +72,3 @@ d = ls.delete(query_id)
 print(
     "DELETE: {}\n".format(d.text)
 )
-
-

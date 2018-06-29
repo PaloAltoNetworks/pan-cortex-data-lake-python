@@ -31,5 +31,3 @@ f = es.get_filters(channel_id)
 print(
     "\nSTATUS_CODE: {}, RESULT: {}\n".format(f.status_code, f.text)
 )
-
-

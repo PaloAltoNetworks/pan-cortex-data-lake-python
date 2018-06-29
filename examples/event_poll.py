@@ -25,11 +25,9 @@ es = EventService(
 channel_id = 'EventFilter'
 
 # Poll event channel
-p = es.poll(channel_id)
+p = es.poll(channel_id=channel_id)
 
 # Print results
 print(
     "\nSTATUS_CODE: {}, RESULT: {}\n".format(p.status_code, p.text)
 )
-
-

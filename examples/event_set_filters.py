@@ -34,11 +34,9 @@ data = {  # Prepare 'filter' data
 channel_id = 'EventFilter'
 
 # Set new event filters
-f = es.set_filters(channel_id, data)
+f = es.set_filters(channel_id=channel_id, json=data)
 
 # Print results
 print(
     "\nSTATUS_CODE: {}, RESULT: {}\n".format(f.status_code, f.text)
 )
-
-

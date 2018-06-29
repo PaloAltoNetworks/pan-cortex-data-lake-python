@@ -31,5 +31,3 @@ a = es.ack(channel_id)
 print(
     "\nSTATUS_CODE: {}, RESULT: {}\n".format(a.status_code, a.text)
 )
-
-

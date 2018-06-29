@@ -39,7 +39,7 @@ data = [
     }
 ]
 
-q = ls.write(vendor_id=VENDOR_ID, log_type=LOG_TYPE, data=data)
+q = ls.write(vendor_id=VENDOR_ID, log_type=LOG_TYPE, json=data)
 
 print(
     "\nWRITE: {}\n".format(q.text)

@@ -30,7 +30,7 @@ data = {  # Prepare 'query' data
 }
 
 # Generate new 'query'
-q = ls.query(data)
+q = ls.query(json=data)
 
 print(
     "\nQUERY: {}\n".format(q.text)
@@ -74,4 +74,3 @@ d = ls.delete(query_id)
 print(
     "DELETE: {}\n".format(d.text)
 )
-

@@ -31,5 +31,3 @@ n = es.nack(channel_id)
 print(
     "\nSTATUS_CODE: {}, RESULT: {}\n".format(n.status_code, n.text)
 )
-
-
