@@ -147,7 +147,7 @@ class EventService(object):
         )
         return r
 
-    def poll(self, channel_id=None, data=None, **kwargs):  # pragma: no cover
+    def poll(self, channel_id=None, json=None, **kwargs):  # pragma: no cover
         """Read one or more events from a channel.
 
         Reads events (log records) from the identified channel. Events
@@ -155,7 +155,7 @@ class EventService(object):
 
         Args:
             channel_id (str): The channel ID.
-            data (dict): Payload/request dictionary.
+            json (dict, list): Payload/request dictionary.
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
@@ -169,7 +169,7 @@ class EventService(object):
         r = self._httpclient.request(
             method="POST",
             url=self.url,
-            data=data,
+            json=json,
             path=path,
             **kwargs
         )

@@ -149,7 +149,7 @@ class DirectorySyncService(object):
         )
         return r
 
-    def query(self, object_class=None, data=None, **kwargs):  # pragma: no cover
+    def query(self, object_class=None, json=None, **kwargs):  # pragma: no cover
         """Query data stored in directory.
 
         Retrieves directory data by querying a Directory Sync Service
@@ -161,7 +161,7 @@ class DirectorySyncService(object):
 
         Args:
             object_class (str): Directory object class.
-            data (dict): Payload/request dictionary.
+            json (dict, list): Payload/request dictionary.
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
@@ -175,7 +175,7 @@ class DirectorySyncService(object):
         r = self._httpclient.request(
             method="POST",
             url=self.url,
-            data=data,
+            json=json,
             path=path,
             **kwargs
         )
