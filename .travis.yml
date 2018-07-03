@@ -22,6 +22,16 @@ python:
 - 3.6
 - 3.5
 - 2.7
+matrix:
+  include:
+    - python: "pypy3"
+    - python: "pypy"
+    - python: "3.7"
+    - python: "3.6"
+    - python: "3.5"
+    - python: "2.7"
+  allow_failures:
+    - python: "3.7"
 script:
 - tox
 - coverage run --source pancloud -m py.test
