@@ -15,8 +15,6 @@ install:
 - pip install requests
 - pip install tinydb
 language: python
-dist: xenial
-sudo: true
 python:
 - pypy3
 - pypy
