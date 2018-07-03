@@ -25,8 +25,25 @@ python:
 - 3.5
 - 2.7
 matrix:
-  allow_failures:
+  include:
+    - python: 2.7
+      dist: trusty
+      sudo: false
+    - python: 3.5
+      dist: trusty
+      sudo: false
+    - python: 3.6
+      dist: trusty
+      sudo: false
     - python: 3.7
+      dist: xenial
+      sudo: true
+    - python: pypy
+      dist: trusty
+      sudo: false
+    - python: pypy3
+      dist: trusty
+      sudo: false
 script:
 - tox
 - coverage run --source pancloud -m py.test
