@@ -147,7 +147,7 @@ class EventService(object):
         )
         return r
 
-    def poll(self, channel_id=None, data=None, **kwargs):  # pragma: no cover
+    def poll(self, channel_id=None, json=None, **kwargs):  # pragma: no cover
         """Read one or more events from a channel.
 
         Reads events (log records) from the identified channel. Events
@@ -155,7 +155,7 @@ class EventService(object):
 
         Args:
             channel_id (str): The channel ID.
-            data (dict): Payload/request dictionary.
+            json (dict): Payload/request body.
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
@@ -169,13 +169,13 @@ class EventService(object):
         r = self._httpclient.request(
             method="POST",
             url=self.url,
-            data=data,
+            json=json,
             path=path,
             **kwargs
         )
         return r
 
-    def set_filters(self, channel_id=None, data=None, **kwargs):  # pragma: no cover
+    def set_filters(self, channel_id=None, json=None, **kwargs):  # pragma: no cover
         """Set one or more filters for the channel.
 
         Configures one or more filters for a channel. The filters
@@ -184,7 +184,7 @@ class EventService(object):
 
         Args:
             channel_id (str): The channel ID.
-            data (dict): Payload/request dictionary.
+            json (dict): Payload/request body.
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Returns:
@@ -200,13 +200,13 @@ class EventService(object):
         r = self._httpclient.request(
             method="PUT",
             url=self.url,
-            data=data,
+            json=json,
             path=path,
             **kwargs
         )
         return r
 
-    def xpoll(self, channel_id=None, data=None, ack=False,
+    def xpoll(self, channel_id=None, json=None, ack=False,
               follow=False, **kwargs):
         """Retrieve logType, event entries iteratively in a non-greedy manner.
 
@@ -215,7 +215,7 @@ class EventService(object):
 
         Args:
             channel_id (str): The channel ID.
-            data (dict): Payload/request dictionary.
+            json (dict): Payload/request body.
             ack (bool): True to acknowledge read.
             follow(bool): True to continue polling after channelId empty.
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
@@ -247,7 +247,7 @@ class EventService(object):
                                     r.status_code)
 
         while True:
-            r = self.poll(channel_id, data, **kwargs)
+            r = self.poll(channel_id, json, **kwargs)
             try:
                 r_json = r.json()
             except ValueError as e:
