@@ -986,7 +986,11 @@ def parse_opts():
         init = None
         if k == 'R0' and headers is not None:
             init = {'headers': headers}
-        options_R[k + '_obj'] = defaultdict(dict)
+        if k == 'R1':
+            # default R1 to None so don't send body unless specified
+            options_R[k + '_obj'] = defaultdict(lambda: None)
+        else:
+            options_R[k + '_obj'] = defaultdict(dict)
         for x in options_R[k].keys():
             options_R[k + '_obj'][x] =\
                 process_json_args(options_R[k][x], init)
