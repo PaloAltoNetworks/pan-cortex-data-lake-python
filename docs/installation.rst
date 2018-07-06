@@ -69,7 +69,7 @@ To upgrade `pancloud` using pipenv:
 
 .. code-block:: console
 
-    $ pipenv upgrade pancloud
+    $ pipenv update pancloud
 
 
 From sources
