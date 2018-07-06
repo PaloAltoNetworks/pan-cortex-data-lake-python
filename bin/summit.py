@@ -597,8 +597,16 @@ def directory_sync_print_status(options, x):
 
 def print_response(r, options, k):
     if options['debug'] > 2:
-        print(pprint.pformat(dict(r.headers), indent=INDENT),
-              file=sys.stderr)
+        # request
+        if r.request.headers is not None:
+            # XXX ok to leak Authorization header here
+            print(pprint.pformat(dict(r.request.headers),
+                                 indent=INDENT), file=sys.stderr)
+        print(r.request.body, file=sys.stderr)
+        # response
+        if r.headers is not None:
+            print(pprint.pformat(dict(r.headers),
+                                 indent=INDENT), file=sys.stderr)
         print(r.text, file=sys.stderr)
 
     if r.text is None or r.headers is None:
