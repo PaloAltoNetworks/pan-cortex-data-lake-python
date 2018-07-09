@@ -211,7 +211,8 @@ def logging(options, session):
                   file=sys.stderr)
 
         try:
-            r = api.query(data=x, **R['R2_obj'][k])
+            r = api.query(json=x,
+                          **R['R2_obj'][k])
         except Exception as e:
             print_exception(k, e)
             sys.exit(1)
@@ -331,7 +332,7 @@ def event(options, session):
         R = options['R']
         try:
             r = api.set_filters(channel_id=options['id'],
-                                data=R['R1_obj'][k],
+                                json=R['R1_obj'][k],
                                 **R['R2_obj'][k])
         except Exception as e:
             print_exception(k, e)
@@ -351,7 +352,7 @@ def event(options, session):
         R = options['R']
         try:
             for x in api.xpoll(channel_id=options['id'],
-                               data=R['R1_obj'][k],
+                               json=R['R1_obj'][k],
                                ack=options['ack'],
                                follow=options['follow'],
                                **R['R2_obj'][k]):
@@ -369,7 +370,7 @@ def event(options, session):
         R = options['R']
         try:
             r = api.poll(channel_id=options['id'],
-                         data=R['R1_obj'][k],
+                         json=R['R1_obj'][k],
                          **R['R2_obj'][k])
         except Exception as e:
             print_exception(k, e)
@@ -443,7 +444,7 @@ def directory_sync(options, session):
         R = options['R']
         try:
             r = api.query(object_class=options['id'],
-                          data=R['R1_obj'][k],
+                          json=R['R1_obj'][k],
                           **R['R2_obj'][k])
         except Exception as e:
             print_exception(k, e)
@@ -1108,7 +1109,6 @@ def parse_opts():
     if not options['credentials'] and 'ACCESS_TOKEN' in os.environ:
         headers = {
             'Authorization': 'Bearer %s' % os.environ['ACCESS_TOKEN'],
-            'Content-Type': 'application/json',
             'Accept': 'application/json',
         }
 
@@ -1171,7 +1171,8 @@ def usage():
     -m method             invoke class method
                           multiple -m's allowed
     --R0 json             class constructor args (**kwargs)
-    --R1 json             class method body/QUERY_STRING (data/params)
+    --R1 json             class method body or QUERY_STRING using
+                          json= or params= arguments
     --R2 json             class method args (**kwargs)
                           multiple --R[012]'s allowed, will be merged
     -J expression         JMESPath expression for JSON response data
