@@ -20,7 +20,8 @@
 
 from __future__ import print_function
 from collections import defaultdict
-import datetime
+from datetime import datetime
+from datetime import timedelta
 import getopt
 import json
 import logging as logging_
@@ -28,6 +29,7 @@ import os
 import pprint
 import requests
 import sys
+import time
 try:
     import jmespath
     from jmespath import exceptions
@@ -189,17 +191,28 @@ def logging(options, session):
 
         R = options['R']
         x = R['R1_obj'][k].copy()
-        if options['start_seconds'] is not None:
+        if ('startTime' not in x and
+           options['start_seconds'] is not None):
             x['startTime'] = options['start_seconds']
-        if options['end_seconds'] is not None:
+        if ('endTime' not in x and
+           options['end_seconds'] is not None):
             x['endTime'] = options['end_seconds']
+
+        if options['debug'] > 1:
+            if 'startTime' in x:
+                t = datetime.utcfromtimestamp(x['startTime'])
+                print('startTime:', t, file=sys.stderr)
+            if 'endTime' in x:
+                t = datetime.utcfromtimestamp(x['endTime'])
+                print('endTime:', t, file=sys.stderr)
 
         if options['debug'] > 2:
             print(pprint.pformat(x, indent=INDENT),
                   file=sys.stderr)
 
         try:
-            r = api.query(data=x, **R['R2_obj'][k])
+            r = api.query(json=x,
+                          **R['R2_obj'][k])
         except Exception as e:
             print_exception(k, e)
             sys.exit(1)
@@ -319,7 +332,7 @@ def event(options, session):
         R = options['R']
         try:
             r = api.set_filters(channel_id=options['id'],
-                                data=R['R1_obj'][k],
+                                json=R['R1_obj'][k],
                                 **R['R2_obj'][k])
         except Exception as e:
             print_exception(k, e)
@@ -339,7 +352,7 @@ def event(options, session):
         R = options['R']
         try:
             for x in api.xpoll(channel_id=options['id'],
-                               data=R['R1_obj'][k],
+                               json=R['R1_obj'][k],
                                ack=options['ack'],
                                follow=options['follow'],
                                **R['R2_obj'][k]):
@@ -357,7 +370,7 @@ def event(options, session):
         R = options['R']
         try:
             r = api.poll(channel_id=options['id'],
-                         data=R['R1_obj'][k],
+                         json=R['R1_obj'][k],
                          **R['R2_obj'][k])
         except Exception as e:
             print_exception(k, e)
@@ -431,7 +444,7 @@ def directory_sync(options, session):
         R = options['R']
         try:
             r = api.query(object_class=options['id'],
-                          data=R['R1_obj'][k],
+                          json=R['R1_obj'][k],
                           **R['R2_obj'][k])
         except Exception as e:
             print_exception(k, e)
@@ -561,16 +574,16 @@ def event_print_status(options, x):
                 k = 'receive_time'
                 try:
                     seconds = ev['event'][-1][k]
-                    t = datetime.datetime.utcfromtimestamp(seconds)
+                    t = datetime.utcfromtimestamp(seconds)
                     print(' %s' % t, end='', file=sys.stderr)
                 except (IndexError, KeyError):
                     pass
 
-                t0 = datetime.datetime.utcfromtimestamp(0)
+                t0 = datetime.utcfromtimestamp(0)
                 seq0 = 0
                 try:
                     for log in ev['event']:
-                        t1 = datetime.datetime.utcfromtimestamp(log[k])
+                        t1 = datetime.utcfromtimestamp(log[k])
                         seq1 = log['seqno']
                         if t0 > t1:
                             # XXX logs not in chronological order
@@ -597,8 +610,16 @@ def directory_sync_print_status(options, x):
 
 def print_response(r, options, k):
     if options['debug'] > 2:
-        print(pprint.pformat(dict(r.headers), indent=INDENT),
-              file=sys.stderr)
+        # request
+        if r.request.headers is not None:
+            # XXX ok to leak Authorization header here
+            print(pprint.pformat(dict(r.request.headers),
+                                 indent=INDENT), file=sys.stderr)
+        print(r.request.body, file=sys.stderr)
+        # response
+        if r.headers is not None:
+            print(pprint.pformat(dict(r.headers),
+                                 indent=INDENT), file=sys.stderr)
         print(r.text, file=sys.stderr)
 
     if r.text is None or r.headers is None:
@@ -716,41 +737,84 @@ def process_json_args(args, init=None):
     return obj
 
 
-def process_time(x):
-    try:
-        seconds = int(x)
-    except ValueError as e:
-        if not have_arrow:
-            print('%s: %s' % (str(x), e), file=sys.stderr)
-            print('Install arrow module for non Unix epoch time support: '
-                  'http://arrow.readthedocs.io/', file=sys.stderr)
-            sys.exit(1)
-
-        try:
-            t = arrow.get(x)
-        except arrow.parser.ParserError as e:
-            print('%s: %s' % (str(x), e), file=sys.stderr)
-            sys.exit(1)
-
-        seconds = t.timestamp
-        if debug > 1:
-            print('time %d: %s' % (seconds, t), file=sys.stderr)
-
-    else:
-        try:
-            t = datetime.datetime.utcfromtimestamp(seconds)
-        except ValueError as e:
-            print('%s: %s' % (str(x), e), file=sys.stderr)
-            sys.exit(1)
-
-        if debug > 1:
-            print('time %d: %s' % (seconds, t), file=sys.stderr)
-
+def validate_time(arg, seconds):
     if seconds < LOGGING_SERVICE_EPOCH:
-        t0 = datetime.datetime.utcfromtimestamp(LOGGING_SERVICE_EPOCH)
-        t = datetime.datetime.utcfromtimestamp(seconds)
-        print('Warning: "%s" < logging service epoch "%s"' % (t, t0),
+        t0 = datetime.utcfromtimestamp(LOGGING_SERVICE_EPOCH)
+        t = datetime.utcfromtimestamp(seconds)
+        print('Warning: %s: "%s" < logging service epoch "%s"' %
+              (arg, t, t0),
               file=sys.stderr)
+
+
+def debug_time(func):
+    def wrapper(*args, **kwargs):
+        seconds = func(*args, **kwargs)
+        if debug > 1:
+            t = datetime.utcfromtimestamp(seconds)
+            print('time', seconds, t, file=sys.stderr)
+        return seconds
+
+    return wrapper
+
+
+@debug_time
+def process_time(x):
+    def nice_time(time):
+        import re
+
+        m = re.match('^-?(\d+)([sSmMhHdDwW]?)$', time)
+        if not m:
+            raise ValueError('Invalid time: %s' % time)
+
+        kwargs = {}
+        x = m.groups()
+        modifier = x[1].lower()
+        if modifier == '' or modifier == 's':
+            kwargs['seconds'] = int(x[0])
+        elif modifier == 'm':
+            kwargs['minutes'] = int(x[0])
+        elif modifier == 'h':
+            kwargs['hours'] = int(x[0])
+        elif modifier == 'd':
+            kwargs['days'] = int(x[0])
+        elif modifier == 'w':
+            kwargs['weeks'] = int(x[0])
+        else:
+            assert False, 'unhandled modifier: %s' % modifier
+
+        try:
+            t = timedelta(**kwargs)
+        except OverflowError as e:
+            raise OverflowError('Invalid time: %s: %s' % (time, e))
+
+        return t
+
+    try:
+        t = nice_time(x)
+    except OverflowError as e:
+            print(e, file=sys.stderr)
+            sys.exit(1)
+    except ValueError:
+        pass
+    else:
+        if x[0] == '-':
+            return int(-t.total_seconds())
+        else:
+            return int(t.total_seconds())
+
+    if not have_arrow:
+        print('%s: %s' % (str(x), e), file=sys.stderr)
+        print('Install arrow module for non Unix epoch time support: '
+              'http://arrow.readthedocs.io/', file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        t = arrow.get(x)
+    except arrow.parser.ParserError as e:
+        print('%s: %s' % (str(x), e), file=sys.stderr)
+        sys.exit(1)
+
+    seconds = t.timestamp
 
     return seconds
 
@@ -793,10 +857,14 @@ def parse_opts():
         'xpoll': False,
         'query': False,
         'write': False,
-        'start': None,
-        'start_seconds': None,
         'id': None,
         'seq': 0,
+        'start': None,
+        'start_seconds': None,
+        'window': None,
+        'window_seconds': None,
+        'midpoint': None,
+        'midpoint_seconds': None,
         'end': None,
         'end_seconds': None,
         'set': False,
@@ -857,7 +925,7 @@ def parse_opts():
     short_options = 'CHLDEm:J:pj'
     long_options = [
         'delete', 'poll', 'xpoll', 'query', 'write',
-        'start=', 'end=',
+        'start=', 'midpoint=', 'end=', 'window=',
         'id=', 'seq=',
         'set', 'get', 'ack', 'nack', 'follow',
         'count', 'domains', 'attributes',
@@ -915,9 +983,24 @@ def parse_opts():
         elif opt == '--start':
             options['start'] = arg
             options['start_seconds'] = process_time(arg)
+        elif opt == '--window':
+            options['window'] = arg
+            options['window_seconds'] = process_time(arg)
+            if options['window_seconds'] < 0:
+                print("--window can't be negative", file=sys.stderr)
+                sys.exit(1)
+        elif opt == '--midpoint':
+            options['midpoint'] = arg
+            options['midpoint_seconds'] = process_time(arg)
+            if options['midpoint_seconds'] < 0:
+                print("--midpoint can't be negative", file=sys.stderr)
+                sys.exit(1)
         elif opt == '--end':
             options['end'] = arg
             options['end_seconds'] = process_time(arg)
+            if options['end_seconds'] < 0:
+                print("--end can't be negative", file=sys.stderr)
+                sys.exit(1)
         elif opt == '--id':
             options['id'] = arg
         elif opt == '--seq':
@@ -974,11 +1057,58 @@ def parse_opts():
         else:
             assert False, 'unhandled option %s' % opt
 
+    # --start time
+    #   Use negative seconds to specify relative time to end.
+    #
+    #   Can also use a time modifier preceeding seconds:
+    #     s|S: seconds
+    #     m|M: minutes
+    #     h|H: hours
+    #     d|D: days
+    #     w|W: weeks
+    #
+    #   Example: --start -7d --end 2018-06-08
+    #   Result: startTime: 2018-06-01 00:00:00 endTime: 2018-06-08 00:00:00
+    #
+    # --midpoint time
+    #   Use seconds in --window to specify start-end duration to
+    #   midpoint.
+    #
+    #   Example: --window 2d --midpoint 2018-06-02
+    #   Result: startTime: 2018-06-01 00:00:00 endTime: 2018-06-03 00:00:00
+    #
+    # --end time
+    #   Defaults to current time.
+
+    if options['midpoint_seconds'] is not None:
+        if options['window_seconds'] is not None:
+            offset = options['window_seconds'] // 2
+            options['start_seconds'] = (options['midpoint_seconds'] -
+                                        offset)
+            options['end_seconds'] = (options['midpoint_seconds'] +
+                                      offset)
+        else:
+            print('--midpoint requires --window for start-end',
+                  file=sys.stderr)
+            sys.exit(1)
+
+    if options['end_seconds'] is None:
+        options['end_seconds'] = int(time.time())
+
+    if (options['start_seconds'] is not None and
+       options['start_seconds'] < 0):
+        options['start_seconds'] = (options['start_seconds'] +
+                                    options['end_seconds'])
+
+    if options['start_seconds'] is not None:
+        validate_time('startTime', options['start_seconds'])
+    if options['end_seconds'] is not None:
+        validate_time('endTime', options['end_seconds'])
+
     headers = None
     if not options['credentials'] and 'ACCESS_TOKEN' in os.environ:
         headers = {
             'Authorization': 'Bearer %s' % os.environ['ACCESS_TOKEN'],
-            'Content-Type': 'application/json',
             'Accept': 'application/json',
         }
 
@@ -986,7 +1116,11 @@ def parse_opts():
         init = None
         if k == 'R0' and headers is not None:
             init = {'headers': headers}
-        options_R[k + '_obj'] = defaultdict(dict)
+        if k == 'R1':
+            # default R1 to None so don't send body unless specified
+            options_R[k + '_obj'] = defaultdict(lambda: None)
+        else:
+            options_R[k + '_obj'] = defaultdict(dict)
         for x in options_R[k].keys():
             options_R[k + '_obj'][x] =\
                 process_json_args(options_R[k][x], init)
@@ -1007,8 +1141,10 @@ def usage():
       --xpoll             poll all logging query records
       --query             query logging records
       --write             write logging records (future)
-      --start time        startTime
-      --end time          endTime
+      --start time        startTime (-time for relative to end)
+      --window time       time duration for midpoint
+      --midpoint time     midpoint in window for start-end
+      --end time          endTime (default: current time)
       --id id             queryId
       --seq no            sequenceNo
     -E                    Event Service API request using
@@ -1035,7 +1171,8 @@ def usage():
     -m method             invoke class method
                           multiple -m's allowed
     --R0 json             class constructor args (**kwargs)
-    --R1 json             class method body/QUERY_STRING (data/params)
+    --R1 json             class method body or QUERY_STRING using
+                          json= or params= arguments
     --R2 json             class method args (**kwargs)
                           multiple --R[012]'s allowed, will be merged
     -J expression         JMESPath expression for JSON response data
