@@ -288,7 +288,7 @@ class LoggingService(object):
                                  r_json['errorMessage']))
 
         elif r_json['queryStatus'] == 'RUNNING':
-            if 'maxWaitTime' in params:
+            if params is not None and 'maxWaitTime' in params:
                 pass
             else:
                 # XXX
