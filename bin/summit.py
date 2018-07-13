@@ -123,7 +123,8 @@ def credentials(options):
         print_exception(k, e)
         sys.exit(1)
 
-    if options['write']:
+    # XXX pre-dates -m
+    if options['write_credentials']:
         write_credentials(x, options)
 
     methods(options, x)
@@ -276,7 +277,18 @@ def logging(options, session):
         k = 'LoggingService.write'
 
         R = options['R']
-        print(k, 'not implemented')
+        try:
+            # XXX use R2 to specify "log_type"
+            r = api.write(vendor_id=options['id'],
+                          json=R['R1_obj'][k],
+                          **R['R2_obj'][k])
+        except Exception as e:
+            print_exception(k, e)
+            sys.exit(1)
+
+        print_status(k, r, options)
+        print_response(r, options, k)
+        exit_for_http_status(r)
 
     k = 'LoggingService'
 
@@ -713,7 +725,7 @@ def process_arg(x):
 
 
 def process_json_args(args, init=None):
-    obj = init or {}
+    obj = init
     for r in args:
         try:
             x = json.loads(r)
@@ -721,7 +733,28 @@ def process_json_args(args, init=None):
             print('%s: %s' % (e, r), file=sys.stderr)
             sys.exit(1)
 
-        obj.update(x)
+        if obj is None:
+            if isinstance(x, list):
+                obj = []
+            elif isinstance(x, dict):
+                obj = {}
+            else:
+                print('Invalid --R[0-2] type: %s: %s' % (type(x), x),
+                      file=sys.stderr)
+                sys.exit(1)
+        try:
+            if isinstance(x, list):
+                if x:
+                    obj.append(x[0])
+            elif isinstance(x, dict):
+                obj.update(x)
+            else:
+                print('Invalid --R[0-2] type: %s: %s' % (type(x), x),
+                      file=sys.stderr)
+                sys.exit(1)
+        except AttributeError:
+            print("Can't mix --R[0-2] types", file=sys.stderr)
+            sys.exit(1)
 
     # XXX used for debug only
     try:
@@ -857,6 +890,7 @@ def parse_opts():
         'xpoll': False,
         'query': False,
         'write': False,
+        'write_credentials': False,
         'id': None,
         'seq': 0,
         'start': None,
@@ -975,11 +1009,12 @@ def parse_opts():
             options['query'] = True
             last_m = 'query'
         elif opt == '--write':
-            options['write'] = True
             if last_c == 'Credentials':
                 last_m = 'write_credentials'
+                options['write_credentials'] = True
             else:
                 last_m = 'write'
+                options['write'] = True
         elif opt == '--start':
             options['start'] = arg
             options['start_seconds'] = process_time(arg)
@@ -1122,8 +1157,16 @@ def parse_opts():
         else:
             options_R[k + '_obj'] = defaultdict(dict)
         for x in options_R[k].keys():
-            options_R[k + '_obj'][x] =\
-                process_json_args(options_R[k][x], init)
+            r = process_json_args(options_R[k][x], init)
+            if k in ['R0', 'R1', 'R2'] and isinstance(r, dict):
+                pass
+            elif k in ['R1'] and isinstance(r, list):
+                pass
+            else:
+                print('Invalid --%s type: %s' % (k, type(r)),
+                      file=sys.stderr)
+                sys.exit(1)
+            options_R[k + '_obj'][x] = r
 
     if options['debug'] > 2:
         s = pprint.pformat(options, indent=INDENT)
@@ -1140,7 +1183,7 @@ def usage():
       --poll              poll logging query results
       --xpoll             poll all logging query records
       --query             query logging records
-      --write             write logging records (future)
+      --write             write logging records
       --start time        startTime (-time for relative to end)
       --window time       time duration for midpoint
       --midpoint time     midpoint in window for start-end
