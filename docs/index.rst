@@ -14,10 +14,10 @@ Release v\ |version|. (:ref:`Installation <installation>`)
 Welcome to pancloud's documentation!
 ====================================
 
-The Palo Alto Networks Cloud Python SDK, or ``pancloud``, was created to assist developers with
-programmatically interacting with the Palo Alto Networks Application Framework.
+The Palo Alto Networks Cloud Python SDK (or ``pancloud`` for short) was created to empower
+developers to write innovative security solutions using the Palo Alto Networks Application Framework.
 
-The primary goal is to provide full, low-level API coverage for the following Application Framework services:
+The primary goal of this library is to provide full, low-level coverage for the following Application Framework services:
 
     - Logging Service
     - Directory Sync Service
@@ -41,6 +41,7 @@ to install and contribute to ``pancloud``, as well as the version history.
 .. toctree::
    :maxdepth: 2
 
+   readme
    guides/quickstart
    guides/credentials
    installation

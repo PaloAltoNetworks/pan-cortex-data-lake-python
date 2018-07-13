@@ -29,6 +29,9 @@ class HTTPClient(object):
         granular performance and reliability tuning.
 
         Parameters:
+            auto_refresh (bool): Perform token refresh following HTTP 401 response from server. Defaults to ``True``.
+            auto_retry (bool): Retry last failed HTTP request following a token refresh. Defaults to ``True``.
+            credentials (Credentials): :class:`~pancloud.credentials.Credentials` object. Defaults to ``None``.
             enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.PanCloudError`. Defaults to ``False``.
             port (int): TCP port to append to URL. Defaults to ``443``.
             raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
@@ -50,7 +53,6 @@ class HTTPClient(object):
             self.session.headers = kwargs.pop(
                 'headers',
                 {
-                    "Content-Type": "application/json",
                     "Accept": "application/json"
                 }
             )
@@ -233,13 +235,7 @@ class HTTPClient(object):
         # Request() overrides
         for x in ['allow_redirects', 'data', 'json', 'method',
                   'timeout']:
-            if x in kwargs and x == 'data':
-                d = kwargs.pop(x)
-                if type(d) is dict or type(d) is list:
-                    k[x] = json.dumps(d)  # convert to str
-                else:  # let requests handle the form-encoding
-                    k[x] = d
-            elif x in kwargs:
+            if x in kwargs:
                 k[x] = kwargs.pop(x)
 
         # Handle invalid kwargs
