@@ -1,2 +1,4 @@
 requests
 tinydb
+arrow>=0.12.0
+jmespath>=0.9.3
