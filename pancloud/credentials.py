@@ -306,6 +306,7 @@ class Credentials(object):
                                 'client_id': c.client_id,
                                 'client_secret': c.client_secret,
                                 'refresh_token': c.refresh_token,
+                                'grant_type': 'refresh_token'
                             },
                             timeout=timeout
                         )
@@ -317,6 +318,9 @@ class Credentials(object):
                             self.access_token_ = r.json().get(
                                 'access_token', ''
                             )
+                            if r.json().get('refresh_token', None):
+                                self.refresh_token_ = \
+                                    r.json().get('refresh_token')
                         except ValueError as e:
                             raise PanCloudError("Invalid JSON: %s" % e)
                         else:
