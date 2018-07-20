@@ -28,7 +28,7 @@ ReadOnlyCredentials = namedtuple(
 class Credentials(object):
     """An Application Framework credentials object."""
 
-    def __init__(self, auth_base_url=None, cache_token=True,
+    def __init__(self, access_token=None, auth_base_url=None, cache_token=True,
                  client_id=None, client_secret=None, instance_id=None,
                  profile=None, redirect_uri=None, region=None,
                  refresh_token=None, scope=None, storage_adapter=None,
@@ -48,6 +48,7 @@ class Credentials(object):
             4) Credentials file/token store
 
         Args:
+            access_token (str): OAuth2 access token. Defaults to ``None``.
             auth_base_url (str): IdP base authorization URL. Default to ``None``.
             cache_token (bool): If ``True``, stores ``access_token`` in token store. Defaults to ``True``.
             client_id (str): OAuth2 client ID. Defaults to ``None``.
@@ -63,7 +64,7 @@ class Credentials(object):
             **kwargs: Supported :class:`~requests.Session` parameters.
 
         """
-        self.access_token_ = None
+        self.access_token_ = access_token
         self.auth_base_url = auth_base_url or BASE_URL
         self.cache_token_ = cache_token
         self.client_id_ = client_id
@@ -82,6 +83,9 @@ class Credentials(object):
         self.token_lock = Lock()
         self.token_url = token_url or TOKEN_URL
         self.token_revoke_url = token_revoke_url or REVOKE_URL
+        self._credentials_found_in_instance = any(
+            [self.access_token_, self.client_id_,
+             self.client_secret_, self.refresh_token_])
         with requests.Session() as self.session:
             self.session.auth = kwargs.pop('auth', self.session.auth)
             self.session.cert = kwargs.pop('cert', self.session.cert)
@@ -132,6 +136,13 @@ class Credentials(object):
         return self.refresh_token_ or \
                self._resolve_credential('refresh_token')
 
+    @staticmethod
+    def _credentials_found_in_envars():
+        return any([os.getenv('ACCESS_TOKEN'),
+                    os.getenv('CLIENT_ID'),
+                    os.getenv('CLIENT_SECRET'),
+                    os.getenv('REFRESH_TOKEN')])
+
     def _init_adapter(self):
         module_path = self.adapter.rsplit('.', 1)[0]
         adapter = self.adapter.split('.')[-1]
@@ -158,10 +169,13 @@ class Credentials(object):
             str or None: Resolved credential or ``None``.
 
         """
-        return os.getenv(credential.upper()) \
-            or self.storage().fetch_credential(
-            credential=credential, profile=self.profile
-        )
+        if self._credentials_found_in_instance:
+            return
+        elif self._credentials_found_in_envars():
+            return os.getenv(credential.upper())
+        else:
+            return self.storage().fetch_credential(
+                credential=credential, profile=self.profile)
 
     def fetch_tokens(self, client_id=None, client_secret=None, code=None,
                      redirect_uri=None):
