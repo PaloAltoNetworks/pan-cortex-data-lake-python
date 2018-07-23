@@ -69,7 +69,6 @@ class Credentials(object):
         self.cache_token_ = cache_token
         self.client_id_ = client_id
         self.client_secret_ = client_secret
-        self.environ = os.environ
         self.instance_id = instance_id
         self.profile = profile or 'default'
         self.redirect_uri = redirect_uri
@@ -213,19 +212,16 @@ class Credentials(object):
                 '%s %s: %s' % (r.status_code, r.reason, r.text)
             )
         try:
-            self.access_token_ = r.json().get(
-                'access_token', ''
-            )
-            self.refresh_token_ = r.json().get(
-                'refresh_token'
-            )
-            self.write_credentials()
+            r_json = r.json()
         except ValueError as e:
             raise PanCloudError("Invalid JSON: %s" % e)
         else:
             if r.json().get('error_description') or r.json().get('error'):
                 raise PanCloudError(r.text)
-            return r.json()
+            self.access_token_ = r_json.get('access_token')
+            self.refresh_token_ = r_json.get('refresh_token')
+            self.write_credentials()
+            return r_json
 
     def get_authorization_url(self, client_id=None, instance_id=None,
                               redirect_uri=None, region=None, scope=None,
@@ -271,19 +267,9 @@ class Credentials(object):
             class: Read-only credentials.
 
         """
-        if self.cache_token:
-            access_token = self.access_token_ or \
-                           self._resolve_credential('access_token')
-        else:
-            access_token = self.access_token_
-        client_id = self.client_id_ or self._resolve_credential(
-            'client_id')
-        client_secret = self.client_secret_ or self._resolve_credential(
-            'client_secret')
-        refresh_token = self.refresh_token_ or self._resolve_credential(
-            'refresh_token')
         return ReadOnlyCredentials(
-            access_token, client_id, client_secret, refresh_token
+            self.access_token, self.client_id, self.client_secret,
+            self.refresh_token
         )
 
     def remove_profile(self, profile):
@@ -329,12 +315,7 @@ class Credentials(object):
                                 '%s %s: %s' % (r.status_code, r.reason, r.text)
                             )
                         try:
-                            self.access_token_ = r.json().get(
-                                'access_token', ''
-                            )
-                            if r.json().get('refresh_token', None):
-                                self.refresh_token_ = \
-                                    r.json().get('refresh_token')
+                            r_json = r.json()
                         except ValueError as e:
                             raise PanCloudError("Invalid JSON: %s" % e)
                         else:
@@ -344,6 +325,12 @@ class Credentials(object):
                                 'error'
                             ):
                                 raise PanCloudError(r.text)
+                            self.access_token_ = r_json.get(
+                                'access_token', None
+                            )
+                            if r_json.get('refresh_token', None):
+                                self.refresh_token_ = \
+                                    r_json.get('refresh_token')
                             self.write_credentials()
                         return self.access_token_
                     else:
