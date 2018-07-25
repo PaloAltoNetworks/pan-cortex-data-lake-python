@@ -48,6 +48,7 @@ sys.path[:0] = [os.path.join(libpath, os.pardir)]
 from pancloud import Credentials, HTTPClient, LoggingService, \
     EventService, DirectorySyncService, __version__
 
+_None = object()  # sentinal used to not set --end default
 INDENT = 2
 LOGGING_SERVICE_EPOCH = 1504224000  # 2017-09-01T00:00:00+00:00
 DEFAULT_EVENT_CHANNEL_ID = 'EventFilter'
@@ -191,7 +192,10 @@ def logging(options, session):
         k = 'LoggingService.query'
 
         R = options['R']
-        x = R['R1_obj'][k].copy()
+        if R['R1_obj'][k] is None:
+            x = {}
+        else:
+            x = R['R1_obj'][k].copy()
         if ('startTime' not in x and
            options['start_seconds'] is not None):
             x['startTime'] = options['start_seconds']
@@ -210,6 +214,9 @@ def logging(options, session):
         if options['debug'] > 2:
             print(pprint.pformat(x, indent=INDENT),
                   file=sys.stderr)
+
+        if not x and R['R1_obj'][k] is None:
+            x = None  # preserve None if no parameters added
 
         try:
             r = api.query(json=x,
@@ -1033,7 +1040,11 @@ def parse_opts():
         elif opt == '--end':
             options['end'] = arg
             options['end_seconds'] = process_time(arg)
-            if options['end_seconds'] < 0:
+            if options['end_seconds'] == -1:
+                # XXX as a special case allow end -1 to override default
+                # which allows test case of empty body
+                options['end_seconds'] = _None
+            elif options['end_seconds'] < 0:
                 print("--end can't be negative", file=sys.stderr)
                 sys.exit(1)
         elif opt == '--id':
@@ -1127,7 +1138,9 @@ def parse_opts():
                   file=sys.stderr)
             sys.exit(1)
 
-    if options['end_seconds'] is None:
+    if options['end_seconds'] is _None:
+        options['end_seconds'] = None
+    elif options['end_seconds'] is None:
         options['end_seconds'] = int(time.time())
 
     if (options['start_seconds'] is not None and
