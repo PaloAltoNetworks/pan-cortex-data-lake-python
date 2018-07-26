@@ -12,6 +12,7 @@ from requests.adapters import HTTPAdapter
 
 from .exceptions import UnexpectedKwargsError, \
     RequiredKwargsError, HTTPError, PanCloudError
+from . import __version__
 
 
 class HTTPClient(object):
@@ -45,17 +46,13 @@ class HTTPClient(object):
             requests.packages.urllib3.disable_warnings()
         self.kwargs = kwargs.copy()  # used for __repr__
         with requests.Session() as self.session:
+            self._default_headers()  # apply default headers
             self.session.auth = kwargs.pop('auth', self.session.auth)
             self.session.cert = kwargs.pop('cert', self.session.cert)
             self.session.cookies = kwargs.pop(
                 'cookies', self.session.cookies
             )
-            self.session.headers = kwargs.pop(
-                'headers',
-                {
-                    "Accept": "application/json"
-                }
-            )
+            self.session.headers.update(kwargs.pop('headers', {}))
             self.session.params = kwargs.pop(
                 'params', self.session.params
             )
@@ -140,6 +137,20 @@ class HTTPClient(object):
             token = credentials.refresh(access_token=None, timeout=10)
         headers['Authorization'] = "Bearer {}".format(token)
         return headers
+
+    def _default_headers(self):
+        """Update default headers.
+
+        The requests library default headers are set in the `utils.py`
+        `default_headers()` function.
+
+        """
+        self.session.headers.update(
+            {
+                'Accept': 'application/json',
+                'User-Agent': '%s/%s' % ('pancloud', __version__)
+            }
+        )
 
     def _send_request(self, enforce_json, method, raise_for_status,
                       url, **kwargs):

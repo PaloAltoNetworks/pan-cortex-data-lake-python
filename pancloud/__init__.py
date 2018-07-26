@@ -2,6 +2,9 @@
 
 """Main package for pancloud."""
 
+__author__ = 'Palo Alto Networks'
+__version__ = '1.2.3'
+
 from .directorysync import DirectorySyncService
 from .event import EventService
 from .exceptions import PanCloudError, HTTPError, \
@@ -9,6 +12,3 @@ from .exceptions import PanCloudError, HTTPError, \
 from .httpclient import HTTPClient
 from .logging import LoggingService
 from .credentials import Credentials
-
-__author__ = 'Palo Alto Networks'
-__version__ = '1.2.3'
