@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Access, store and retrieve credentials from providers."""
+"""Access, store and refresh credentials."""
 from __future__ import absolute_import
 
 import os
@@ -35,17 +35,17 @@ class Credentials(object):
                  token_url=None, token_revoke_url=None, **kwargs):
         """Persist Session() and credentials attributes.
 
-        Built on top of the ``Requests`` library, ``Credentials`` is an
-        abstraction layer for storing, resolving and retrieving
+        Built on top of the ``Requests`` library, ``Credentials``
+        is an abstraction layer for accessing, storing and refreshing
         credentials needed for interacting with the Application
         Framework.
 
-        ``Credentials`` resolves credentials in the following order:
+        ``Credentials`` resolves credentials from the following locations,
+        in the following order:
 
-            1) Service object
-            2) HTTPClient session
-            3) Environment variables
-            4) Credentials file/token store
+            1) Class instance variables
+            2) Environment variables
+            3) Credentials store
 
         Args:
             access_token (str): OAuth2 access token. Defaults to ``None``.
@@ -107,7 +107,7 @@ class Credentials(object):
 
     @property
     def access_token(self):
-        """Get access_token"""
+        """Get access_token."""
         if self.cache_token:
             return self.access_token_ or \
                    self._resolve_credential('access_token')
@@ -115,28 +115,35 @@ class Credentials(object):
 
     @property
     def cache_token(self):
+        """Get cache_token setting."""
         return self.cache_token_
 
     @property
     def client_id(self):
-        """Get client_id"""
+        """Get client_id."""
         return self.client_id_ or \
                self._resolve_credential('client_id')
 
     @property
     def client_secret(self):
-        """Get client_secret"""
+        """Get client_secret."""
         return self.client_secret_ or \
                self._resolve_credential('client_secret')
 
     @property
     def refresh_token(self):
-        """Get refresh_token"""
+        """Get refresh_token."""
         return self.refresh_token_ or \
                self._resolve_credential('refresh_token')
 
     @staticmethod
     def _credentials_found_in_envars():
+        """Check for credentials in envars.
+
+        Returns:
+            bool: ``True`` if at least one is found, otherwise ``False``.
+
+        """
         return any([os.getenv('ACCESS_TOKEN'),
                     os.getenv('CLIENT_ID'),
                     os.getenv('CLIENT_SECRET'),
@@ -159,10 +166,10 @@ class Credentials(object):
         return class_  # Returns 'TinyDBStore' as class
 
     def _resolve_credential(self, credential):
-        """Resolve credential from environ or credentials file.
+        """Resolve credential from envars or credentials store.
 
         Args:
-            credential (str): Credential to fetch.
+            credential (str): Credential to resolve.
 
         Returns:
             str or None: Resolved credential or ``None``.
@@ -178,7 +185,7 @@ class Credentials(object):
 
     def fetch_tokens(self, client_id=None, client_secret=None, code=None,
                      redirect_uri=None):
-        """Fetch tokens from token URL.
+        """Exchange authorization code for token.
 
         Args:
             client_id (str): OAuth2 client ID. Defaults to ``None``.
@@ -273,7 +280,7 @@ class Credentials(object):
         )
 
     def remove_profile(self, profile):
-        """Remove profile from credentials file.
+        """Remove profile from credentials store.
 
         Args:
             profile (str): Credentials profile to remove.
@@ -285,7 +292,7 @@ class Credentials(object):
         return self.storage().remove_profile(profile=profile)
 
     def refresh(self, timeout=None, access_token=None):
-        """Refresh access token and renew refresh token.
+        """Refresh access and refresh tokens.
 
         Args:
             timeout (int): HTTP timeout. Defaults to ``None``.
@@ -377,7 +384,7 @@ class Credentials(object):
     def write_credentials(self):
         """Write credentials.
 
-        Write credentials to credentials file. Performs ``upsert``.
+        Write credentials to credentials store.
 
         Returns:
             int: Result of operation.
