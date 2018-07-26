@@ -144,10 +144,10 @@ class Credentials(object):
             bool: ``True`` if at least one is found, otherwise ``False``.
 
         """
-        return any([os.getenv('ACCESS_TOKEN'),
-                    os.getenv('CLIENT_ID'),
-                    os.getenv('CLIENT_SECRET'),
-                    os.getenv('REFRESH_TOKEN')])
+        return any([os.getenv('PAN_ACCESS_TOKEN'),
+                    os.getenv('PAN_CLIENT_ID'),
+                    os.getenv('PAN_CLIENT_SECRET'),
+                    os.getenv('PAN_REFRESH_TOKEN')])
 
     def _init_adapter(self):
         module_path = self.adapter.rsplit('.', 1)[0]
@@ -178,7 +178,7 @@ class Credentials(object):
         if self._credentials_found_in_instance:
             return
         elif self._credentials_found_in_envars():
-            return os.getenv(credential.upper())
+            return os.getenv('PAN_' + credential.upper())
         else:
             return self.storage().fetch_credential(
                 credential=credential, profile=self.profile)

@@ -40,9 +40,9 @@ cred-init.json example:
 .. code-block:: json
 
     {
-    "client_id": "<client_id>",
-    "client_secret": "<client_secret>",
-    "refresh_token": "<refresh_token>"
+        "client_id": "<client_id>",
+        "client_secret": "<client_secret>",
+        "refresh_token": "<refresh_token>"
     }
 
 credentials_generate.py:
@@ -64,18 +64,44 @@ SDK in your own project.
 Credential Resolver
 -------------------
 The ``pancloud`` :class:`~pancloud.credentials.Credentials` class implements
-a built-in resolver which looks for credentials in different
-areas during runtime:
+a built-in resolver that looks for credentials in different places, following
+a particular lookup order:
 
-- Credentials passed as :class:`~pancloud.credentials.Credentials` constructor key-word arguments
-- Credentials stored as environment variables
-    - REFRESH_TOKEN
-    - CLIENT_ID
-    - CLIENT_SECRET
-- Credentials stored in a credentials file (~/.config/pancloud/credentials.json)
-    - ``refresh_token``
-    - ``client_id``
-    - ``client_secret``
+1. Credentials passed as :class:`~pancloud.credentials.Credentials` constructor key-word arguments:
+
+.. code-block:: python
+
+    c = Credentials(
+        client_id=<client_id>,
+        client_secret=<client_secret>,
+        refresh_token=<refresh_token>
+    )
+
+2. Credentials stored as environment variables:
+
+    - ``PAN_REFRESH_TOKEN``
+    - ``PAN_CLIENT_ID``
+    - ``PAN_CLIENT_SECRET``
+
+3. Credentials stored in a credentials file (~/.config/pancloud/credentials.json) or custom store:
+
+.. code-block:: python
+
+    {
+        "profiles": {
+            "1": {
+                "access_token": <access_token>,
+                "client_id": <client_id>,
+                "client_secret": <client_secret>,
+                "profile": <profile>,
+                "refresh_token": <refresh_token>
+            }
+        }
+    }
+
+The resolution performs a top-down, first match evaluation and stops when any of
+the four credentials are detected. Attempting to :meth:`~pancloud.credentials.Credentials.refresh`
+with an incomplete set of credentials will raise a :exc:`~pancloud.exceptions.PartialCredentialsError`.
 
 .. note::
 
