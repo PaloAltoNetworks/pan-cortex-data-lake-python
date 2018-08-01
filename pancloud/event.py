@@ -18,6 +18,7 @@ Examples:
 
 from __future__ import absolute_import
 import logging
+import time
 
 from .exceptions import PanCloudError, RequiredKwargsError
 from .httpclient import HTTPClient
@@ -207,7 +208,7 @@ class EventService(object):
         return r
 
     def xpoll(self, channel_id=None, json=None, ack=False,
-              follow=False, **kwargs):
+              follow=False, pause=None, **kwargs):
         """Retrieve logType, event entries iteratively in a non-greedy manner.
 
         Generator function to return logType, event entries from poll
@@ -217,7 +218,8 @@ class EventService(object):
             channel_id (str): The channel ID.
             json (dict): Payload/request body.
             ack (bool): True to acknowledge read.
-            follow(bool): True to continue polling after channelId empty.
+            follow (bool): True to continue polling after channelId empty.
+            pause (float): Seconds to sleep between poll when follow and channelId empty.
             **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
 
         Yields:
@@ -268,5 +270,10 @@ class EventService(object):
             for x in r_json:
                 yield x
 
+            # XXX don't ack if empty response?
             if ack:
                 _ack(channel_id, **kwargs)
+
+            if not r_json and pause is not None:
+                self._debug('sleep %.2fs', pause)
+                time.sleep(pause)
