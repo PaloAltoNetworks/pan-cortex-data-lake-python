@@ -4,7 +4,6 @@
 
 from __future__ import absolute_import
 
-import json
 import logging
 
 import requests
@@ -96,9 +95,8 @@ class HTTPClient(object):
                 raise UnexpectedKwargsError(kwargs)
 
             if self.credentials:
-                self.session.headers = self._apply_credentials(
-                    self.session.headers, self.credentials
-                )
+                self._apply_credentials(
+                    self.credentials, self.session.headers)
 
     def __repr__(self):
         for k in self.kwargs.get('headers', {}):
@@ -118,25 +116,23 @@ class HTTPClient(object):
         )
 
     @staticmethod
-    def _apply_credentials(headers, credentials):
+    def _apply_credentials(credentials, headers):
         """Update Authorization header.
 
         Update request headers with latest `access_token`. Perform token
         `refresh` if token is ``None``.
 
         Args:
-            headers (dict): Request headers.
             credentials (class): Read-only credentials.
-
-        Returns:
-            dict: Updated request headers.
+            headers (class): Requests `CaseInsensitiveDict`.
 
         """
         token = credentials.get_credentials().access_token
         if token is None:
             token = credentials.refresh(access_token=None, timeout=10)
-        headers['Authorization'] = "Bearer {}".format(token)
-        return headers
+        headers.update(
+            {'Authorization': "Bearer {}".format(token)}
+        )
 
     def _default_headers(self):
         """Update default headers.
@@ -215,10 +211,9 @@ class HTTPClient(object):
         verify = kwargs.pop('verify', None)
 
         # Non-Requests key-word arguments
-        auto_refresh = kwargs.pop('auto_refresh', None) or self.auto_refresh
-        auto_retry = kwargs.pop('auto_retry', None) or self.auto_retry
-        credentials = kwargs.pop(
-            'credentials', None) or self.credentials
+        auto_refresh = kwargs.pop('auto_refresh', self.auto_refresh)
+        auto_retry = kwargs.pop('auto_retry', self.auto_retry)
+        credentials = kwargs.pop('credentials', None)
         enforce_json = kwargs.pop('enforce_json', self.enforce_json)
         path = kwargs.pop('path', '')  # default to empty path
         raise_for_status = kwargs.pop(
@@ -226,11 +221,12 @@ class HTTPClient(object):
         )
         url = "{}:{}{}".format(url, self.port, path)
 
-        if credentials and not headers:
-            headers = self._apply_credentials(
-                self.session.headers, credentials)
-        elif credentials and headers:
-            headers = self._apply_credentials(headers, credentials)
+        if credentials:
+            if headers is None:
+                headers = self.session.headers.copy()
+            self._apply_credentials(credentials, headers)
+        else:
+            credentials = self.credentials
 
         k = {  # Re-pack kwargs to dictionary
             'params': params or self.session.params,
@@ -260,11 +256,6 @@ class HTTPClient(object):
 
         # Prepare and send the Request() and return Response()
         try:
-            if credentials:
-                if credentials.cache_token:
-                    h = self._apply_credentials(
-                        k['headers'], credentials)
-                    k['headers'] = h
             r = self._send_request(
                 enforce_json, method, raise_for_status, url, **k
             )
@@ -272,9 +263,9 @@ class HTTPClient(object):
                 if credentials and auto_refresh:
                     token = credentials.get_credentials().access_token
                     credentials.refresh(access_token=token, timeout=10)
-                    h = self._apply_credentials(
-                        k['headers'], credentials)
-                    k['headers'] = h
+                    self._apply_credentials(
+                        credentials, headers or self.session.headers
+                    )
                     if auto_retry:
                         r = self._send_request(
                             enforce_json, method, raise_for_status, url,
