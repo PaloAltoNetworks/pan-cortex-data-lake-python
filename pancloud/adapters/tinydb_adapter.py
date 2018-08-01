@@ -30,11 +30,9 @@ class TinyDBStore(StorageAdapter):
             str, None: Fetched credential or ``None``.
 
         """
-        q = self.db.search(self.query.profile == profile)
-        try:
-            return q[0].get(credential, '')
-        except (AttributeError, ValueError, IndexError):
-            return
+        q = self.db.get(self.query.profile == profile)
+        if q is not None:
+            return q.get(credential)
 
     def init_store(self):
         path = os.path.join(
