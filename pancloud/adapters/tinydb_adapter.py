@@ -14,7 +14,9 @@ from . import StorageAdapter
 
 class TinyDBStore(StorageAdapter):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        self._storage_params = kwargs.get('storage_params') or {}
+        self.dbfile = self._storage_params.get('dbfile')
         self.query = Query()
         self.db = self.init_store()
         self.lock = RLock()
@@ -37,17 +39,22 @@ class TinyDBStore(StorageAdapter):
             return
 
     def init_store(self):
-        path = os.path.join(
-            os.path.expanduser('~'), '.config', 'pancloud',
-            'credentials.json'
-        )
-        if not os.path.exists(os.path.dirname(path)):
+        if self.dbfile:
+            dbfile = self.dbfile
+        elif os.getenv('PAN_CREDENTIALS_DBFILE'):
+            dbfile = os.getenv('PAN_CREDENTIALS_DBFILE')
+        else:
+            dbfile = os.path.join(
+                os.path.expanduser('~'), '.config', 'pancloud',
+                'credentials.json'
+            )
+        if not os.path.exists(os.path.dirname(dbfile)):
             try:
-                os.makedirs(os.path.dirname(path), 0o700)
+                os.makedirs(os.path.dirname(dbfile), 0o700)
             except OSError as e:
                 raise PanCloudError("{}".format(e))
         return TinyDB(
-            path, sort_keys=True, indent=4,
+            dbfile, sort_keys=True, indent=4,
             default_table='profiles'
         )
 
