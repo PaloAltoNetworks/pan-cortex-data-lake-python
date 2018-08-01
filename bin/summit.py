@@ -33,6 +33,7 @@ import time
 try:
     import jmespath
     from jmespath import exceptions
+    from jmespath import functions
     have_jmespath = True
 except ImportError:
     have_jmespath = False
@@ -672,7 +673,8 @@ def print_response_body(options, k, x):
             return
 
     if print_['jmespath'] is not None:
-        x = jmespath_search(print_['jmespath'], x)
+        x = jmespath_search(print_['jmespath'], x,
+                            options['jmespath_options'])
 
     if print_['print_json']:
         print_json(x)
@@ -701,9 +703,21 @@ def print_json(obj):
                      separators=(',', ': ')))
 
 
-def jmespath_search(expression, obj):
+# Configure JMESPath custom function: isotime()
+def jmespath_init():
+    class CustomFunctions(functions.Functions):
+        @functions.signature({'types': ['number']})
+        def _func_isotime(self, x):
+            d = datetime.fromtimestamp(x)
+            return d.isoformat()
+
+    options = jmespath.Options(custom_functions=CustomFunctions())
+    return options
+
+
+def jmespath_search(expression, obj, options):
     try:
-        x = jmespath.search(expression, obj)
+        x = jmespath.search(expression, obj, options=options)
     except exceptions.JMESPathError as e:
         print('JMESPath %s: %s' % (e.__class__.__name__, e), file=sys.stderr)
         sys.exit(1)
@@ -887,6 +901,7 @@ def parse_opts():
         'R': options_R,
         'm': options_m,
         'print': options_print,
+        'jmespath_options': None,
         'credentials': False,
         'http_client': False,
         'logging_api': False,
@@ -958,6 +973,8 @@ def parse_opts():
                       file=sys.stderr)
                 sys.exit(1)
             options_print[x]['jmespath'] = arg
+            if options['jmespath_options'] is None:
+                options['jmespath_options'] = jmespath_init()
         elif opt == 'p':
             options_print[x]['print_python'] = True
         elif opt == 'j':
