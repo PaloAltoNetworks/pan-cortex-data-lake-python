@@ -32,7 +32,8 @@ class Credentials(object):
                  client_id=None, client_secret=None, instance_id=None,
                  profile=None, redirect_uri=None, region=None,
                  refresh_token=None, scope=None, storage_adapter=None,
-                 token_url=None, token_revoke_url=None, **kwargs):
+                 storage_params=None, token_url=None, token_revoke_url=None,
+                 **kwargs):
         """Persist Session() and credentials attributes.
 
         Built on top of the ``Requests`` library, ``Credentials``
@@ -59,6 +60,7 @@ class Credentials(object):
             region (str): Region. Defaults to ``None``.
             refresh_token (str): OAuth2 refresh token. Defaults to ``None``.
             scope (str): OAuth2 scope. Defaults to ``None``.
+            storage_params (dict) = Storage adapter parameters. Defaults to ``None``.
             token_url (str): Refresh URL. Defaults to ``None``.
             token_revoke_url (str): Revoke URL. Defaults to ``None``.
             **kwargs: Supported :class:`~requests.Session` parameters.
@@ -78,7 +80,7 @@ class Credentials(object):
         self.state = uuid.uuid4()
         self.adapter = storage_adapter or \
                        'pancloud.adapters.tinydb_adapter.TinyDBStore'
-        self.storage = self._init_adapter()
+        self.storage = self._init_adapter(storage_params)
         self.token_lock = Lock()
         self.token_url = token_url or TOKEN_URL
         self.token_revoke_url = token_revoke_url or REVOKE_URL
@@ -149,7 +151,7 @@ class Credentials(object):
                     os.getenv('PAN_CLIENT_SECRET'),
                     os.getenv('PAN_REFRESH_TOKEN')])
 
-    def _init_adapter(self):
+    def _init_adapter(self, storage_params=None):
         module_path = self.adapter.rsplit('.', 1)[0]
         adapter = self.adapter.split('.')[-1]
         try:
@@ -163,7 +165,7 @@ class Credentials(object):
         except AttributeError:
             raise PanCloudError('Class not found: %s' % adapter)
 
-        return class_  # Returns 'TinyDBStore' as class
+        return class_(storage_params=storage_params)
 
     def _resolve_credential(self, credential):
         """Resolve credential from envars or credentials store.
@@ -180,7 +182,7 @@ class Credentials(object):
         elif self._credentials_found_in_envars():
             return os.getenv('PAN_' + credential.upper())
         else:
-            return self.storage().fetch_credential(
+            return self.storage.fetch_credential(
                 credential=credential, profile=self.profile)
 
     def fetch_tokens(self, client_id=None, client_secret=None, code=None,
@@ -289,7 +291,7 @@ class Credentials(object):
             int: Result of operation.
 
         """
-        return self.storage().remove_profile(profile=profile)
+        return self.storage.remove_profile(profile=profile)
 
     def refresh(self, timeout=None, access_token=None):
         """Refresh access and refresh tokens.
@@ -391,7 +393,7 @@ class Credentials(object):
 
         """
         c = self.get_credentials()
-        return self.storage().write_credentials(
+        return self.storage.write_credentials(
             credentials=c, profile=self.profile,
             cache_token=self.cache_token_
         )

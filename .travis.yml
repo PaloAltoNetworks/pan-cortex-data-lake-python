@@ -23,7 +23,7 @@ python:
 - 2.7
 script:
 - tox
-- coverage run --source pancloud -m py.test
+- coverage run --source pancloud -m py.test --ignore=examples
 - coverage report -m
 
 # safelist
