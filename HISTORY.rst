@@ -2,6 +2,26 @@
 History
 =======
 
+1.3.0 (2018-08-04)
+------------------
+
+* Added support for custom read/write credentials path.
+* `TinyDBStore` `fetch_credential()` now returns `None` instead of empty `str`.
+* Fixed bug that caused `_resolve_credential()` to be executed an inefficient number of times.
+* Now updating `HTTPClient` headers instead of overriding them which previously broke HTTP persistence.
+* Added JMESPath `isotime()` function to `summit.py` which prints epoch.
+* Added argument to `EventService` `xpoll()` method to support sleeping between polls.
+* Added `PAN_` prefix to envars to avoid name collisions.
+* Fixed bug when `R['R1_obj']['LoggingService.query']` is None and allow json=None case with special case of --end -1 which will not set a default end of now.
+* Fixed bug that nulled out credentials if an error occurred during a `fetch_tokens()` or `refresh()` operation.
+* Now enforcing strict credential resolution. Previous behavior allowed for merging credentials from different providers.
+* Added support for caching `refresh_token` to support rolling.
+* Added support for writing logs to `summit.py`.
+* Switch from using `data` param to `json` param in client/service methods.
+* Now defaulting `R1` to `None` so don't send body unless specified.
+* Now printing request headers and body at debug level 3 in `summit.py`.
+* Added enhancements to `summit.py` for specifying `startTime` and `endTime`.
+
 1.2.3 (2018-06-21)
 ------------------
 
