@@ -282,10 +282,13 @@ class LoggingService(object):
                 sequence_no = 1
 
         elif r_json['queryStatus'] == 'JOB_FAILED':
-            raise PanCloudError('%s: %s: %s' %
-                                (r_json['queryStatus'],
-                                 r_json['errorCode'],
-                                 r_json['errorMessage']))
+            e = '%s' % r_json['queryStatus']
+            try:
+                e += ': %s' % r_json['result']['esResult']['error']
+            except KeyError:
+                self._debug(r_json)
+
+            raise PanCloudError(e)
 
         elif r_json['queryStatus'] == 'RUNNING':
             if params is not None and 'maxWaitTime' in params:
