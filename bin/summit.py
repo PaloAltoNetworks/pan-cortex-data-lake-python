@@ -1224,9 +1224,11 @@ def usage():
                           EventService() class
       --set               set event channel filters
       --get               get event channel filters
-      --ack               move event read point to current
-      --nack              move event read point to previous
-      --poll              poll events
+      --ack               acknowledgement for events read
+                          (sets ack point = read point)
+      --nack              negative acknowledgement for events read
+                          (sets read point = ack point)
+      --poll              read events
       --xpoll             poll all events until drained
                           (use --ack to ack after each poll)
       --follow            follow xpoll after drained: xpoll(follow=True)
