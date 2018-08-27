@@ -77,7 +77,7 @@ class Credentials(object):
         self.region = region
         self.refresh_token_ = refresh_token
         self.scope = scope
-        self.state = uuid.uuid4()
+        self.state = None
         self.adapter = storage_adapter or \
                        'pancloud.adapters.tinydb_adapter.TinyDBStore'
         self.storage = self._init_adapter(storage_params)
@@ -254,7 +254,8 @@ class Credentials(object):
         redirect_uri = redirect_uri or self.redirect_uri
         region = region or self.region
         scope = scope or self.scope
-        state = state or self.state
+        state = state or uuid.uuid4()
+        self.state = state
         return requests.Request(
             'GET',
             self.auth_base_url,
