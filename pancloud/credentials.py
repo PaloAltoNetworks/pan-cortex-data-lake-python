@@ -9,15 +9,14 @@ import uuid
 from collections import namedtuple
 from threading import Lock
 
-import requests
+from requests import Request
 
-from .exceptions import UnexpectedKwargsError, PanCloudError, \
-    PartialCredentialsError
+from .httpclient import HTTPClient
+from .exceptions import PanCloudError, PartialCredentialsError
 
 # Constants
-TOKEN_URL = 'https://api.paloaltonetworks.com/api/oauth2/RequestToken'
-REVOKE_URL = 'https://api.paloaltonetworks.com/api/oauth2/RevokeToken'
-BASE_URL = 'https://identity.paloaltonetworks.com/as/authorization.oauth2'
+API_BASE_URL = 'https://api.paloaltonetworks.com'
+AUTH_BASE_URL = 'https://identity.paloaltonetworks.com/as/authorization.oauth2'
 
 ReadOnlyCredentials = namedtuple(
     'ReadOnlyCredentials',
@@ -36,10 +35,9 @@ class Credentials(object):
                  **kwargs):
         """Persist Session() and credentials attributes.
 
-        Built on top of the ``Requests`` library, ``Credentials``
-        is an abstraction layer for accessing, storing and refreshing
-        credentials needed for interacting with the Application
-        Framework.
+        The ``Credentials`` class is an abstraction layer for accessing,
+        storing and refreshing credentials needed for interacting with
+        the Application Framework.
 
         ``Credentials`` resolves credentials from the following locations,
         in the following order:
@@ -67,7 +65,7 @@ class Credentials(object):
 
         """
         self.access_token_ = access_token
-        self.auth_base_url = auth_base_url or BASE_URL
+        self.auth_base_url = auth_base_url or AUTH_BASE_URL
         self.cache_token_ = cache_token
         self.client_id_ = client_id
         self.client_secret_ = client_secret
@@ -77,35 +75,17 @@ class Credentials(object):
         self.region = region
         self.refresh_token_ = refresh_token
         self.scope = scope
+        self.session = kwargs.pop('session', None)
         self.state = uuid.uuid4()
         self.adapter = storage_adapter or \
                        'pancloud.adapters.tinydb_adapter.TinyDBStore'
         self.storage = self._init_adapter(storage_params)
         self.token_lock = Lock()
-        self.token_url = token_url or TOKEN_URL
-        self.token_revoke_url = token_revoke_url or REVOKE_URL
+        self.token_url = token_url or API_BASE_URL
         self._credentials_found_in_instance = any(
             [self.access_token_, self.client_id_,
              self.client_secret_, self.refresh_token_])
-        with requests.Session() as self.session:
-            self.session.auth = kwargs.pop('auth', self.session.auth)
-            self.session.cert = kwargs.pop('cert', self.session.cert)
-            self.session.cookies = kwargs.pop('cookies',
-                                              self.session.cookies)
-            self.session.headers = kwargs.pop('headers',
-                                              self.session.headers)
-            self.session.params = kwargs.pop('params',
-                                             self.session.params)
-            self.session.proxies = kwargs.pop('proxies',
-                                              self.session.proxies)
-            self.session.stream = kwargs.pop('stream',
-                                             self.session.stream)
-            self.session.trust_env = kwargs.pop('trust_env',
-                                                self.session.trust_env)
-            self.session.verify = kwargs.pop('verify',
-                                             self.session.verify)
-            if len(kwargs) > 0:
-                raise UnexpectedKwargsError(kwargs)
+        self._httpclient = self.session or HTTPClient(**kwargs)
 
     @property
     def access_token(self):
@@ -186,7 +166,7 @@ class Credentials(object):
                 credential=credential, profile=self.profile)
 
     def fetch_tokens(self, client_id=None, client_secret=None, code=None,
-                     redirect_uri=None):
+                     redirect_uri=None, **kwargs):
         """Exchange authorization code for token.
 
         Args:
@@ -202,19 +182,20 @@ class Credentials(object):
         client_id = client_id or self.client_id
         client_secret = client_secret or self.client_secret
         redirect_uri = redirect_uri or self.redirect_uri
-        r = requests.post(
-            self.token_url,
-            headers={
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            data={
-                'grant_type': 'authorization_code',
-                'client_id': client_id,
-                'client_secret': client_secret,
-                'code': code,
-                'redirect_uri': redirect_uri
-            },
-            auth=False
+        data = {
+           'grant_type': 'authorization_code',
+           'client_id': client_id,
+           'client_secret': client_secret,
+           'code': code,
+           'redirect_uri': redirect_uri
+        }
+        r = self._httpclient.request(
+            method='POST',
+            url=self.token_url,
+            json=data,
+            path='/api/oauth2/RequestToken',
+            auth=None,
+            **kwargs
         )
         if not r.ok:
             raise PanCloudError(
@@ -225,7 +206,11 @@ class Credentials(object):
         except ValueError as e:
             raise PanCloudError("Invalid JSON: %s" % e)
         else:
-            if r.json().get('error_description') or r.json().get('error'):
+            if r.json().get(
+                'error_description'
+            ) or r.json().get(
+                'error'
+            ):
                 raise PanCloudError(r.text)
             self.access_token_ = r_json.get('access_token')
             self.refresh_token_ = r_json.get('refresh_token')
@@ -255,7 +240,7 @@ class Credentials(object):
         region = region or self.region
         scope = scope or self.scope
         state = state or self.state
-        return requests.Request(
+        return Request(
             'GET',
             self.auth_base_url,
             params={
@@ -293,11 +278,10 @@ class Credentials(object):
         """
         return self.storage.remove_profile(profile=profile)
 
-    def refresh(self, timeout=None, access_token=None):
+    def refresh(self, access_token=None, **kwargs):
         """Refresh access and refresh tokens.
 
         Args:
-            timeout (int): HTTP timeout. Defaults to ``None``.
             access_token (str): Access token to refresh. Defaults to ``None``.
 
         Returns:
@@ -309,15 +293,18 @@ class Credentials(object):
                 if access_token == self.access_token or access_token is None:
                     c = self.get_credentials()
                     if c.client_id and c.client_secret and c.refresh_token:
-                        r = self.session.post(
+                        data = {
+                            'client_id': c.client_id,
+                            'client_secret': c.client_secret,
+                            'refresh_token': c.refresh_token,
+                            'grant_type': 'refresh_token'
+                        }
+                        r = self._httpclient.request(
+                            method='POST',
                             url=self.token_url,
-                            data={
-                                'client_id': c.client_id,
-                                'client_secret': c.client_secret,
-                                'refresh_token': c.refresh_token,
-                                'grant_type': 'refresh_token'
-                            },
-                            timeout=timeout
+                            json=data,
+                            path='/api/oauth2/RequestToken',
+                            **kwargs
                         )
                         if not r.ok:
                             raise PanCloudError(
@@ -347,41 +334,71 @@ class Credentials(object):
                             "Missing one or more required credentials"
                         )
 
-    def revoke_access_token(self, timeout=None):
+    def revoke_access_token(self, **kwargs):
         """Revoke access token."""
         c = self.get_credentials()
-        r = self.session.post(
-            url=self.token_revoke_url,
-            data={
-                'client_id': c.client_id,
-                'client_secret': c.client_secret,
-                'token': c.access_token,
-                'token_type_hint': 'access_token'
-            },
-            timeout=timeout
+        data = {
+            'client_id': c.client_id,
+            'client_secret': c.client_secret,
+            'token': c.access_token,
+            'token_type_hint': 'access_token'
+        }
+        r = self._httpclient.request(
+            method='POST',
+            url=self.token_url,
+            json=data,
+            path='/api/oauth2/RevokeToken',
+            **kwargs
         )
         if not r.ok:
             raise PanCloudError(
                 '%s %s: %s' % (r.status_code, r.reason, r.text)
             )
+        try:
+            r_json = r.json()
+        except ValueError as e:
+            raise PanCloudError("Invalid JSON: %s" % e)
+        else:
+            if r.json().get(
+                'error_description'
+            ) or r.json().get(
+                'error'
+            ):
+                raise PanCloudError(r.text)
+            return r_json
 
-    def revoke_refresh_token(self, timeout=None):
+    def revoke_refresh_token(self, **kwargs):
         """Revoke refresh token."""
         c = self.get_credentials()
-        r = self.session.post(
-            url=self.token_revoke_url,
-            data={
-                'client_id': c.client_id,
-                'client_secret': c.client_secret,
-                'token': c.refresh_token,
-                'token_type_hint': 'refresh_token'
-            },
-            timeout=timeout
+        data = {
+            'client_id': c.client_id,
+            'client_secret': c.client_secret,
+            'token': c.refresh_token,
+            'token_type_hint': 'refresh_token'
+        }
+        r = self._httpclient.request(
+            method='POST',
+            url=self.token_url,
+            json=data,
+            path='/api/oauth2/RevokeToken',
+            **kwargs
         )
         if not r.ok:
             raise PanCloudError(
                 '%s %s: %s' % (r.status_code, r.reason, r.text)
             )
+        try:
+            r_json = r.json()
+        except ValueError as e:
+            raise PanCloudError("Invalid JSON: %s" % e)
+        else:
+            if r.json().get(
+                'error_description'
+            ) or r.json().get(
+                'error'
+            ):
+                raise PanCloudError(r.text)
+            return r_json
 
     def write_credentials(self):
         """Write credentials.
