@@ -130,6 +130,8 @@ class HTTPClient(object):
         token = credentials.get_credentials().access_token
         if token is None:
             token = credentials.refresh(access_token=None, timeout=10)
+        elif credentials.jwt_is_expired():
+            token = credentials.refresh(timeout=10)
         headers.update(
             {'Authorization': "Bearer {}".format(token)}
         )
