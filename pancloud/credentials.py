@@ -107,6 +107,17 @@ class Credentials(object):
             if len(kwargs) > 0:
                 raise UnexpectedKwargsError(kwargs)
 
+    def __repr__(self):
+        args = self.__dict__.copy()
+        for k in ['access_token_', 'refresh_token_', 'client_secret_']:
+            if args[k] is not None:
+                args[k] = '*' * 6
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(
+                '%s=%r' % x for x in args.items()),
+        )
+
     @property
     def access_token(self):
         """Get access_token."""
