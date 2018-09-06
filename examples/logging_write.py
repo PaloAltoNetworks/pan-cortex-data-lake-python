@@ -5,18 +5,19 @@
 
 import os
 import sys
+from uuid import uuid4
+from time import time
 
 curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
-from pancloud import LoggingService
-from pancloud import Credentials
+from pancloud import LoggingService, Credentials
 
 
-VENDOR_ID = 'panw'
-LOG_TYPE = 'threat'
+VENDOR_ID = 'vendor'
+LOG_TYPE = 'log_type'
 
-url = 'https://apigw-stg4.us.paloaltonetworks.com'
+url = 'https://api.us.paloaltonetworks.com'
 
 c = Credentials()
 
@@ -26,20 +27,19 @@ ls = LoggingService(
     credentials=c
 )
 
-data = [
+logs = [
     {
-        'generatedTime': 0,
-        'uuid': 1,
+        'generatedTime': time(),
+        'uuid': str(uuid4()),
         'user': 'acme/wcoyote',
         'action': 'drop',
-        'type': 'vulnerability',
         'subType': 'brute-force',
         'name': 'anvil',
         'repeatCnt': 5
     }
 ]
 
-q = ls.write(vendor_id=VENDOR_ID, log_type=LOG_TYPE, data=data)
+q = ls.write(vendor_id=VENDOR_ID, log_type=LOG_TYPE, json=logs)
 
 print(
     "\nWRITE: {}\n".format(q.text)
