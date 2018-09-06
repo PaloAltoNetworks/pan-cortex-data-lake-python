@@ -10,6 +10,9 @@ from collections import namedtuple
 from threading import Lock
 
 from requests import Request
+from time import time
+from base64 import b64decode
+from json import loads
 
 from .httpclient import HTTPClient
 from .exceptions import PanCloudError, PartialCredentialsError
@@ -70,13 +73,14 @@ class Credentials(object):
         self.client_id_ = client_id
         self.client_secret_ = client_secret
         self.instance_id = instance_id
+        self.jwt_exp_ = None
         self.profile = profile or 'default'
         self.redirect_uri = redirect_uri
         self.region = region
         self.refresh_token_ = refresh_token
         self.scope = scope
         self.session = kwargs.pop('session', None)
-        self.state = uuid.uuid4()
+        self.state = None
         self.adapter = storage_adapter or \
                        'pancloud.adapters.tinydb_adapter.TinyDBStore'
         self.storage = self._init_adapter(storage_params)
@@ -86,6 +90,17 @@ class Credentials(object):
             [self.access_token_, self.client_id_,
              self.client_secret_, self.refresh_token_])
         self._httpclient = self.session or HTTPClient(**kwargs)
+
+    def __repr__(self):
+        args = self.__dict__.copy()
+        for k in ['access_token_', 'refresh_token_', 'client_secret_']:
+            if args[k] is not None:
+                args[k] = '*' * 6
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(
+                '%s=%r' % x for x in args.items()),
+        )
 
     @property
     def access_token(self):
@@ -111,6 +126,11 @@ class Credentials(object):
         """Get client_secret."""
         return self.client_secret_ or \
                self._resolve_credential('client_secret')
+
+    @property
+    def jwt_exp(self):
+        """Get JWT exp."""
+        return self.jwt_exp_ or self.decode_exp()
 
     @property
     def refresh_token(self):
@@ -165,6 +185,47 @@ class Credentials(object):
             return self.storage.fetch_credential(
                 credential=credential, profile=self.profile)
 
+    def decode_exp(self, access_token=None):
+        """Extract exp field from access token.
+
+        Args:
+            access_token (str): Access token to validate. Defaults to ``None``.
+
+        Returns:
+            int: JWT expiration in epoch seconds.
+
+        """
+        c = self.get_credentials()
+        jwt = access_token or c.access_token
+        try:
+            _, payload, _ = jwt.split('.')  # header, payload, sig
+            rem = len(payload) % 4
+            if rem > 0:  # add padding
+                payload += '=' * (4 - rem)
+            try:
+                decoded_jwt = b64decode(payload)
+            except TypeError as e:
+                raise PanCloudError(
+                    "Failed to base64 decode JWT: %s" % e)
+            else:
+                try:
+                    j = loads(decoded_jwt)
+                except ValueError as e:
+                    raise PanCloudError("Invalid JSON: %s" % e)
+                if 'exp' in j:
+                    try:
+                        exp = int(j['exp'])
+                    except ValueError:
+                        raise PanCloudError(
+                            "Expiration time (exp) must be an integer")
+                    else:
+                        self.jwt_exp_ = exp
+                        return exp
+                else:
+                    raise PanCloudError("No exp field found in payload")
+        except (AttributeError, ValueError) as e:
+            raise PanCloudError("Invalid JWT: %s" % e)
+
     def fetch_tokens(self, client_id=None, client_secret=None, code=None,
                      redirect_uri=None, **kwargs):
         """Exchange authorization code for token.
@@ -213,6 +274,7 @@ class Credentials(object):
             ):
                 raise PanCloudError(r.text)
             self.access_token_ = r_json.get('access_token')
+            self.jwt_exp_ = self.decode_exp(self.access_token_)
             self.refresh_token_ = r_json.get('refresh_token')
             self.write_credentials()
             return r_json
@@ -239,7 +301,8 @@ class Credentials(object):
         redirect_uri = redirect_uri or self.redirect_uri
         region = region or self.region
         scope = scope or self.scope
-        state = state or self.state
+        state = state or uuid.uuid4()
+        self.state = state
         return Request(
             'GET',
             self.auth_base_url,
@@ -265,6 +328,26 @@ class Credentials(object):
             self.access_token, self.client_id, self.client_secret,
             self.refresh_token
         )
+
+    def jwt_is_expired(self, access_token=None, leeway=0):
+        """Validate JWT access token expiration.
+
+        Args:
+            access_token (str): Access token to validate. Defaults to ``None``.
+            leeway (float): Time in seconds to adjust for local clock skew. Defaults to 0.
+
+        Returns:
+            bool: ``True`` if expired, otherwise ``False``.
+
+        """
+        if access_token is not None:
+            exp = self.decode_exp(access_token)
+        else:
+            exp = self.jwt_exp
+        now = time()
+        if exp < (now - leeway):
+            return True
+        return False
 
     def remove_profile(self, profile):
         """Remove profile from credentials store.
@@ -324,6 +407,8 @@ class Credentials(object):
                             self.access_token_ = r_json.get(
                                 'access_token', None
                             )
+                            self.jwt_exp_ = self.decode_exp(
+                                self.access_token_)
                             if r_json.get('refresh_token', None):
                                 self.refresh_token_ = \
                                     r_json.get('refresh_token')
