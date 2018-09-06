@@ -15,6 +15,16 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 from pancloud import Credentials
 
 
+def confirm_write(profile):
+    """Prompt user to enter Y or N (case-insensitive) to continue."""
+    answer = ""
+    while answer not in ["y", "n"]:
+        answer = input(
+            "\nWrite credentials to PROFILE '%s' [Y/N]? " % profile
+        ).lower()
+    return answer == "y"
+
+
 def main():
     try:
         print("\nCollecting info needed to generate credentials file...\n")
@@ -26,9 +36,12 @@ def main():
                         client_secret=client_secret,
                         refresh_token=refresh_token,
                         profile=profile)
-        print("Writing credentials file...")
-        c.write_credentials()
-        print("Done!\n")
+        if confirm_write(profile):
+            print("Writing credentials file...")
+            c.write_credentials()
+            print("Done!\n")
+        else:
+            print("\nWrite credentials operation aborted.\n")
     except KeyboardInterrupt:
         print("Exiting...")
 
