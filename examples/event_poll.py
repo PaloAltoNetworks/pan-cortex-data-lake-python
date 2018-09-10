@@ -9,10 +9,9 @@ import sys
 curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
-from pancloud import EventService
-from pancloud import Credentials
+from pancloud import EventService, Credentials
 
-url = 'https://apigw-stg4.us.paloaltonetworks.com'
+url = 'https://api.us.paloaltonetworks.com'
 
 c = Credentials()
 
@@ -29,7 +28,5 @@ p = es.poll(channel_id)
 
 # Print results
 print(
-    "\nSTATUS_CODE: {}, RESULT: {}\n".format(p.status_code, p.text)
+    "\nSTATUS_CODE: {}, RESULT: \n\n{}\n".format(p.status_code, p.text)
 )
-
-

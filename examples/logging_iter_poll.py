@@ -9,10 +9,9 @@ import sys
 curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
-from pancloud import LoggingService
-from pancloud import Credentials
+from pancloud import LoggingService, Credentials
 
-url = 'https://apigw-stg4.us.paloaltonetworks.com'
+url = 'https://api.us.paloaltonetworks.com'
 
 c = Credentials()
 
@@ -22,15 +21,15 @@ ls = LoggingService(
     credentials=c
 )
 
-data = {  # Prepare 'query' data
-    "query": "select * from panw.traffic limit 1",
+query = {  # Prepare 'query' data
+    "query": "SELECT * FROM panw.traffic LIMIT 5",
     "startTime": 0,  # 1970
     "endTime": 1609459200,  # 2021
     "maxWaitTime": 0  # no logs in initial response
 }
 
 # Generate new 'query'
-q = ls.query(data)
+q = ls.query(json=query)
 
 print(
     "\nQUERY: {}\n".format(q.text)
@@ -72,5 +71,3 @@ d = ls.delete(query_id)
 print(
     "DELETE: {}\n".format(d.text)
 )
-
-

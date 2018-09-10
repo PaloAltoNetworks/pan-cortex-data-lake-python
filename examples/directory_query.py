@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Example interaction with Directory Sync Service using attributes."""
+"""Example interaction with Directory Sync Service using query."""
 
 import os
 import sys
@@ -21,10 +21,13 @@ ds = DirectorySyncService(
     credentials=c
 )
 
+OBJ_CLASS = "users"  # users | computers | containers | groups | ous
+DOMAIN = "example.com"  # use domains() method to retrieve available domains
+
 # Retrieve attributes from directory-sync
-a = ds.attributes()
+q = ds.query(object_class=OBJ_CLASS, json={'domain': DOMAIN})
 
 # Print results
 print(
-    "\nSTATUS_CODE: {}, RESULT: \n\n{}\n".format(a.status_code, a.text)
+    "\nSTATUS_CODE: {}, RESULT: \n\n{}\n".format(q.status_code, q.text)
 )

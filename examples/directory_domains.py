@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Example interaction with Directory Sync Service using attributes."""
+"""Example interaction with Directory Sync Service using domains."""
 
 import os
 import sys
@@ -21,10 +21,10 @@ ds = DirectorySyncService(
     credentials=c
 )
 
-# Retrieve attributes from directory-sync
-a = ds.attributes()
+# Retrieve domains
+d = ds.domains()
 
 # Print results
 print(
-    "\nSTATUS_CODE: {}, RESULT: \n\n{}\n".format(a.status_code, a.text)
+    "\nSTATUS_CODE: {}, RESULT: \n\n{}\n".format(d.status_code, d.text)
 )
