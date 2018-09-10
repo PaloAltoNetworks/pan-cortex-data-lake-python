@@ -355,6 +355,9 @@ class Credentials(object):
         Args:
             profile (str): Credentials profile to remove.
 
+        Returns:
+            int: Result of operation.
+
         """
         return self.storage.remove_profile(profile=profile)
 
@@ -486,6 +489,9 @@ class Credentials(object):
         """Write credentials.
 
         Write credentials to credentials store.
+
+        Returns:
+            int: Result of operation.
 
         """
         c = self.get_credentials()

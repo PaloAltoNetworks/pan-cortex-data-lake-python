@@ -63,7 +63,7 @@ class TinyDBStore(StorageAdapter):
             profile (str): Credentials profile to remove.
 
         Returns:
-            list: List of IDs affected by operation.
+            int: Result of operation.
 
         """
         with self.db:
