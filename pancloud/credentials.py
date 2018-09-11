@@ -110,6 +110,11 @@ class Credentials(object):
                    self._resolve_credential('access_token')
         return self.access_token_
 
+    @access_token.setter
+    def access_token(self, access_token):
+        """Set access_token."""
+        self.access_token_ = access_token
+
     @property
     def cache_token(self):
         """Get cache_token setting."""
@@ -121,22 +126,42 @@ class Credentials(object):
         return self.client_id_ or \
                self._resolve_credential('client_id')
 
+    @client_id.setter
+    def client_id(self, client_id):
+        """Set client_id."""
+        self.client_id_ = client_id
+
     @property
     def client_secret(self):
         """Get client_secret."""
         return self.client_secret_ or \
                self._resolve_credential('client_secret')
 
+    @client_secret.setter
+    def client_secret(self, client_secret):
+        """Set client_secret."""
+        self.client_secret_ = client_secret
+
     @property
     def jwt_exp(self):
         """Get JWT exp."""
         return self.jwt_exp_ or self.decode_exp()
+
+    @jwt_exp.setter
+    def jwt_exp(self, jwt_exp):
+        """Set jwt_exp."""
+        self.jwt_exp_ = jwt_exp
 
     @property
     def refresh_token(self):
         """Get refresh_token."""
         return self.refresh_token_ or \
                self._resolve_credential('refresh_token')
+
+    @refresh_token.setter
+    def refresh_token(self, refresh_token):
+        """Set refresh_token."""
+        self.refresh_token_ = refresh_token
 
     @staticmethod
     def _credentials_found_in_envars():
@@ -219,7 +244,7 @@ class Credentials(object):
                         raise PanCloudError(
                             "Expiration time (exp) must be an integer")
                     else:
-                        self.jwt_exp_ = exp
+                        self.jwt_exp = exp
                         return exp
                 else:
                     raise PanCloudError("No exp field found in payload")
@@ -273,9 +298,9 @@ class Credentials(object):
                 'error'
             ):
                 raise PanCloudError(r.text)
-            self.access_token_ = r_json.get('access_token')
-            self.jwt_exp_ = self.decode_exp(self.access_token_)
-            self.refresh_token_ = r_json.get('refresh_token')
+            self.access_token = r_json.get('access_token')
+            self.jwt_exp = self.decode_exp(self.access_token_)
+            self.refresh_token = r_json.get('refresh_token')
             self.write_credentials()
             return r_json
 
@@ -404,13 +429,13 @@ class Credentials(object):
                                 'error'
                             ):
                                 raise PanCloudError(r.text)
-                            self.access_token_ = r_json.get(
+                            self.access_token = r_json.get(
                                 'access_token', None
                             )
-                            self.jwt_exp_ = self.decode_exp(
+                            self.jwt_exp = self.decode_exp(
                                 self.access_token_)
                             if r_json.get('refresh_token', None):
-                                self.refresh_token_ = \
+                                self.refresh_token = \
                                     r_json.get('refresh_token')
                             self.write_credentials()
                         return self.access_token_
@@ -497,5 +522,5 @@ class Credentials(object):
         c = self.get_credentials()
         return self.storage.write_credentials(
             credentials=c, profile=self.profile,
-            cache_token=self.cache_token_
+            cache_token=self.cache_token
         )
