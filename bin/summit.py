@@ -49,7 +49,7 @@ sys.path[:0] = [os.path.join(libpath, os.pardir)]
 from pancloud import Credentials, HTTPClient, LoggingService, \
     EventService, DirectorySyncService, __version__
 
-_None = object()  # sentinal used to not set --end default
+_None = object()  # sentinel used to not set --end default
 INDENT = 2
 LOGGING_SERVICE_EPOCH = 1504224000  # 2017-09-01T00:00:00+00:00
 DEFAULT_EVENT_CHANNEL_ID = 'EventFilter'
@@ -125,13 +125,53 @@ def credentials(options):
         print_exception(k, e)
         sys.exit(1)
 
+    setters(options, x)
+    methods(options, x)
+
     # XXX pre-dates -m
     if options['write_credentials']:
         write_credentials(x, options)
 
-    methods(options, x)
-
     return x
+
+
+def setters(options, class_):
+    name = class_.__class__.__name__
+    for method, val in options['s'][name].items():
+        k = '%s.%s' % (name, method)
+        try:
+            method_ = class_.__class__.__dict__[method]
+        except KeyError:
+            print('no class.method: %s' % k, file=sys.stderr)
+            sys.exit(1)
+
+        if not isinstance(method_, property):
+            print('not @property decorated: %s' % k, file=sys.stderr)
+            sys.exit(1)
+
+        method_ = method_.fset
+
+        if not hasattr(method_, '__call__'):
+            print('not setter: %s' % k, file=sys.stderr)
+            sys.exit(1)
+
+        try:
+            method_(class_, val)
+        except Exception as e:
+            print_exception(k, e)
+            sys.exit(1)
+
+        # XXX can use repr() or %r
+        x = val
+        if isinstance(val, str):
+            x = '"%s"' % val
+        try:
+            if isinstance(val, unicode):
+                x = '"%s"' % val
+        except NameError:
+            pass
+
+        print('%s = %s' % (k, x))
 
 
 def methods(options, class_):
@@ -183,6 +223,7 @@ def httpclient(options, c):
         print_exception(k, e)
         sys.exit(1)
 
+    setters(options, x)
     methods(options, x)
 
     return x
@@ -329,6 +370,7 @@ def logging(options, session):
     if options['write']:
         write(api, options)
 
+    setters(options, api)
     methods(options, api)
 
 
@@ -442,6 +484,7 @@ def event(options, session):
     if options['nack']:
         nack(api, options)
 
+    setters(options, api)
     methods(options, api)
 
 
@@ -523,6 +566,7 @@ def directory_sync(options, session):
     if options['attributes']:
         attributes(api, options)
 
+    setters(options, api)
     methods(options, api)
 
 
@@ -886,6 +930,10 @@ def parse_opts():
 
     options_m = defaultdict(list)
 
+    options_s = defaultdict(
+        lambda: defaultdict()
+    )
+
     options_print = defaultdict(
         lambda: defaultdict(
             dict,
@@ -900,6 +948,7 @@ def parse_opts():
     options = {
         'R': options_R,
         'm': options_m,
+        's': options_s,
         'print': options_print,
         'jmespath_options': None,
         'credentials': False,
@@ -956,6 +1005,24 @@ def parse_opts():
 
         options_m[last_c].append(arg)
 
+    def _options_s(last_c, arg):
+        if last_c is None:
+            print('-s has no class context', file=sys.stderr)
+            sys.exit(1)
+
+        x = arg.split('=', 1)
+        if len(x) != 2:
+            print('-s argument must be setter=json',  file=sys.stderr)
+            sys.exit(1)
+
+        try:
+            val = json.loads(x[1])
+        except ValueError as e:
+            print('-s json argument invalid: %s' % e)
+            sys.exit(1)
+
+        options_s[last_c][x[0]] = val
+
     def _options_print(opt, last_c, last_m, arg):
         x = '%s.%s' % (last_c, last_m)
         if last_c and last_m:
@@ -980,7 +1047,7 @@ def parse_opts():
         elif opt == 'j':
             options_print[x]['print_json'] = True
 
-    short_options = 'CHLDEm:J:pj'
+    short_options = 'CHLDEm:s:J:pj'
     long_options = [
         'delete', 'poll', 'xpoll', 'query', 'write',
         'start=', 'midpoint=', 'end=', 'window=',
@@ -1096,6 +1163,9 @@ def parse_opts():
         elif opt == '-m':
             _options_m(last_c, arg)
             last_m = arg
+        elif opt == '-s':
+            _options_s(last_c, arg)
+            last_m = None
         elif opt in ['-p', '-j', '-J']:
             _options_print(opt[1:], last_c, last_m, arg)
         elif opt == '--debug':  # XXX positional
@@ -1244,7 +1314,8 @@ def usage():
     -C                    use Credentials() class
       --write             write_credentials() method
     -m method             invoke class method
-                          multiple -m's allowed
+    -s setter=json        invoke class setter
+                          multiple -[ms]'s allowed
     --R0 json             class constructor args (**kwargs)
     --R1 json             class method body or QUERY_STRING using
                           json= or params= arguments
