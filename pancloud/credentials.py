@@ -145,7 +145,7 @@ class Credentials(object):
     @property
     def jwt_exp(self):
         """Get JWT exp."""
-        return self.jwt_exp_ or self.decode_exp()
+        return self.jwt_exp_ or self._decode_exp()
 
     @jwt_exp.setter
     def jwt_exp(self, jwt_exp):
@@ -210,14 +210,14 @@ class Credentials(object):
             return self.storage.fetch_credential(
                 credential=credential, profile=self.profile)
 
-    def decode_exp(self, access_token=None):
-        """Extract exp field from access token.
+    def decode_jwt_payload(self, access_token=None):
+        """Extract payload field from JWT.
 
         Args:
-            access_token (str): Access token to validate. Defaults to ``None``.
+            access_token (str): Access token to decode. Defaults to ``None``.
 
         Returns:
-            int: JWT expiration in epoch seconds.
+            dict: JSON object that contains the claims conveyed by the JWT.
 
         """
         c = self.get_credentials()
@@ -234,22 +234,39 @@ class Credentials(object):
                     "Failed to base64 decode JWT: %s" % e)
             else:
                 try:
-                    j = loads(decoded_jwt)
+                    x = loads(decoded_jwt)
                 except ValueError as e:
                     raise PanCloudError("Invalid JSON: %s" % e)
-                if 'exp' in j:
-                    try:
-                        exp = int(j['exp'])
-                    except ValueError:
-                        raise PanCloudError(
-                            "Expiration time (exp) must be an integer")
-                    else:
-                        self.jwt_exp = exp
-                        return exp
-                else:
-                    raise PanCloudError("No exp field found in payload")
         except (AttributeError, ValueError) as e:
             raise PanCloudError("Invalid JWT: %s" % e)
+
+        return x
+
+    def _decode_exp(self, access_token=None):
+        """Extract exp field from access token.
+
+        Args:
+            access_token (str): Access token to decode. Defaults to ``None``.
+
+        Returns:
+            int: JWT expiration in epoch seconds.
+
+        """
+        c = self.get_credentials()
+        jwt = access_token or c.access_token
+        x = self.decode_jwt_payload(jwt)
+
+        if 'exp' in x:
+            try:
+                exp = int(x['exp'])
+            except ValueError:
+                raise PanCloudError(
+                    "Expiration time (exp) must be an integer")
+            else:
+                self.jwt_exp = exp
+                return exp
+        else:
+            raise PanCloudError("No exp field found in payload")
 
     def fetch_tokens(self, client_id=None, client_secret=None, code=None,
                      redirect_uri=None, **kwargs):
@@ -299,7 +316,7 @@ class Credentials(object):
             ):
                 raise PanCloudError(r.text)
             self.access_token = r_json.get('access_token')
-            self.jwt_exp = self.decode_exp(self.access_token_)
+            self.jwt_exp = self._decode_exp(self.access_token_)
             self.refresh_token = r_json.get('refresh_token')
             self.write_credentials()
             return r_json
@@ -366,7 +383,7 @@ class Credentials(object):
 
         """
         if access_token is not None:
-            exp = self.decode_exp(access_token)
+            exp = self._decode_exp(access_token)
         else:
             exp = self.jwt_exp
         now = time()
@@ -432,7 +449,7 @@ class Credentials(object):
                             self.access_token = r_json.get(
                                 'access_token', None
                             )
-                            self.jwt_exp = self.decode_exp(
+                            self.jwt_exp = self._decode_exp(
                                 self.access_token_)
                             if r_json.get('refresh_token', None):
                                 self.refresh_token = \
