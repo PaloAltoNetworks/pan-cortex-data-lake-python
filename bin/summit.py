@@ -110,11 +110,9 @@ def credentials(options):
             print_exception(k, e)
             sys.exit(1)
 
+        print(k, file=sys.stderr)
         if x is not None:
-            print('%s:' % k)
-            print(x)
-        else:
-            print(k)
+            print_response_json(options, k, x)
 
     k = 'Credentials'
 
@@ -161,17 +159,12 @@ def setters(options, class_):
             print_exception(k, e)
             sys.exit(1)
 
-        # XXX can use repr() or %r
-        x = val
-        if isinstance(val, str):
-            x = '"%s"' % val
         try:
-            if isinstance(val, unicode):
-                x = '"%s"' % val
-        except NameError:
-            pass
+            x = json.dumps(val, separators=(',', ':'))
+        except ValueError as e:
+            x = e
 
-        print('%s = %s' % (k, x))
+        print('%s = %s' % (k, x), file=sys.stderr)
 
 
 def methods(options, class_):
@@ -205,11 +198,15 @@ def methods(options, class_):
                 print_response(x, options, k)
                 exit_for_http_status(x)
             else:
-                print('%s:' % k)
-                print(x)
-
+                print(k, file=sys.stderr)
+                try:
+                    json.dumps(x)
+                except (TypeError, ValueError):
+                    print(pprint.pformat(x, indent=INDENT))
+                else:
+                    print_response_json(options, k, x)
         else:
-            print(k)
+            print(k, file=sys.stderr)
 
 
 def httpclient(options, c):
@@ -301,7 +298,7 @@ def logging(options, session):
                                delete_query=options['delete'],
                                params=R['R1_obj'][k],
                                **R['R2_obj'][k]):
-                print_response_body(options, k, x)
+                print_response_json(options, k, x)
 
         except Exception as e:
             print_exception(k, e)
@@ -421,7 +418,7 @@ def event(options, session):
                 print('%s:' % k, end='', file=sys.stderr)
                 event_print_status(options, [x])
                 print(file=sys.stderr)
-                print_response_body(options, k, x)
+                print_response_json(options, k, x)
         except Exception as e:
             print_exception(k, e)
             sys.exit(1)
@@ -700,13 +697,13 @@ def print_response(r, options, k):
             print(e, file=sys.stderr)
             sys.exit(1)
 
-        print_response_body(options, k, obj)
+        print_response_json(options, k, obj)
         return obj
     else:
         print('WARNING: Response Content-Type:', x, file=sys.stderr)
 
 
-def print_response_body(options, k, x):
+def print_response_json(options, k, x):
     if k in options['print']:
         print_ = options['print'][k]
     else:
