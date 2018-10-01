@@ -89,7 +89,9 @@ class HTTPClient(object):
             self.raise_for_status = kwargs.pop(
                 'raise_for_status', False
             )
-            self.url = kwargs.pop('url', None)
+            self.url = kwargs.pop(
+                'url', 'https://api.us.paloaltonetworks.com'
+            )
 
             if len(kwargs) > 0:  # Handle invalid kwargs
                 raise UnexpectedKwargsError(kwargs)

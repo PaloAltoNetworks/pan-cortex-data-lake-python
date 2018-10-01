@@ -12,8 +12,8 @@ curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pancloud.httpclient import HTTPClient
-from pancloud.exceptions import HTTPError, RequiredKwargsError, \
-    UnexpectedKwargsError, PanCloudError
+from pancloud.exceptions import HTTPError, UnexpectedKwargsError, \
+    PanCloudError
 
 
 HTTPBIN = os.environ.get('HTTPBIN_URL', 'http://httpbin.org')
@@ -31,10 +31,6 @@ class TestHTTPClient:
             HTTPClient(url='asdaksjhdakjsdh').request(method='GET')
         with pytest.raises(HTTPError):
             HTTPClient(url='http://').request(method='GET')
-
-    def test_required_kwargs(self):
-        with pytest.raises(RequiredKwargsError):
-            HTTPClient().request()
 
     def test_connection_timeout(self):
         with pytest.raises(HTTPError):
