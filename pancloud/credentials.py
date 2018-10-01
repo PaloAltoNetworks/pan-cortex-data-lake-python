@@ -343,7 +343,7 @@ class Credentials(object):
         redirect_uri = redirect_uri or self.redirect_uri
         region = region or self.region
         scope = scope or self.scope
-        state = state or uuid.uuid4()
+        state = state or str(uuid.uuid4())
         self.state = state
         return Request(
             'GET',
