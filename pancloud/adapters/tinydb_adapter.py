@@ -63,7 +63,7 @@ class TinyDBStore(StorageAdapter):
             profile (str): Credentials profile to remove.
 
         Returns:
-            int: Result of operation.
+            list: List of affected document IDs.
 
         """
         with self.db:
@@ -81,7 +81,7 @@ class TinyDBStore(StorageAdapter):
             profile (str): Credentials profile. Defaults to ``'default'``.
 
         Returns:
-            int: Result of operation.
+            int: Affected document ID.
 
         """
         d = {
