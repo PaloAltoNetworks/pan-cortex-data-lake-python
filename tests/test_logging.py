@@ -13,8 +13,7 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pancloud.logging import LoggingService
 from pancloud.httpclient import HTTPClient
-from pancloud.exceptions import RequiredKwargsError, \
-    UnexpectedKwargsError, HTTPError
+from pancloud.exceptions import UnexpectedKwargsError, HTTPError
 
 
 HTTPBIN = os.environ.get('HTTPBIN_URL', 'http://httpbin.org')
@@ -33,13 +32,6 @@ class TestLoggingService:
         LoggingService(url=TARPIT).delete
         LoggingService(url=TARPIT).iter_poll
         LoggingService(url=TARPIT).xpoll
-
-    def test_required_kwargs(self):
-        with pytest.raises(RequiredKwargsError):
-            LoggingService()
-
-        with pytest.raises(RequiredKwargsError):
-            LoggingService(session=None)
 
     def test_unexpected_kwargs(self):
         with pytest.raises(UnexpectedKwargsError):

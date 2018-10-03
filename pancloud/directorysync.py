@@ -18,7 +18,6 @@ Examples:
 from __future__ import absolute_import
 import logging
 
-from .exceptions import RequiredKwargsError
 from .httpclient import HTTPClient
 
 
@@ -38,13 +37,8 @@ class DirectorySyncService(object):
         """
         self.kwargs = kwargs.copy()  # used for __repr__
         self.session = kwargs.pop('session', None)
-        if isinstance(self.session, HTTPClient):
-            self.url = kwargs.pop('url', None) or self.session.url
-        else:
-            self.url = kwargs.pop('url', None)
-        if self.url is None:
-            raise RequiredKwargsError('url')
         self._httpclient = self.session or HTTPClient(**kwargs)
+        self.url = self._httpclient.url
         self._debug = logging.getLogger(__name__).debug
 
     def __repr__(self):

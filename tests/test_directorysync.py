@@ -13,8 +13,7 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pancloud.directorysync import DirectorySyncService
 from pancloud.httpclient import HTTPClient
-from pancloud.exceptions import RequiredKwargsError, \
-    UnexpectedKwargsError
+from pancloud.exceptions import UnexpectedKwargsError
 
 
 TARPIT = os.environ.get('TARPIT', 'http://10.255.255.1')
@@ -31,14 +30,6 @@ class TestDirectorySyncService:
         DirectorySyncService(url=TARPIT).query
         DirectorySyncService(url=TARPIT).domains
         DirectorySyncService(url=TARPIT).count
-
-
-    def test_required_kwargs(self):
-        with pytest.raises(RequiredKwargsError):
-            DirectorySyncService()
-
-        with pytest.raises(RequiredKwargsError):
-            DirectorySyncService(session=None)
 
     def test_unexpected_kwargs(self):
         with pytest.raises(UnexpectedKwargsError):
