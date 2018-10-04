@@ -2,6 +2,24 @@
 History
 =======
 
+1.4.0 (2018-10-04)
+------------------
+
+* Added default URL to `HTTPClient` class.
+* Updated docstrings for `StorageAdapter`, `TinyDBStore` and `Credentials` classes.
+* Now returning `state` as `str` instead of `UUID` in `get_authorization_url()` method.
+* Now unifying display results for -m/-s/--write. For -m you now need an output specifier (-j/-p) to print the response.
+* Added `decode_jwt_payload()` method to allow for extracting/using all JWT fields.
+* Added -s option to allow for invocation of setter methods. This allows modifying of credential store fields.
+* Added credential setters to allow for modifying credentials.
+* Updated examples.
+* Switched from using `requests` to `HTTPClient` in `Credentials` class.
+* Now checking JWT access_token `exp` to determine if refresh if needed.
+* Now generating a new `state` each time `get_authorization_url()` is called.
+* Added `__repr__` to `Credentials` class with support for masking secrets.
+* Updated -E --ack,nack,poll options usage to be accurate.
+* `JOB_FAILED` response in `xpoll()` queryStatus now includes errorCode.
+
 1.3.0 (2018-08-04)
 ------------------
 
