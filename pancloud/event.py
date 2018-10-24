@@ -87,6 +87,33 @@ class EventService(object):
         )
         return r
 
+    def flush(self, channel_id=None, **kwargs):  # pragma: no cover
+        """Discard all existing events from the event channel.
+
+        This endpoint removes all events from the channel. Use this
+        endpoint only if you currently have unread events in your
+        channel that you never intend to process.
+
+        Args:
+            channel_id (str): The channel ID.
+            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
+
+        Returns:
+            requests.Response: Requests Response() object.
+
+        Examples:
+            Refer to ``event_flush.py`` example.
+
+        """
+        path = "/event-service/v1/channels/{}/flush".format(channel_id)
+        r = self._httpclient.request(
+            method="POST",
+            url=self.url,
+            path=path,
+            **kwargs
+        )
+        return r
+
     def get_filters(self, channel_id=None, **kwargs):  # pragma: no cover
         """Retrieve the filters currently set on the channel.
 
