@@ -447,6 +447,10 @@ def event(options, session):
         k = 'EventService.nack'
         generic(api, options, api.nack, k)
 
+    def flush(api, options):
+        k = 'EventService.flush'
+        generic(api, options, api.flush, k)
+
     k = 'EventService'
 
     R = options['R']
@@ -480,6 +484,9 @@ def event(options, session):
 
     if options['nack']:
         nack(api, options)
+
+    if options['flush']:
+        flush(api, options)
 
     setters(options, api)
     methods(options, api)
@@ -973,6 +980,7 @@ def parse_opts():
         'get': False,
         'ack': False,
         'nack': False,
+        'flush': False,
         'follow': False,
         'count': False,
         'domains': False,
@@ -1049,8 +1057,8 @@ def parse_opts():
         'delete', 'poll', 'xpoll', 'query', 'write',
         'start=', 'midpoint=', 'end=', 'window=',
         'id=', 'seq=',
-        'set', 'get', 'ack', 'nack', 'follow',
-        'count', 'domains', 'attributes',
+        'set', 'get', 'ack', 'nack', 'flush',
+        'follow', 'count', 'domains', 'attributes',
         'R0=', 'R1=', 'R2=',
         'debug=', 'version', 'help',
     ]
@@ -1144,6 +1152,9 @@ def parse_opts():
         elif opt == '--nack':
             options['nack'] = True
             last_m = 'nack'
+        elif opt == '--flush':
+            options['flush'] = True
+            last_m = 'flush'
         elif opt == '--follow':
             options['follow'] = True
         elif opt == '--count':
@@ -1295,6 +1306,8 @@ def usage():
                           (sets ack point = read point)
       --nack              negative acknowledgement for events read
                           (sets read point = ack point)
+      --flush             discard unread events 
+                          (set read and ack point to end of channel)
       --poll              read events
       --xpoll             poll all events until drained
                           (use --ack to ack after each poll)

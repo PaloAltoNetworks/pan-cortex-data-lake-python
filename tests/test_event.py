@@ -31,6 +31,7 @@ class TestEventService:
         EventService(url=TARPIT).poll
         EventService(url=TARPIT).ack
         EventService(url=TARPIT).nack
+        EventService(url=TARPIT).flush
 
     def test_unexpected_kwargs(self):
         with pytest.raises(UnexpectedKwargsError):
