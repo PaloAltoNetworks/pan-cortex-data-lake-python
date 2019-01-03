@@ -98,7 +98,10 @@ class HTTPClient(object):
 
             if self.credentials:
                 self._apply_credentials(
-                    self.credentials, self.session.headers)
+                    auto_refresh=self.auto_refresh,
+                    credentials=self.credentials,
+                    headers=self.session.headers
+                )
 
     def __repr__(self):
         for k in self.kwargs.get('headers', {}):
@@ -118,22 +121,26 @@ class HTTPClient(object):
         )
 
     @staticmethod
-    def _apply_credentials(credentials, headers):
+    def _apply_credentials(auto_refresh=True, credentials=None,
+                           headers=None):
         """Update Authorization header.
 
         Update request headers with latest `access_token`. Perform token
         `refresh` if token is ``None``.
 
         Args:
+            auto_refresh (bool): Perform token refresh if access_token is ``None`` or expired. Defaults to ``True``.
             credentials (class): Read-only credentials.
             headers (class): Requests `CaseInsensitiveDict`.
 
         """
         token = credentials.get_credentials().access_token
-        if token is None:
-            token = credentials.refresh(access_token=None, timeout=10)
-        elif credentials.jwt_is_expired():
-            token = credentials.refresh(timeout=10)
+        if auto_refresh is True:
+            if token is None:
+                token = credentials.refresh(
+                    access_token=None, timeout=10)
+            elif credentials.jwt_is_expired():
+                token = credentials.refresh(timeout=10)
         headers.update(
             {'Authorization': "Bearer {}".format(token)}
         )
@@ -263,12 +270,15 @@ class HTTPClient(object):
             r = self._send_request(
                 enforce_json, method, raise_for_status, url, **k
             )
+            # TODO remove the following if statement
             if r.status_code == 401:
                 if credentials and auto_refresh:
                     token = credentials.get_credentials().access_token
                     credentials.refresh(access_token=token, timeout=10)
                     self._apply_credentials(
-                        credentials, headers or self.session.headers
+                        auto_refresh=auto_refresh,
+                        credentials=credentials,
+                        headers=headers or self.session.headers
                     )
                     if auto_retry:
                         r = self._send_request(
