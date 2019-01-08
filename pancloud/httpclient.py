@@ -80,7 +80,6 @@ class HTTPClient(object):
 
             # Non-Requests key-word arguments
             self.auto_refresh = kwargs.pop('auto_refresh', True)
-            self.auto_retry = kwargs.pop('auto_retry', True)
             self.credentials = kwargs.pop('credentials', None)
             self.enforce_json = kwargs.pop(
                 'enforce_json', False
@@ -209,22 +208,21 @@ class HTTPClient(object):
             requests.Response: Requests Response() object
 
         """
-        url = kwargs.pop('url', None) or self.url
+        url = kwargs.pop('url', self.url)
 
         # Session() overrides
-        auth = kwargs.pop('auth', None)
-        cert = kwargs.pop('cert', None)
-        cookies = kwargs.pop('cookies', None)
-        headers = kwargs.pop('headers', None)
-        params = kwargs.pop('params', None)
-        proxies = kwargs.pop('proxies', None)
-        stream = kwargs.pop('stream', None)
-        verify = kwargs.pop('verify', None)
+        auth = kwargs.pop('auth', self.session.auth)
+        cert = kwargs.pop('cert', self.session.cert)
+        cookies = kwargs.pop('cookies', self.session.cookies)
+        headers = kwargs.pop('headers', self.session.headers.copy())
+        params = kwargs.pop('params', self.session.params)
+        proxies = kwargs.pop('proxies', self.session.proxies)
+        stream = kwargs.pop('stream', self.session.stream)
+        verify = kwargs.pop('verify', self.session.verify)
 
         # Non-Requests key-word arguments
         auto_refresh = kwargs.pop('auto_refresh', self.auto_refresh)
-        auto_retry = kwargs.pop('auto_retry', self.auto_retry)
-        credentials = kwargs.pop('credentials', None)
+        credentials = kwargs.pop('credentials', self.credentials)
         enforce_json = kwargs.pop('enforce_json', self.enforce_json)
         path = kwargs.pop('path', '')  # default to empty path
         raise_for_status = kwargs.pop(
@@ -233,21 +231,21 @@ class HTTPClient(object):
         url = "{}:{}{}".format(url, self.port, path)
 
         if credentials:
-            if headers is None:
-                headers = self.session.headers.copy()
-            self._apply_credentials(credentials, headers)
-        else:
-            credentials = self.credentials
+            self._apply_credentials(
+                auto_refresh=auto_refresh,
+                credentials=credentials,
+                headers=headers
+            )
 
         k = {  # Re-pack kwargs to dictionary
-            'params': params or self.session.params,
-            'headers': headers or self.session.headers,
-            'cookies': cookies or self.session.cookies,
-            'auth': auth or self.session.auth,
-            'proxies': proxies or self.session.proxies,
-            'verify': verify or self.session.verify,
-            'stream': stream or self.session.stream,
-            'cert': cert or self.session.cert
+            'params': params,
+            'headers': headers,
+            'cookies': cookies,
+            'auth': auth,
+            'proxies': proxies,
+            'verify': verify,
+            'stream': stream,
+            'cert': cert
         }
 
         # Request() overrides
@@ -270,21 +268,6 @@ class HTTPClient(object):
             r = self._send_request(
                 enforce_json, method, raise_for_status, url, **k
             )
-            # TODO remove the following if statement
-            if r.status_code == 401:
-                if credentials and auto_refresh:
-                    token = credentials.get_credentials().access_token
-                    credentials.refresh(access_token=token, timeout=10)
-                    self._apply_credentials(
-                        auto_refresh=auto_refresh,
-                        credentials=credentials,
-                        headers=headers or self.session.headers
-                    )
-                    if auto_retry:
-                        r = self._send_request(
-                            enforce_json, method, raise_for_status, url,
-                            **k
-                        )
             return r
         except requests.RequestException as e:
             raise HTTPError(e)
