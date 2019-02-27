@@ -20,6 +20,7 @@ from .exceptions import PanCloudError, PartialCredentialsError
 # Constants
 API_BASE_URL = 'https://api.paloaltonetworks.com'
 AUTH_BASE_URL = 'https://identity.paloaltonetworks.com/as/authorization.oauth2'
+DEVELOPER_TOKEN_URL = 'https://app.apiexplorer.rocks'
 
 ReadOnlyCredentials = namedtuple(
     'ReadOnlyCredentials',
@@ -31,11 +32,11 @@ class Credentials(object):
     """An Application Framework credentials object."""
 
     def __init__(self, access_token=None, auth_base_url=None, cache_token=True,
-                 client_id=None, client_secret=None, instance_id=None,
-                 profile=None, redirect_uri=None, region=None,
-                 refresh_token=None, scope=None, storage_adapter=None,
-                 storage_params=None, token_url=None, token_revoke_url=None,
-                 **kwargs):
+                 client_id=None, client_secret=None, developer_token=None,
+                 developer_token_url=None, instance_id=None, profile=None,
+                 redirect_uri=None, region=None, refresh_token=None,
+                 scope=None, storage_adapter=None, storage_params=None,
+                 token_url=None, **kwargs):
         """Persist Session() and credentials attributes.
 
         The ``Credentials`` class is an abstraction layer for accessing,
@@ -55,6 +56,8 @@ class Credentials(object):
             cache_token (bool): If ``True``, stores ``access_token`` in token store. Defaults to ``True``.
             client_id (str): OAuth2 client ID. Defaults to ``None``.
             client_secret (str): OAuth2 client secret. Defaults to ``None``.
+            developer_token (str): Developer Token. Defaults to ``None``.
+            developer_token_url (str): Developer Token URL. Defaults to ``None``.
             instance_id (str): Instance ID. Defaults to ``None``.
             profile (str): Credentials profile. Defaults to ``'default'``.
             redirect_uri (str): Redirect URI. Defaults to ``None``.
@@ -72,6 +75,8 @@ class Credentials(object):
         self.cache_token_ = cache_token
         self.client_id_ = client_id
         self.client_secret_ = client_secret
+        self.developer_token_ = developer_token
+        self.developer_token_url = developer_token_url or DEVELOPER_TOKEN_URL
         self.instance_id = instance_id
         self.jwt_exp_ = None
         self.profile = profile or 'default'
@@ -93,7 +98,8 @@ class Credentials(object):
 
     def __repr__(self):
         args = self.__dict__.copy()
-        for k in ['access_token_', 'refresh_token_', 'client_secret_']:
+        for k in ['access_token_', 'refresh_token_', 'client_secret_',
+                  'developer_token_']:
             if args[k] is not None:
                 args[k] = '*' * 6
         return '{}({})'.format(
@@ -141,6 +147,16 @@ class Credentials(object):
     def client_secret(self, client_secret):
         """Set client_secret."""
         self.client_secret_ = client_secret
+
+    @property
+    def developer_token(self):
+        """Get developer token."""
+        return self.developer_token_ or os.getenv('PAN_DEVELOPER_TOKEN')
+
+    @developer_token.setter
+    def developer_token(self, developer_token):
+        """Set developer token."""
+        self.developer_token_ = developer_token
 
     @property
     def jwt_exp(self):
@@ -416,12 +432,31 @@ class Credentials(object):
         if not self.token_lock.locked():
             with self.token_lock:
                 if access_token == self.access_token or access_token is None:
-                    c = self.get_credentials()
-                    if c.client_id and c.client_secret and c.refresh_token:
+                    if self.developer_token is not None:
+                        r = self._httpclient.request(
+                            method='POST',
+                            url=self.developer_token_url,
+                            path='/request_token',
+                            headers={
+                                'Authorization': 'Bearer {}'.format(
+                                    self.developer_token
+                                )
+                            },
+                            timeout=30,
+                            raise_for_status=True
+                        )
+
+                    elif all(
+                        [
+                            self.client_id,
+                            self.client_secret,
+                            self.refresh_token
+                        ]
+                    ):
                         data = {
-                            'client_id': c.client_id,
-                            'client_secret': c.client_secret,
-                            'refresh_token': c.refresh_token,
+                            'client_id': self.client_id,
+                            'client_secret': self.client_secret,
+                            'refresh_token': self.refresh_token,
                             'grant_type': 'refresh_token'
                         }
                         r = self._httpclient.request(
@@ -431,9 +466,16 @@ class Credentials(object):
                             path='/api/oauth2/RequestToken',
                             **kwargs
                         )
+                    else:
+                        raise PartialCredentialsError(
+                            "Missing one or more required credentials"
+                        )
+
+                    if r:
                         if not r.ok:
                             raise PanCloudError(
-                                '%s %s: %s' % (r.status_code, r.reason, r.text)
+                                '%s %s: %s' % (
+                                r.status_code, r.reason, r.text)
                             )
                         try:
                             r_json = r.json()
@@ -456,10 +498,6 @@ class Credentials(object):
                                     r_json.get('refresh_token')
                             self.write_credentials()
                         return self.access_token_
-                    else:
-                        raise PartialCredentialsError(
-                            "Missing one or more required credentials"
-                        )
 
     def revoke_access_token(self, **kwargs):
         """Revoke access token."""
