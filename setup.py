@@ -24,7 +24,7 @@ test_requirements = [
 
 setup(
     name='pancloud',
-    version='1.4.0',
+    version='1.5.0',
     description="Python idiomatic SDK for the Palo Alto Networks Application Framework.",
     long_description=readme + '\n\n' + history,
     author="Steven Serrata",
@@ -37,7 +37,7 @@ setup(
     zip_safe=False,
     keywords='pancloud',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Natural Language :: English',

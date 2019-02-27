@@ -4,7 +4,7 @@ Palo Alto Networks Cloud Python SDK
 
 Python idiomatic SDK for the Palo Alto Networks Application Framework.
 
-The Palo Alto Networks Cloud Python SDK, or `pancloud`, was created to assist developers with
+The Palo Alto Networks Cloud Python SDK (or `pancloud` for short) was created to assist developers with
 programmatically interacting with the Palo Alto Networks Application Framework.
 
 The primary goal is to provide full, low-level API coverage for the following Application Framework services:
@@ -32,15 +32,16 @@ Features
 --------
 
 - HTTP client wrapper for the popular Requests library with full access to its features.
-- Language bindings for Logging Service, Event Service and Directory-Sync Service.
+- Language bindings for Logging Service, Event Service and Directory Sync Service.
 - Helper methods for performing common tasks, such as log/event pagination.
-- Credentials support for OAuth 2.0.
+- Support for OAuth 2.0 grant code authorization flow.
 - Library of example scripts illustrating how to leverage `pancloud`.
+- Support for API Explorer Developer Tokens (Introduced in v1.5.0).
 
 Status
 ------
 
-The Palo Alto Networks Cloud Python SDK is considered **beta** at this time.
+The Palo Alto Networks Cloud Python SDK is considered **production/stable** at this time.
 
 Installation
 ------------
@@ -72,10 +73,10 @@ Obtaining and Using OAuth 2.0 Tokens
 ------------------------------------
 
 Work with your Developer Relations representative to register your
-application to receive the credentials needed to obtain an `access_token`.
-You'll need a `client_id`, `client_secret`, and `refresh_token`.
-`API Explorer <https://github.com/PaloAltoNetworks/apiexplorer>`__ may optionally be used to perform
-OAuth 2.0 and fetch tokens.
+application and receive the credentials needed to obtain an `access_token`.
+Normally, this requires a `client_id`, `client_secret`, and `refresh_token`.
+API Explorer may optionally be used to generate a Developer Token, which can
+be used in place of the `client_id`, `client_secret`, and `refresh_token`.
 
 For more information visit the following RTD page: `Credentials <https://pancloud.readthedocs.io/en/latest/guides/credentials.html>`__
 

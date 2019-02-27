@@ -2,6 +2,17 @@
 History
 =======
 
+1.5.0 (2019-02-27)
+------------------
+
+* Added `flush()` method to `EventService` class.
+* Added `auto_refresh` support to `HTTPClient` `_apply_credentials()` method.
+* Removed `auto_retry` feature from `HTTPClient` class.
+* Refactored `HTTPClient` class `request()` method keyword argument overrides.
+* Removed unused `token_revoke_url` keyword argument.
+* Added support for API Explorer Developer Tokens to `Credentials` class.
+* Refactored `Credentials` `refresh()` method.
+
 1.4.0 (2018-10-04)
 ------------------
 
