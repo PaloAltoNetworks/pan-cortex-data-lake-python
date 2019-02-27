@@ -3,7 +3,7 @@
 """Main package for pancloud."""
 
 __author__ = 'Palo Alto Networks'
-__version__ = '1.4.0'
+__version__ = '1.5.0'
 
 from .directorysync import DirectorySyncService
 from .event import EventService
