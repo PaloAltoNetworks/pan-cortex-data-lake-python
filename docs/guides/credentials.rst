@@ -4,12 +4,12 @@ Credentials
 ===========
 
 The Application Framework implements OAuth 2.0 for delegating access to
-your Logging, Event and Directory Sync services.
+the Logging, Event and Directory Sync services.
 
 The ``pancloud`` SDK comes packaged with OAuth 2.0 support to ease the process of:
 
-   - Generating authorization URL
-   - Exchanging authorization code for tokens (authorization code grant)
+   - Generating the authorization URL
+   - Exchanging and authorization code for tokens (authorization code grant)
    - Refreshing tokens
    - Revoking tokens
    - Token caching
@@ -17,17 +17,34 @@ The ``pancloud`` SDK comes packaged with OAuth 2.0 support to ease the process o
 
 Obtaining and Using Tokens
 --------------------------
+Starting in version 1.5.0, ``pancloud`` now supports two types of
+credentials:
 
-Work with your Developer Relations representative to register your
-application and receive the credentials needed to obtain an ``access_token``.
-Minimally, you'll need a ``client_id``, ``client_secret``, and ``refresh_token``.
-If you're working on an application without a user agent,
-``API Explorer`` may optionally be used to obtain a ``refresh_token``,
-i.e. perform authorization code grant.
+    - OAuth 2.0 credentials (`client_id`, `client_secret` and `refresh_token`)
+    - Developer Tokens (obtained from `API Explorer`_)
 
-Once acquired, you can generate a ``credentials.json`` file using the
+.. _API Explorer: https://app.apiexplorer.rocks
+
+.. note::
+    The difference between the two is that the first requires developers
+    to write an application capable of performing the OAuth 2.0 authorization
+    code grant flow whereas the second enables developers to quickly get started,
+    by leveraging API Explorer's built-in `access_token` redemption service.
+
+OAuth 2.0 Credentials
+---------------------
+If you are looking to build your own web app, work with your Developer Relations
+representative to register your application to receive the minimum credentials
+needed to perform the OAuth 2.0 authorization code grant flow: `client_id` and `client_secret`.
+
+A successful authorization will grant a `refresh_token` that can be
+combined with the `client_id` and `client_secret` to perform API requests using ``pancloud``.
+
+The following illustrates how to generate a ``credentials.json`` file using the
 ``summit.py`` command-line utility or the ``credentials_generate.py``
-script included in the ``pancloud`` GitHub repo examples folder.
+script included in the ``pancloud`` GitHub repo `examples`_ folder.
+
+.. _examples: https://github.com/PaloAltoNetworks/pancloud/tree/master/examples
 
 summit.py:
 
@@ -60,6 +77,122 @@ credentials_generate.py:
 Once your ``credentials.json`` file is generated, you should be ready
 to run the examples packaged with the ``pancloud`` repo or use the ``pancloud``
 SDK in your own project.
+
+Developer Tokens
+----------------
+Developer Tokens is a new concept introduced in ``pancloud`` v1.5.0 that
+enables developers to quickly get started by offloading the OAuth 2.0
+authorization code grant flow to API Explorer, in exchange for a `developer_token`.
+
+What exactly is a `developer_token` anyway? In a nutshell, a `developer_token` is
+used to authenticate with API Explorer's built-in `access_token` redemption
+service. It's intended to eliminate the need to acquire and store a `client_id`,
+`client_secret` and `refresh_token` in your own credentials store, which
+could be risky without implementing the proper security best practices.
+
+The following sections illustrate how to activate and authorize API Explorer
+so it can be used to generate a `developer_token`.
+
+Activating API Explorer
+-----------------------
+
+    1. Login to the `Cortex Hub`_:
+
+        .. image:: ../../_static/cortexhub.png
+            :scale: 10 %
+
+        .. _Cortex Hub: https://apps.paloaltonetworks.com/apps
+
+    2. Ensure both Logging and Directory Sync Service are activated:
+
+        .. image:: ../../_static/requirements.jpeg
+            :scale: 10 %
+
+    3. Activate API Explorer:
+
+        .. image:: ../../_static/activate.png
+            :scale: 10 %
+
+    4. Complete activation:
+
+        .. image:: ../../_static/activation.png
+            :scale: 10 %
+
+    5. Click tile to login to your API Explorer instance:
+
+        .. image:: ../../_static/redirectlogin.png
+            :scale: 10 %
+
+    6. Click the `Authorize` button corresponding to your instance (if not already authorized):
+
+        .. image:: ../../_static/authorize.png
+            :scale: 10 %
+
+    7. Complete the authorization form (if not already authorized):
+
+        .. image:: ../../_static/authorization.png
+            :scale: 10 %
+
+    8. Give consent to API Explorer for accessing your data:
+
+        .. image:: ../../_static/consentform.png
+            :scale: 10 %
+
+Now that API Explorer has been authorized, let's move on to generate a `developer_token`!
+
+Generating a Developer Token
+----------------------------
+
+    1. Click the `key` icon corresponding with your authorized instance:
+
+        .. image:: ../../_static/generate.png
+            :scale: 10 %
+
+    2. Review the `NOTICE` and select an appropriate expiration for your `developer_token`:
+
+        .. image:: ../../_static/generation.png
+            :scale: 10 %
+
+    3. Click the `Generate` button to generate your `developer_token`. Note that
+       it will only be displayed once, so be sure to copy and store it securely
+       if appropriate.
+
+.. note::
+
+    At this point, you will be given an opportunity to record your Developer Token
+    for safe keeping. Whatever you choose to do, keep it secret and keep it safe, as
+    it allows anyone in possession of it to potentially access your data.
+
+Using a Developer Token
+-----------------------
+
+There are two primary ways to use a `developer_token` with `pancloud`:
+
+- Export a `PAN_DEVELOPER_TOKEN` environment variable
+
+    .. code-block:: console
+
+        export PAN_DEVELOPER_TOKEN=<your token>
+
+- Pass a `developer_token` kwarg into your `Credentials` class constructor (as illustrated below):
+
+    .. code-block:: python
+
+        from pancloud import Credentials
+
+        c = Credentials(developer_token=<your token>)
+
+From this point forward, your `Credentials` object should be capable of
+obtaining and refreshing an `access_token` using API Explorer's built-in
+token redemption service.
+
+.. note::
+
+    You may notice that your `credentials.json` file only stores and updates
+    the `access_token` value when using a `developer_token`. This is by design,
+    as API Explorer, acting as the token redemption service, is responsible
+    for storing the additional credentials needed to perform an `access_token`
+    refresh.
 
 Credential Resolver
 -------------------
@@ -111,20 +244,17 @@ with an incomplete set of credentials will raise a :exc:`~pancloud.exceptions.Pa
     the default (``TinyDB``) which would result in credentials being stored
     outside of ``credentials.json``.
 
-Auto-refresh/Auto-retry
------------------------
-By default, ``Credentials`` supports ``auto_refresh`` and ``auto_retry``
-when valid credentials are present (and ``raise_for_status`` is not passed).
+Auto-refresh
+------------
+By default, ``Credentials`` supports ``auto_refresh`` when valid
+credentials are present (and ``raise_for_status`` is not passed).
 
 ``pancloud`` will auto-refresh and apply the ``access_token`` to the
 ``"Authorization: Bearer"`` header under the following conditions:
 
 * ``auto_refresh`` is set to ``True``.
 * ``access_token`` is ``None``.
-* ``pancloud`` receives an ``HTTP 401`` status code from the Application Framework API and the cached token is the same as the ``access token`` to refresh.
-
-Additionally, ``pancloud`` will ``auto_retry`` a request if an
-``auto_refresh`` occurred due to an ``HTTP 401`` status code.
+* ``exp`` field in `access_token` is expired.
 
 Access Token Caching
 --------------------

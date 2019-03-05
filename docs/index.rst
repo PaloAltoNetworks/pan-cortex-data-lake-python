@@ -15,15 +15,18 @@ Welcome to pancloud's documentation!
 ====================================
 
 The Palo Alto Networks Cloud Python SDK (or ``pancloud`` for short) was created to empower
-developers to write innovative security solutions using the Palo Alto Networks Application Framework.
+developers to write innovative security solutions using the Palo Alto Networks Application Framework
+(now known as `Cortex`_).
 
-The primary goal of this library is to provide full, low-level coverage for the following Application Framework services:
+.. _Cortex: https://www.paloaltonetworks.com/products/cortex
+
+The primary goal of this library is to provide full, low-level coverage of the following Application Framework services:
 
     - Logging Service
     - Directory Sync Service
     - Event Service
 
-The secondary goal is to provide coverage, in the form of helpers, for common tasks/operations.
+The secondary goal is to provide coverage, in the form of helpers, for common tasks/operations:
 
     - Log/event pagination
     - OAuth 2.0 and token refreshing

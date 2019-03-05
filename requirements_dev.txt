@@ -10,3 +10,4 @@ PyYAML >= "3.11"
 pytest >= "2.9.2"
 pytest-runner >= "2.11.1"
 pancloud >= "1.4.0"
+Pallets-Sphinx-Themes>=1.1.4
