@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c99060f3dfc80495e14ff7da7324d98cbd359293f5d8e2be22c8639637e5e8fb"
+            "sha256": "80f114d6895867fb991a17c72898759b23205f88e33bc3b6ed8d7b9cbe38982a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -260,6 +260,14 @@
             ],
             "version": "==19.0"
         },
+        "pallets-sphinx-themes": {
+            "hashes": [
+                "sha256:4d6c2de325ee21c83e0f8f8b3961f75c9c30f0e33df155a832a834dc2ea53b38",
+                "sha256:8d31f57342d5e353528e5883a4e5e05612832e51bbd1a9ecde7f1a7011590c98"
+            ],
+            "index": "pypi",
+            "version": "==1.1.4"
+        },
         "pathtools": {
             "hashes": [
                 "sha256:7c35c5421a39bb82e58018febd90e3b6e5db34c5443aaaf742b3f33d4655f1c0"
@@ -353,7 +361,7 @@
                 "sha256:e170a9e6fcfd19021dd29845af83bb79236068bf5fd4df3327c1be18182b2531"
             ],
             "index": "pypi",
-            "version": ">=4.2b1"
+            "version": "==3.13"
         },
         "requests": {
             "hashes": [

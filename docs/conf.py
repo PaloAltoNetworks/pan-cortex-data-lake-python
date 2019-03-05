@@ -23,7 +23,7 @@ import pancloud
 # -- Project information -----------------------------------------------------
 
 project = u'pancloud'
-copyright = u'2018, Palo Alto Networks'
+copyright = u'2019, Palo Alto Networks'
 author = u'sserrata@paloaltonetworks.com'
 
 # The short X.Y version
@@ -46,7 +46,8 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
     'sphinxcontrib.napoleon',
-    'sphinx.ext.intersphinx'
+    'sphinx.ext.intersphinx',
+    'pallets_sphinx_themes',
 ]
 
 intersphinx_mapping = {
@@ -89,7 +90,7 @@ language = None
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'flask_theme_support.FlaskyStyle'
+# pygments_style = 'flask_theme_support.FlaskyStyle'
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -98,20 +99,21 @@ pygments_style = 'flask_theme_support.FlaskyStyle'
 # a list of builtin themes.
 #
 # html_theme = 'alabaster'
-html_theme = 'sphinx_rtd_theme'
+# html_theme = 'sphinx_rtd_theme'
+html_theme = 'flask'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {
-    'show_powered_by': True,
-    'github_user': 'PaloAltoNetworks',
-    'github_repo': 'pancloud',
-    'github_banner': True,
-    'show_related': True,
-    'note_bg': '#999999'
-}
+# html_theme_options = {
+#     'show_powered_by': True,
+#     'github_user': 'PaloAltoNetworks',
+#     'github_repo': 'pancloud',
+#     'github_banner': True,
+#     'show_related': True,
+#     'note_bg': '#999999'
+# }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
