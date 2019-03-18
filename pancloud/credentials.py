@@ -244,7 +244,7 @@ class Credentials(object):
             if rem > 0:  # add padding
                 payload += '=' * (4 - rem)
             try:
-                decoded_jwt = b64decode(payload)
+                decoded_jwt = b64decode(payload).decode("utf-8")
             except TypeError as e:
                 raise PanCloudError(
                     "Failed to base64 decode JWT: %s" % e)
