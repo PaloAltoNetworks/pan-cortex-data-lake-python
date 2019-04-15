@@ -236,68 +236,64 @@ class LoggingService(object):
                 raise PanCloudError('delete: status_code: %d' %
                                     r.status_code)
 
-        r = self.poll(query_id, sequence_no, params, **kwargs)
-        try:
-            r_json = r.json()
-        except ValueError as e:
-            raise PanCloudError('Invalid JSON: %s' % e)
-
-        if not (200 <= r.status_code < 300):
-            if 'errorCode' in r_json and 'errorMessage' in r_json:
-                raise PanCloudError('%s: %s' %
-                                    (r_json['errorCode'],
-                                     r_json['errorMessage']))
-            else:
-                raise PanCloudError('%s %s' % (r.status_code,
-                                               r.reason))
-
-        if 'queryStatus' not in r_json:
-            self._debug(r_json)
-            raise PanCloudError('no "queryStatus" in response')
-
-        self._debug(r_json['queryStatus'])
-        if r_json['queryStatus'] in ['FINISHED', 'JOB_FINISHED']:
+        while True:
+            r = self.poll(query_id, sequence_no, params, **kwargs)
             try:
-                hits = r_json['result']['esResult']['hits']['hits']
-            except KeyError as e:
-                raise PanCloudError('no "hits" in response' % e)
+                r_json = r.json()
+            except ValueError as e:
+                raise PanCloudError('Invalid JSON: %s' % e)
 
-            self._debug('hits: %d', len(hits))
-            for x in hits:
-                yield x
+            if not (200 <= r.status_code < 300):
+                if 'errorCode' in r_json and 'errorMessage' in r_json:
+                    raise PanCloudError('%s: %s' %
+                                        (r_json['errorCode'],
+                                         r_json['errorMessage']))
+                else:
+                    raise PanCloudError('%s %s' % (r.status_code,
+                                                   r.reason))
 
-            if r_json['queryStatus'] == 'JOB_FINISHED':
-                if delete_query:
-                    _delete(query_id, **kwargs)
-                return
-
-            if sequence_no is not None:
-                sequence_no += 1
-            else:
-                sequence_no = 1
-
-        elif r_json['queryStatus'] == 'JOB_FAILED':
-            e = '%s' % r_json['queryStatus']
-            try:
-                e += ': %s' % r_json['result']['esResult']['error']
-            except KeyError:
+            if 'queryStatus' not in r_json:
                 self._debug(r_json)
+                raise PanCloudError('no "queryStatus" in response')
 
-            raise PanCloudError(e)
+            self._debug(r_json['queryStatus'])
+            if r_json['queryStatus'] in ['FINISHED', 'JOB_FINISHED']:
+                try:
+                    hits = r_json['result']['esResult']['hits']['hits']
+                except KeyError as e:
+                    raise PanCloudError('no "hits" in response' % e)
 
-        elif r_json['queryStatus'] == 'RUNNING':
-            if params is not None and 'maxWaitTime' in params:
-                pass
+                self._debug('hits: %d', len(hits))
+                for x in hits:
+                    yield x
+
+                if r_json['queryStatus'] == 'JOB_FINISHED':
+                    if delete_query:
+                        _delete(query_id, **kwargs)
+                    return
+
+                if sequence_no is not None:
+                    sequence_no += 1
+                else:
+                    sequence_no = 1
+
+            elif r_json['queryStatus'] == 'JOB_FAILED':
+                e = '%s' % r_json['queryStatus']
+                try:
+                    e += ': %s' % r_json['result']['esResult']['error']
+                except KeyError:
+                    self._debug(r_json)
+
+                raise PanCloudError(e)
+
+            elif r_json['queryStatus'] == 'RUNNING':
+                if params is not None and 'maxWaitTime' in params:
+                    pass
+                else:
+                    # XXX
+                    time.sleep(1)
             else:
-                # XXX
-                time.sleep(1)
-        else:
-            raise PanCloudError('Bad queryStatus: %s' % r_json['queryStatus'])
-
-        # recursion
-        for x in self.xpoll(query_id, sequence_no, params, delete_query,
-                            **kwargs):
-            yield x
+                raise PanCloudError('Bad queryStatus: %s' % r_json['queryStatus'])
 
     def write(self, vendor_id=None, log_type=None, json=None, **kwargs):
         """Write log records to the Logging Service.
