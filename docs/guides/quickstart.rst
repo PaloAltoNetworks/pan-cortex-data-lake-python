@@ -30,7 +30,7 @@ Next, let's construct a :class:`~pancloud.logging.LoggingService` instance:
 .. code:: python
 
     ls = LoggingService(
-        url="https://api.us.paloaltonetoworks.com",
+        url="https://api.us.paloaltonetworks.com",
         credentials=Credentials()
     )
 
@@ -102,7 +102,7 @@ What if you want to strictly enforce proper JSON encoding?
 .. code:: python
 
     ls = LoggingService(
-        url="https://api.us.paloaltonetoworks.com",
+        url="https://api.us.paloaltonetworks.com",
         credentials=Credentials(),
         enforce_json=True  # try `json.dumps()` on response text
     )
@@ -119,7 +119,7 @@ you can tell ``pancloud`` to raise a :exc:`~pancloud.exceptions.HTTPError` excep
 .. code:: python
 
     ls = LoggingService(
-        url="https://api.us.paloaltonetoworks.com",
+        url="https://api.us.paloaltonetworks.com",
         credentials=Credentials(),
         raise_for_status=True
     )
