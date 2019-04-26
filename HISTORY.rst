@@ -2,6 +2,14 @@
 History
 =======
 
+1.5.1 (2019-04-26)
+------------------
+
+* Updated Pipfile.lock.
+* Replaced recursion with loop pattern in `LoggingService` `xpoll()` method.
+* Added `decode('utf-8')` to base64 decoded JWT to ensure compatibility with `json.loads()`.
+* Addressed minor typos in docs.
+
 1.5.0 (2019-02-27)
 ------------------
 
