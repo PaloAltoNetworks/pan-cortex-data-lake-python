@@ -2,12 +2,12 @@
 Palo Alto Networks Cloud Python SDK
 ===================================
 
-Python idiomatic SDK for the Palo Alto Networks Application Framework.
+Python idiomatic SDK for the Palo Alto Networks Cortex™ platform.
 
 The Palo Alto Networks Cloud Python SDK (or `pancloud` for short) was created to assist developers with
-programmatically interacting with the Palo Alto Networks Application Framework.
+programmatically interacting with the Palo Alto Networks Cortex™ platform.
 
-The primary goal is to provide full, low-level API coverage for the following Application Framework services:
+The primary goal is to provide full, low-level API coverage for the following Cortex™ services:
 
     - Logging Service
     - Directory Sync Service
@@ -85,15 +85,22 @@ Example
 
 The following example assumes valid credentials are present::
 
-    $ ./logging_query.py
-
-    QUERY: {"queryId":"59801207-9a75-49c1-9f87-a2aa23f55774","sequenceNo":0,"queryStatus":"RUNNING","clientParameters":{},"result":{"esResult":null,"esQuery":{"table":["panw.traffic"],"query":{"aggregations":{},"size":1},"selections":[],"params":{}}}}
-
-    JOB_FINISHED: queryId: 59801207-9a75-49c1-9f87-a2aa23f55774, sequenceNo: 0, retrieving from 0, size: 1, took: 117 ms
-
-    RESULT: {"queryId":"59801207-9a75-49c1-9f87-a2aa23f55774","sequenceNo":0,"queryStatus":"JOB_FINISHED","clientParameters":{},"result":{"esResult":{"took":117,"hits":{"total":1878954,"maxScore":2,"hits":[{"_index":"117270009_panw.all_2018042400-2018062300_000000","_type":"traffic","_id":"117270009_lcaas:0:149314:0","_score":2,"_source":{"risk-of-app":"4","logset":"ForwardToLoggingService","bytes_received":14882,"natsport":53295,"sessionid":806912,"type":"traffic","parent_start_time":0,"packets":30,"characteristic-of-app":["able-to-transfer-file","has-known-vulnerability","tunnel-other-application","prone-to-misuse","is-saas"],"dg_hier_level_4":0,"dg_hier_level_1":11,"dg_hier_level_3":0,"dg_hier_level_2":0,"action":"allow","recsize":1622,"from":"L3-Trust","parent_session_id":0,"repeatcnt":1,"app":"web-browsing","vsys":"vsys1","nat":1,"technology-of-app":"browser-based","pkts_received":17,"chunks_sent":0,"receive_time":1524893357,"non-standard-dport":443,"subcategory-of-app":"internet-utility","chunks_received":0,"users":"panwdomain\\user1","srcuser":"panwdomain\\user1","proxy":1,"fwd":1,"config_ver":2049,"cloud_hostname":"sample-cft-fw","customer-id":"117270009","proto":"tcp","non_std_dport":1,"tunneled-app":"tunneled-app","is-saas-of-app":0,"natdport":443,"action_source":"from-policy","assoc_id":0,"dst":"66.135.212.201","natdst":"66.135.212.201","chunks":0,"flags":22020208,"rule":"Allow Outbound Browsing","dport":443,"elapsed":0,"sanctioned-state-of-app":0,"inbound_if":"ethernet1/2","device_name":"sample-cft-fw","subtype":"end","time_received":1524893357,"actionflags":-9223372036854776000,"tunnelid_imsi":0,"session_end_reason":"tcp-fin","natsrc":"10.0.0.100","seqno":1633879,"src":"10.0.1.101","start":1524893341,"time_generated":1524893357,"outbound_if":"ethernet1/1","category-of-app":"general-internet","bytes_sent":2152,"srcloc":"10.0.0.0-10.255.255.255","pkts_sent":13,"dstloc":"US","serial":"","bytes":17034,"vsys_id":1,"to":"L3-Untrust","category":"10006","sport":33562,"tunnel":0}}]},"id":"59801207-9a75-49c1-9f87-a2aa23f55774","from":0,"size":1,"completed":true,"state":"COMPLETED","timed_out":false},"esQuery":{"table":["panw.traffic"],"query":{"aggregations":{},"size":1},"selections":[],"params":{}}}}
-
-    DELETE: {"success":true}
+``` {.sourceCode .python}
+>>> import pancloud
+>>> c = pancloud.Credentials()
+>>> ls = pancloud.LoggingService(credentials=c)
+>>> query = {
+...     "query": "SELECT * FROM panw.traffic LIMIT 1",
+...     "startTime": 1938869090,
+...     "endTime": 1938869150,
+...     "maxWaitTime": 10000  
+... }
+>>> q = ls.query(query)
+>>> q.status_code
+200
+>>> q.json()
+{u'result': {u'esQuery': {u'table': [u'panw.traffic'], u'selections': [], u'params': {}, u'query': {u'aggregations': {}, u'size': 1}}, u'esResult': {u'hits': {u'hits': [{u'_score': 2, u'_type': u'traffic', u'_id': u'117270018_lcaas:0:9379670:1', u'_source': {u'logset': u'LCaaS', u'traffic_flags': 0, u'parent_start_time': 0, u'inbound_if': u'ethernet1/1', u'dstloc': u'10.0.0.0-10.255.255.255', u'natdport': 0, u'time_generated': 1560175638, u'recsize': 1958, u'chunks_sent': 0, u'to': u'l3-untrust', u'non-standard-dport': 0, u'receive_time': 1560175660, u'elapsed': 0, u'seqno': 51422235, u'pbf_s2c': 0, u'vsys': u'vsys1', u'bytes': 196, u'subtype': u'end', u'subcategory-of-app': u'internet-utility', u'vsys_id': 1, u'actionflags': -9223372036854776000L, u'pkts_sent': 1, u'sport': 0, u'is-saas-of-app': 0, u'category': u'any', u'ui-srcloc': u'Singapore', u'bytes_received': 98, u'container': 0, u'dst': u'10.10.0.2', u'customer-id': u'117270018', u'packet_capture': 0, u'srcloc': u'SG', u'natsport': 0, u'parent_session_id': 0, u'proxy': 0, u'ui-dstloc': u'10.0.0.0-10.255.255.255', u'src': u'203.208.197.133', u'config_ver': 2304, u'sanctioned-state-of-app': 0, u'fwd': 1, u'technology-of-app': u'network-protocol', u'bytes_sent': 98, u'chunks_received': 0, u'dg_hier_level_3': 0, u'dg_hier_level_2': 0, u'dg_hier_level_1': 16, u'dg_hier_level_4': 0, u'repeatcnt': 1, u'natsrc': u'0.0.0.0', u'app': u'ping', u'characteristic-of-app': [u'tunnel-other-application', u'prone-to-misuse', u'is-saas'], u'chunks': 0, u'non_std_dport': 1, u'decrypt_mirror': 0, u'action_source': u'from-policy', u'from': u'l3-untrust', u'url_denied': 0, u'assoc_id': 0, u'log_feat_bit1': 0, u'start': 1560175625, u'cloud_hostname': u'ngfw-1', u'pbf_c2s': 0, u'sym_return': 0, u'captive_portal': 0, u'outbound_if': u'ethernet1/1', u'tunnelid_imsi': 0, u'sessionid': 407532, u'category-of-app': u'general-internet', u'tunnel': u'N/A', u'type': u'traffic', u'mptcp_on': 0, u'recon_excluded': 0, u'http2_connection': 0, u'tunnel_inspected': 0, u'risk-of-app': u'2', u'serial': u'007200000046172', u'is_fwaas': 0, u'proto': u'icmp', u'is_phishing': 0, u'is_gpaas': 0, u'nat': 0, u'tunneled-app': u'untunneled', u'natdst': u'0.0.0.0', u'time_received': 1560175638, u'users': u'203.208.197.133', u'rule_uuid': u'd6992de4-5523-4ba8-b9e9-a99fe9dbfda4', u'pkts_received': 1, u'action': u'allow', u'is_dup_log': 0, u'exported': 0, u'session_end_reason': u'aged-out', u'transaction': 0, u'packets': 2, u'flag': 0, u'rule': u'intrazone-default', u'device_name': u'ngfw-1', u'flags': 1048676, u'dport': 0}, u'_index': u'117270018_panw.all_2019060600-2019062600_000000'}], u'total': 22942, u'maxScore': 2}, u'from': 0, u'completed': True, u'took': 185, u'timed_out': False, u'state': u'COMPLETED', u'id': u'e2a685ce-0b21-41d6-a050-4e371e456817', u'size': 1}}, u'sequenceNo': 0, u'queryId': u'e2a685ce-0b21-41d6-a050-4e371e456817', u'clientParameters': {}, u'queryStatus': u'JOB_FINISHED'}
+```
 
 Contributors
 ------------
