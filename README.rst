@@ -85,7 +85,7 @@ Example
 
 The following example assumes valid credentials are present::
 
-``` {.sourceCode .python}
+```python
 >>> import pancloud
 >>> c = pancloud.Credentials()
 >>> ls = pancloud.LoggingService(credentials=c)
