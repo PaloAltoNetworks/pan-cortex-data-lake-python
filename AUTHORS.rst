@@ -11,3 +11,5 @@ Contributors
 ------------
 
 * Kevin Steves <ksteves@paloaltonetworks.com>
+* Misha Seltzer
+* Luigi Mori
