@@ -9,9 +9,8 @@ programmatically interacting with the Palo Alto Networks Cortex™ platform.
 
 The primary goal is to provide full, low-level API coverage for the following Cortex™ services:
 
-    - Logging Service
-    - Directory Sync Service
-    - Event Service
+    - Query Service
+    - More coming soon!
 
 The secondary goal is to provide coverage, in the form of helpers, for common tasks/operations.
 
@@ -32,7 +31,7 @@ Features
 --------
 
 - HTTP client wrapper for the popular Requests library with full access to its features.
-- Language bindings for Logging Service, Event Service and Directory Sync Service.
+- Language bindings for Query Service.
 - Helper methods for performing common tasks, such as log/event pagination.
 - Support for OAuth 2.0 grant code authorization flow.
 - Library of example scripts illustrating how to leverage `pancloud`.

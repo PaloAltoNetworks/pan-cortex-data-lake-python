@@ -2,4 +2,4 @@
 
 """Adapters package."""
 
-from .adapter import StorageAdapter
+from .adapter import StorageAdapter  # noqa: F401

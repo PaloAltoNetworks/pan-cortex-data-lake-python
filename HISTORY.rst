@@ -2,6 +2,17 @@
 History
 =======
 
+2.0.0-alpha1 (2019-11-21)
+-------------------------
+
+* Removed all legacy modules, e.g. logging, event and directorysync
+* Removed all references to legacy modules and classes
+* Removed all legacy tests
+* Added util module
+* Added query module
+* Added example query script
+* Updated httpclient module
+
 1.5.1 (2019-04-26)
 ------------------
 

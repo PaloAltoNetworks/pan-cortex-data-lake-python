@@ -66,6 +66,7 @@ target/
 *.p12
 .DS_Store
 travis_pypi_setup.py
+.envrc
 
 # IDE stuff
 .idea/*

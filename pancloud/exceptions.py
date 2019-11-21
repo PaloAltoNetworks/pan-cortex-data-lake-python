@@ -33,9 +33,7 @@ class HTTPError(PanCloudError):
             inst (class): Exception instance.
 
         """
-        PanCloudError.__init__(
-            self, "{}".format(inst)
-        )
+        PanCloudError.__init__(self, "{}".format(inst))
 
 
 class PartialCredentialsError(PanCloudError):
@@ -48,9 +46,7 @@ class PartialCredentialsError(PanCloudError):
             inst (class): Exception instance.
 
         """
-        PanCloudError.__init__(
-            self, "{}".format(inst)
-        )
+        PanCloudError.__init__(self, "{}".format(inst))
 
 
 class RequiredKwargsError(PanCloudError):
@@ -76,8 +72,4 @@ class UnexpectedKwargsError(PanCloudError):
             kwargs (dict): Key-word arguments.
 
         """
-        PanCloudError.__init__(
-            self, "{}".format(", ".join(kwargs.keys()))
-        )
-
-
+        PanCloudError.__init__(self, "{}".format(", ".join(kwargs.keys())))

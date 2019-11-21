@@ -2,13 +2,15 @@
 
 """Main package for pancloud."""
 
-__author__ = 'Palo Alto Networks'
-__version__ = '1.5.1'
+__author__ = "Palo Alto Networks"
+__version__ = "2.0.0-alpha1"
 
-from .directorysync import DirectorySyncService
-from .event import EventService
-from .exceptions import PanCloudError, HTTPError, \
-    UnexpectedKwargsError, RequiredKwargsError
-from .httpclient import HTTPClient
-from .logging import LoggingService
-from .credentials import Credentials
+from .exceptions import (  # noqa: F401
+    PanCloudError,
+    HTTPError,
+    UnexpectedKwargsError,
+    RequiredKwargsError,
+)
+from .httpclient import HTTPClient  # noqa: F401
+from .query import QueryService  # noqa: F401
+from .credentials import Credentials  # noqa: F401

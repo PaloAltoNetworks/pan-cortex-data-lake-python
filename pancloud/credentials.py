@@ -18,25 +18,39 @@ from .httpclient import HTTPClient
 from .exceptions import PanCloudError, PartialCredentialsError
 
 # Constants
-API_BASE_URL = 'https://api.paloaltonetworks.com'
-AUTH_BASE_URL = 'https://identity.paloaltonetworks.com/as/authorization.oauth2'
-DEVELOPER_TOKEN_URL = 'https://app.apiexplorer.rocks'
+API_BASE_URL = "https://api.paloaltonetworks.com"
+AUTH_BASE_URL = "https://identity.paloaltonetworks.com/as/authorization.oauth2"
+DEVELOPER_TOKEN_URL = "https://app.apiexplorer.rocks"
 
 ReadOnlyCredentials = namedtuple(
-    'ReadOnlyCredentials',
-    ['access_token', 'client_id', 'client_secret', 'refresh_token']
+    "ReadOnlyCredentials",
+    ["access_token", "client_id", "client_secret", "refresh_token"],
 )
 
 
 class Credentials(object):
     """An Application Framework credentials object."""
 
-    def __init__(self, access_token=None, auth_base_url=None, cache_token=True,
-                 client_id=None, client_secret=None, developer_token=None,
-                 developer_token_url=None, instance_id=None, profile=None,
-                 redirect_uri=None, region=None, refresh_token=None,
-                 scope=None, storage_adapter=None, storage_params=None,
-                 token_url=None, **kwargs):
+    def __init__(
+        self,
+        access_token=None,
+        auth_base_url=None,
+        cache_token=True,
+        client_id=None,
+        client_secret=None,
+        developer_token=None,
+        developer_token_url=None,
+        instance_id=None,
+        profile=None,
+        redirect_uri=None,
+        region=None,
+        refresh_token=None,
+        scope=None,
+        storage_adapter=None,
+        storage_params=None,
+        token_url=None,
+        **kwargs
+    ):
         """Persist Session() and credentials attributes.
 
         The ``Credentials`` class is an abstraction layer for accessing,
@@ -79,41 +93,46 @@ class Credentials(object):
         self.developer_token_url = developer_token_url or DEVELOPER_TOKEN_URL
         self.instance_id = instance_id
         self.jwt_exp_ = None
-        self.profile = profile or 'default'
+        self.profile = profile or "default"
         self.redirect_uri = redirect_uri
         self.region = region
         self.refresh_token_ = refresh_token
         self.scope = scope
-        self.session = kwargs.pop('session', None)
+        self.session = kwargs.pop("session", None)
         self.state = None
-        self.adapter = storage_adapter or \
-                       'pancloud.adapters.tinydb_adapter.TinyDBStore'
+        self.adapter = storage_adapter or "pancloud.adapters.tinydb_adapter.TinyDBStore"
         self.storage = self._init_adapter(storage_params)
         self.token_lock = Lock()
         self.token_url = token_url or API_BASE_URL
         self._credentials_found_in_instance = any(
-            [self.access_token_, self.client_id_,
-             self.client_secret_, self.refresh_token_])
+            [
+                self.access_token_,
+                self.client_id_,
+                self.client_secret_,
+                self.refresh_token_,
+            ]
+        )
         self._httpclient = self.session or HTTPClient(**kwargs)
 
     def __repr__(self):
         args = self.__dict__.copy()
-        for k in ['access_token_', 'refresh_token_', 'client_secret_',
-                  'developer_token_']:
+        for k in [
+            "access_token_",
+            "refresh_token_",
+            "client_secret_",
+            "developer_token_",
+        ]:
             if args[k] is not None:
-                args[k] = '*' * 6
-        return '{}({})'.format(
-            self.__class__.__name__,
-            ', '.join(
-                '%s=%r' % x for x in args.items()),
+                args[k] = "*" * 6
+        return "{}({})".format(
+            self.__class__.__name__, ", ".join("%s=%r" % x for x in args.items()),
         )
 
     @property
     def access_token(self):
         """Get access_token."""
         if self.cache_token:
-            return self.access_token_ or \
-                   self._resolve_credential('access_token')
+            return self.access_token_ or self._resolve_credential("access_token")
         return self.access_token_
 
     @access_token.setter
@@ -129,8 +148,7 @@ class Credentials(object):
     @property
     def client_id(self):
         """Get client_id."""
-        return self.client_id_ or \
-               self._resolve_credential('client_id')
+        return self.client_id_ or self._resolve_credential("client_id")
 
     @client_id.setter
     def client_id(self, client_id):
@@ -140,8 +158,7 @@ class Credentials(object):
     @property
     def client_secret(self):
         """Get client_secret."""
-        return self.client_secret_ or \
-               self._resolve_credential('client_secret')
+        return self.client_secret_ or self._resolve_credential("client_secret")
 
     @client_secret.setter
     def client_secret(self, client_secret):
@@ -151,7 +168,7 @@ class Credentials(object):
     @property
     def developer_token(self):
         """Get developer token."""
-        return self.developer_token_ or os.getenv('PAN_DEVELOPER_TOKEN')
+        return self.developer_token_ or os.getenv("PAN_DEVELOPER_TOKEN")
 
     @developer_token.setter
     def developer_token(self, developer_token):
@@ -171,8 +188,7 @@ class Credentials(object):
     @property
     def refresh_token(self):
         """Get refresh_token."""
-        return self.refresh_token_ or \
-               self._resolve_credential('refresh_token')
+        return self.refresh_token_ or self._resolve_credential("refresh_token")
 
     @refresh_token.setter
     def refresh_token(self, refresh_token):
@@ -187,24 +203,27 @@ class Credentials(object):
             bool: ``True`` if at least one is found, otherwise ``False``.
 
         """
-        return any([os.getenv('PAN_ACCESS_TOKEN'),
-                    os.getenv('PAN_CLIENT_ID'),
-                    os.getenv('PAN_CLIENT_SECRET'),
-                    os.getenv('PAN_REFRESH_TOKEN')])
+        return any(
+            [
+                os.getenv("PAN_ACCESS_TOKEN"),
+                os.getenv("PAN_CLIENT_ID"),
+                os.getenv("PAN_CLIENT_SECRET"),
+                os.getenv("PAN_REFRESH_TOKEN"),
+            ]
+        )
 
     def _init_adapter(self, storage_params=None):
-        module_path = self.adapter.rsplit('.', 1)[0]
-        adapter = self.adapter.split('.')[-1]
+        module_path = self.adapter.rsplit(".", 1)[0]
+        adapter = self.adapter.split(".")[-1]
         try:
             __import__(module_path)
         except ImportError as e:
-            raise PanCloudError('Module import error: %s: %s' %
-                                (module_path, e))
+            raise PanCloudError("Module import error: %s: %s" % (module_path, e))
 
         try:
             class_ = getattr(sys.modules[module_path], adapter)
         except AttributeError:
-            raise PanCloudError('Class not found: %s' % adapter)
+            raise PanCloudError("Class not found: %s" % adapter)
 
         return class_(storage_params=storage_params)
 
@@ -221,10 +240,11 @@ class Credentials(object):
         if self._credentials_found_in_instance:
             return
         elif self._credentials_found_in_envars():
-            return os.getenv('PAN_' + credential.upper())
+            return os.getenv("PAN_" + credential.upper())
         else:
             return self.storage.fetch_credential(
-                credential=credential, profile=self.profile)
+                credential=credential, profile=self.profile
+            )
 
     def decode_jwt_payload(self, access_token=None):
         """Extract payload field from JWT.
@@ -239,15 +259,14 @@ class Credentials(object):
         c = self.get_credentials()
         jwt = access_token or c.access_token
         try:
-            _, payload, _ = jwt.split('.')  # header, payload, sig
+            _, payload, _ = jwt.split(".")  # header, payload, sig
             rem = len(payload) % 4
             if rem > 0:  # add padding
-                payload += '=' * (4 - rem)
+                payload += "=" * (4 - rem)
             try:
                 decoded_jwt = b64decode(payload).decode("utf-8")
             except TypeError as e:
-                raise PanCloudError(
-                    "Failed to base64 decode JWT: %s" % e)
+                raise PanCloudError("Failed to base64 decode JWT: %s" % e)
             else:
                 try:
                     x = loads(decoded_jwt)
@@ -272,20 +291,20 @@ class Credentials(object):
         jwt = access_token or c.access_token
         x = self.decode_jwt_payload(jwt)
 
-        if 'exp' in x:
+        if "exp" in x:
             try:
-                exp = int(x['exp'])
+                exp = int(x["exp"])
             except ValueError:
-                raise PanCloudError(
-                    "Expiration time (exp) must be an integer")
+                raise PanCloudError("Expiration time (exp) must be an integer")
             else:
                 self.jwt_exp = exp
                 return exp
         else:
             raise PanCloudError("No exp field found in payload")
 
-    def fetch_tokens(self, client_id=None, client_secret=None, code=None,
-                     redirect_uri=None, **kwargs):
+    def fetch_tokens(
+        self, client_id=None, client_secret=None, code=None, redirect_uri=None, **kwargs
+    ):
         """Exchange authorization code for token.
 
         Args:
@@ -302,44 +321,44 @@ class Credentials(object):
         client_secret = client_secret or self.client_secret
         redirect_uri = redirect_uri or self.redirect_uri
         data = {
-           'grant_type': 'authorization_code',
-           'client_id': client_id,
-           'client_secret': client_secret,
-           'code': code,
-           'redirect_uri': redirect_uri
+            "grant_type": "authorization_code",
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "code": code,
+            "redirect_uri": redirect_uri,
         }
         r = self._httpclient.request(
-            method='POST',
+            method="POST",
             url=self.token_url,
             json=data,
-            path='/api/oauth2/RequestToken',
+            path="/api/oauth2/RequestToken",
             auth=None,
             **kwargs
         )
         if not r.ok:
-            raise PanCloudError(
-                '%s %s: %s' % (r.status_code, r.reason, r.text)
-            )
+            raise PanCloudError("%s %s: %s" % (r.status_code, r.reason, r.text))
         try:
             r_json = r.json()
         except ValueError as e:
             raise PanCloudError("Invalid JSON: %s" % e)
         else:
-            if r.json().get(
-                'error_description'
-            ) or r.json().get(
-                'error'
-            ):
+            if r.json().get("error_description") or r.json().get("error"):
                 raise PanCloudError(r.text)
-            self.access_token = r_json.get('access_token')
+            self.access_token = r_json.get("access_token")
             self.jwt_exp = self._decode_exp(self.access_token_)
-            self.refresh_token = r_json.get('refresh_token')
+            self.refresh_token = r_json.get("refresh_token")
             self.write_credentials()
             return r_json
 
-    def get_authorization_url(self, client_id=None, instance_id=None,
-                              redirect_uri=None, region=None, scope=None,
-                              state=None):
+    def get_authorization_url(
+        self,
+        client_id=None,
+        instance_id=None,
+        redirect_uri=None,
+        region=None,
+        scope=None,
+        state=None,
+    ):
         """Generate authorization URL.
 
         Args:
@@ -361,19 +380,24 @@ class Credentials(object):
         scope = scope or self.scope
         state = state or str(uuid.uuid4())
         self.state = state
-        return Request(
-            'GET',
-            self.auth_base_url,
-            params={
-                'client_id': client_id,
-                'instance_id': instance_id,
-                'redirect_uri': redirect_uri,
-                'region': region,
-                'response_type': 'code',
-                'scope': scope,
-                'state': state
-            }
-        ).prepare().url, state
+        return (
+            Request(
+                "GET",
+                self.auth_base_url,
+                params={
+                    "client_id": client_id,
+                    "instance_id": instance_id,
+                    "redirect_uri": redirect_uri,
+                    "region": region,
+                    "response_type": "code",
+                    "scope": scope,
+                    "state": state,
+                },
+            )
+            .prepare()
+            .url,
+            state,
+        )
 
     def get_credentials(self):
         """Get read-only credentials.
@@ -383,8 +407,7 @@ class Credentials(object):
 
         """
         return ReadOnlyCredentials(
-            self.access_token, self.client_id, self.client_secret,
-            self.refresh_token
+            self.access_token, self.client_id, self.client_secret, self.refresh_token
         )
 
     def jwt_is_expired(self, access_token=None, leeway=0):
@@ -434,36 +457,30 @@ class Credentials(object):
                 if access_token == self.access_token or access_token is None:
                     if self.developer_token is not None:
                         r = self._httpclient.request(
-                            method='POST',
+                            method="POST",
                             url=self.developer_token_url,
-                            path='/request_token',
+                            path="/request_token",
                             headers={
-                                'Authorization': 'Bearer {}'.format(
+                                "Authorization": "Bearer {}".format(
                                     self.developer_token
                                 )
                             },
                             timeout=30,
-                            raise_for_status=True
+                            raise_for_status=True,
                         )
 
-                    elif all(
-                        [
-                            self.client_id,
-                            self.client_secret,
-                            self.refresh_token
-                        ]
-                    ):
+                    elif all([self.client_id, self.client_secret, self.refresh_token]):
                         data = {
-                            'client_id': self.client_id,
-                            'client_secret': self.client_secret,
-                            'refresh_token': self.refresh_token,
-                            'grant_type': 'refresh_token'
+                            "client_id": self.client_id,
+                            "client_secret": self.client_secret,
+                            "refresh_token": self.refresh_token,
+                            "grant_type": "refresh_token",
                         }
                         r = self._httpclient.request(
-                            method='POST',
+                            method="POST",
                             url=self.token_url,
                             json=data,
-                            path='/api/oauth2/RequestToken',
+                            path="/api/oauth2/RequestToken",
                             **kwargs
                         )
                     else:
@@ -474,28 +491,21 @@ class Credentials(object):
                     if r:
                         if not r.ok:
                             raise PanCloudError(
-                                '%s %s: %s' % (
-                                r.status_code, r.reason, r.text)
+                                "%s %s: %s" % (r.status_code, r.reason, r.text)
                             )
                         try:
                             r_json = r.json()
                         except ValueError as e:
                             raise PanCloudError("Invalid JSON: %s" % e)
                         else:
-                            if r.json().get(
-                                'error_description'
-                            ) or r.json().get(
-                                'error'
+                            if r.json().get("error_description") or r.json().get(
+                                "error"
                             ):
                                 raise PanCloudError(r.text)
-                            self.access_token = r_json.get(
-                                'access_token', None
-                            )
-                            self.jwt_exp = self._decode_exp(
-                                self.access_token_)
-                            if r_json.get('refresh_token', None):
-                                self.refresh_token = \
-                                    r_json.get('refresh_token')
+                            self.access_token = r_json.get("access_token", None)
+                            self.jwt_exp = self._decode_exp(self.access_token_)
+                            if r_json.get("refresh_token", None):
+                                self.refresh_token = r_json.get("refresh_token")
                             self.write_credentials()
                         return self.access_token_
 
@@ -503,32 +513,26 @@ class Credentials(object):
         """Revoke access token."""
         c = self.get_credentials()
         data = {
-            'client_id': c.client_id,
-            'client_secret': c.client_secret,
-            'token': c.access_token,
-            'token_type_hint': 'access_token'
+            "client_id": c.client_id,
+            "client_secret": c.client_secret,
+            "token": c.access_token,
+            "token_type_hint": "access_token",
         }
         r = self._httpclient.request(
-            method='POST',
+            method="POST",
             url=self.token_url,
             json=data,
-            path='/api/oauth2/RevokeToken',
+            path="/api/oauth2/RevokeToken",
             **kwargs
         )
         if not r.ok:
-            raise PanCloudError(
-                '%s %s: %s' % (r.status_code, r.reason, r.text)
-            )
+            raise PanCloudError("%s %s: %s" % (r.status_code, r.reason, r.text))
         try:
             r_json = r.json()
         except ValueError as e:
             raise PanCloudError("Invalid JSON: %s" % e)
         else:
-            if r.json().get(
-                'error_description'
-            ) or r.json().get(
-                'error'
-            ):
+            if r.json().get("error_description") or r.json().get("error"):
                 raise PanCloudError(r.text)
             return r_json
 
@@ -536,32 +540,26 @@ class Credentials(object):
         """Revoke refresh token."""
         c = self.get_credentials()
         data = {
-            'client_id': c.client_id,
-            'client_secret': c.client_secret,
-            'token': c.refresh_token,
-            'token_type_hint': 'refresh_token'
+            "client_id": c.client_id,
+            "client_secret": c.client_secret,
+            "token": c.refresh_token,
+            "token_type_hint": "refresh_token",
         }
         r = self._httpclient.request(
-            method='POST',
+            method="POST",
             url=self.token_url,
             json=data,
-            path='/api/oauth2/RevokeToken',
+            path="/api/oauth2/RevokeToken",
             **kwargs
         )
         if not r.ok:
-            raise PanCloudError(
-                '%s %s: %s' % (r.status_code, r.reason, r.text)
-            )
+            raise PanCloudError("%s %s: %s" % (r.status_code, r.reason, r.text))
         try:
             r_json = r.json()
         except ValueError as e:
             raise PanCloudError("Invalid JSON: %s" % e)
         else:
-            if r.json().get(
-                'error_description'
-            ) or r.json().get(
-                'error'
-            ):
+            if r.json().get("error_description") or r.json().get("error"):
                 raise PanCloudError(r.text)
             return r_json
 
@@ -576,6 +574,5 @@ class Credentials(object):
         """
         c = self.get_credentials()
         return self.storage.write_credentials(
-            credentials=c, profile=self.profile,
-            cache_token=self.cache_token
+            credentials=c, profile=self.profile, cache_token=self.cache_token
         )
