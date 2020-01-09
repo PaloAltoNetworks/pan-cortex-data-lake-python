@@ -331,7 +331,7 @@ class Credentials(object):
             method="POST",
             url=self.token_url,
             json=data,
-            path="/api/oauth2/RequestToken",
+            endpoint="/api/oauth2/RequestToken",
             auth=None,
             **kwargs
         )
@@ -459,7 +459,7 @@ class Credentials(object):
                         r = self._httpclient.request(
                             method="POST",
                             url=self.developer_token_url,
-                            path="/request_token",
+                            endpoint="/request_token",
                             headers={
                                 "Authorization": "Bearer {}".format(
                                     self.developer_token
@@ -480,7 +480,7 @@ class Credentials(object):
                             method="POST",
                             url=self.token_url,
                             json=data,
-                            path="/api/oauth2/RequestToken",
+                            endpoint="/api/oauth2/RequestToken",
                             **kwargs
                         )
                     else:
@@ -522,7 +522,7 @@ class Credentials(object):
             method="POST",
             url=self.token_url,
             json=data,
-            path="/api/oauth2/RevokeToken",
+            endpoint="/api/oauth2/RevokeToken",
             **kwargs
         )
         if not r.ok:
@@ -549,7 +549,7 @@ class Credentials(object):
             method="POST",
             url=self.token_url,
             json=data,
-            path="/api/oauth2/RevokeToken",
+            endpoint="/api/oauth2/RevokeToken",
             **kwargs
         )
         if not r.ok:
