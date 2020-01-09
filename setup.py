@@ -20,7 +20,7 @@ test_requirements = ["pytest"]
 
 setup(
     name="pancloud",
-    version="2.0.0-alpha1",
+    version="2.0.0-alpha2",
     description="Python idiomatic SDK for Cortex™.",
     long_description=readme + "\n\n" + history,
     author="Steven Serrata",
