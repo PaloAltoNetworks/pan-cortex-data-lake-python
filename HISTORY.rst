@@ -2,6 +2,11 @@
 History
 =======
 
+2.0.0-alpha2 (2020-01-09)
+-------------------------
+
+* Fixed invalid use of `HTTPClient` class `path` keyword arg in `Credentials`
+
 2.0.0-alpha1 (2019-11-21)
 -------------------------
 
