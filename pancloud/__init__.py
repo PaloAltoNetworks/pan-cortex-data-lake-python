@@ -3,7 +3,7 @@
 """Main package for pancloud."""
 
 __author__ = "Palo Alto Networks"
-__version__ = "2.0.0-alpha1"
+__version__ = "2.0.0-alpha2"
 
 from .exceptions import (  # noqa: F401
     PanCloudError,
