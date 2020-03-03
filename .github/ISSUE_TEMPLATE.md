@@ -1,6 +1,6 @@
-* Palo Alto Networks Cloud Python SDK version:
-* Python version:
-* Operating System:
+-   Cortex Data Lake Python SDK version:
+-   Python version:
+-   Operating System:
 
 ### Description
 
