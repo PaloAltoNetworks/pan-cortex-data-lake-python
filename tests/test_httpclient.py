@@ -11,8 +11,12 @@ import pytest
 curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
-from pancloud.httpclient import HTTPClient
-from pancloud.exceptions import HTTPError, UnexpectedKwargsError, PanCloudError
+from pan_cortex_data_lake.httpclient import HTTPClient
+from pan_cortex_data_lake.exceptions import (
+    HTTPError,
+    UnexpectedKwargsError,
+    CortexError,
+)
 
 
 HTTPBIN = os.environ.get("HTTPBIN_URL", "http://httpbin.org")
@@ -49,7 +53,7 @@ class TestHTTPClient:
             HTTPClient(url=TARPIT).request(method="GET", foo="foo")
 
     def test_enforce_json(self):
-        with pytest.raises(PanCloudError):
+        with pytest.raises(CortexError):
             HTTPClient(
                 url=HTTPBIN,
                 port=80,
@@ -62,4 +66,3 @@ class TestHTTPClient:
             HTTPClient(url=HTTPBIN, port=80, raise_for_status=True).request(
                 method="GET", endpoint="/status/400"
             )
-

@@ -11,16 +11,16 @@ import pytest
 curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
-from pancloud.query import QueryService
-from pancloud.httpclient import HTTPClient
-from pancloud.exceptions import UnexpectedKwargsError, HTTPError
+from pan_cortex_data_lake.query import QueryService
+from pan_cortex_data_lake.httpclient import HTTPClient
+from pan_cortex_data_lake.exceptions import UnexpectedKwargsError
 
 
 HTTPBIN = os.environ.get("HTTPBIN_URL", "http://httpbin.org")
 TARPIT = os.environ.get("TARPIT", "http://10.255.255.1")
 
 
-class TestLoggingService:
+class TestQueryService:
     def test_entry_points(self):
 
         QueryService(url=TARPIT).session
