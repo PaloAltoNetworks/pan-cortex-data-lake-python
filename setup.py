@@ -20,9 +20,10 @@ test_requirements = ["pytest"]
 
 setup(
     name="pan-cortex-data-lake",
-    version="2.0.0-alpha4",
+    version="2.0.0-a5",
     description="Python idiomatic SDK for Cortex™ Data Lake.",
     long_description=readme + "\n\n" + history,
+    long_description_content_type="text/markdown",
     author="Steven Serrata",
     author_email="sserrata@paloaltonetworks.com",
     url="https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python",
