@@ -89,7 +89,9 @@ class HTTPClient(object):
                 self.session.headers.update({"x-envoy-force-trace": ""})
             self.port = kwargs.pop("port", 443)
             self.raise_for_status = kwargs.pop("raise_for_status", False)
-            self.url = kwargs.pop("url", "https://api.us.paloaltonetworks.com")
+            self.url = kwargs.pop(
+                "url", "https://cortex-prd1-api.us.cdl.paloaltonetworks.com"
+            )
 
             if len(kwargs) > 0:  # Handle invalid kwargs
                 raise UnexpectedKwargsError(kwargs)
