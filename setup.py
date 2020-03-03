@@ -19,19 +19,21 @@ setup_requirements = ["pytest-runner"]
 test_requirements = ["pytest"]
 
 setup(
-    name="pancloud",
-    version="2.0.0-alpha2",
-    description="Python idiomatic SDK for Cortex™.",
+    name="pan-cortex-data-lake",
+    version="2.0.0-alpha3",
+    description="Python idiomatic SDK for Cortex™ Data Lake.",
     long_description=readme + "\n\n" + history,
     author="Steven Serrata",
     author_email="sserrata@paloaltonetworks.com",
-    url="https://github.com/PaloAltoNetworks/pancloud",
-    packages=find_packages(include=["pancloud", "pancloud.adapters"]),
+    url="https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python",
+    packages=find_packages(
+        include=["pan_cortex_data_lake", "pan_cortex_data_lake.adapters"]
+    ),
     include_package_data=True,
     install_requires=requirements,
     license="ISC license",
     zip_safe=False,
-    keywords="pancloud",
+    keywords="cortex data lake",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
