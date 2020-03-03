@@ -1,9 +1,11 @@
-bumpversion >= "0.5.3"
-watchdog >= "0.8.3"
-flake8 >= "2.6.0"
-tox >= "2.3.1"
-coverage >= "4.1"
-cryptography >= "1.7"
-pytest >= "2.9.2"
-pytest-runner >= "2.11.1"
-pancloud >= "2.0.0a2"
+bumpversion
+watchdog
+flake8
+tox
+coverage
+cryptography
+pytest
+pytest-runner
+pan-cortex-data-lake >= "2.0.0a3"
+black
+pylint
