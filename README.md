@@ -40,7 +40,7 @@ The Palo Alto Networks Cortex™ Data Lake Python SDK is considered **alpha** at
 
 From PyPI:
 
-    $ pip install pan-cortex-data-lake==2.0.0a3
+    $ pip install pan-cortex-data-lake
 
 ## Obtaining and Using OAuth 2.0 Tokens
 
