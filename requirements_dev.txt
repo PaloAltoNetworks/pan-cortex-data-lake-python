@@ -1,11 +1,6 @@
-bumpversion
-watchdog
 flake8
 tox
 coverage
-cryptography
 pytest
 pytest-runner
-pan-cortex-data-lake >= "2.0.0a3"
-black
-pylint
+pan-cortex-data-lake
