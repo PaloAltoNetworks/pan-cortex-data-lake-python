@@ -11,7 +11,7 @@ from builtins import input
 curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
-from pancloud import Credentials
+from cortex import Credentials
 
 
 def confirm_delete(profile):

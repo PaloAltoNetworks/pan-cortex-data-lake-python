@@ -11,22 +11,22 @@ import time
 curpath = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
-from pancloud import QueryService, Credentials
+from pan_cortex_data_lake import Credentials, QueryService
 
-url = "https://cortex-stg5.us.stg.cdl.pan.run"  # stg5
-CERT = os.environ["PAN_CERT_PATH"]
-KEY = os.environ["PAN_KEY_PATH"]
+url = "https://cortex-prd1-api.us.cdl.paloaltonetworks.com"  # prod us
 
-# Create Logging Service instance
-qs = QueryService(url=url, cert=(CERT, KEY), verify=False, force_trace=True)
+# Create Credentials instance
+# export PAN_DEVELOPER_TOKEN for quick access
+c = Credentials(verify=False)
+
+# Create Query Service instance
+qs = QueryService(url=url, force_trace=True, credentials=c)
 
 # SQL = 'SELECT * FROM `2020001.firewall.traffic` LIMIT 100'
-SQL = "SELECT * FROM `587718190.firewall.traffic` LIMIT 5"
+SQL = "SELECT * FROM `4199400902993631660.firewall.traffic` LIMIT 1"
 
 # Generate new 'query'
-query_params = {"language": "bigquery", "query": SQL}
-
-now = int(time.time())  # used for createdAfter
+query_params = {"query": SQL}
 
 q = qs.create_query(query_params=query_params)
 
@@ -38,32 +38,11 @@ print("QUERY Response: {}\n".format(q.text))
 
 job_id = q.json()["jobId"]  # access 'jobId' from 'query' response
 
-# List jobs
-
-l = qs.list_jobs(created_after=now, tenant_id="2020001")
-
-print("LIST HTTP STATUS CODE: {}\n".format(l.status_code))
-
-print("LIST Response: {}\n".format(l.text))
-
-# Get job details
-j = qs.get_job(job_id=job_id)
-
-print("JOB HTTP STATUS CODE: {}\n".format(j.status_code))
-
-print("JOB Response: {}\n".format(j.text))
-
-# Get job results
-results = qs.get_job_results(job_id=job_id)
-
-print("RESULTS HTTP STATUS CODE: {}\n".format(results.status_code))
-
-print("RESULTS Response: {}\n".format(results.text))
-
 # Iterate through job results (pages)
-# Need to settle on a generic name for this method.
 print("Iterate through job results: \n")
-for p in qs.iter_job_results(job_id=job_id, page_size=1):
+for p in qs.iter_job_results(
+    job_id=job_id, page_size=1, result_format="valuesDictionary"
+):
     print("RESULTS: {}\n".format(p.text))
 
 print("STATS: {}".format(qs.stats))
