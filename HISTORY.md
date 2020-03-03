@@ -1,13 +1,21 @@
 # History
 
+## 2.0.0-alpha5 (2020-02-20)
+
+-   Fixed `Credentials` storage adapter import
+
+## 2.0.0-alpha4 (2020-02-20)
+
+-   Updated MANIFEST
+
 ## 2.0.0-alpha3 (2020-02-20)
 
--   Rename `pancloud` package directory to `pan_cortex_data_lake`
--   Publish to PyPI under new name, `pan-cortex-data-lake`
--   Move from RST to MD format for docs files
--   Drop support for `pipenv`
--   Update setup.cfg and setup.py
--   Update tests and test config files
+-   Renamed `pancloud` package directory to `pan_cortex_data_lake`
+-   Published to PyPI under new name, `pan-cortex-data-lake`
+-   Moved from RST to MD format for docs files
+-   Droped support for `pipenv`
+-   Updated setup.cfg and setup.py
+-   Updated tests and test config files
 
 ## 2.0.0-alpha2 (2020-01-09)
 

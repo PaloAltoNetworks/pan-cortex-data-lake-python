@@ -100,7 +100,10 @@ class Credentials(object):
         self.scope = scope
         self.session = kwargs.pop("session", None)
         self.state = None
-        self.adapter = storage_adapter or "pancloud.adapters.tinydb_adapter.TinyDBStore"
+        self.adapter = (
+            storage_adapter
+            or "pan_cortex_data_lake.adapters.tinydb_adapter.TinyDBStore"
+        )
         self.storage = self._init_adapter(storage_params)
         self.token_lock = Lock()
         self.token_url = token_url or API_BASE_URL
