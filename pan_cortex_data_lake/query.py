@@ -220,6 +220,7 @@ class QueryService(object):
         """
         credentials = kwargs.pop("credentials", None)
         params = kwargs.pop("params", {})
+        enforce_json = kwargs.pop("enforce_json", True)
         for name, value in [
             ("maxWait", max_wait),
             ("offset", offset),
@@ -234,7 +235,7 @@ class QueryService(object):
             r = self.get_job_results(
                 job_id=job_id,
                 params=params,
-                enforce_json=True,
+                enforce_json=enforce_json,
                 credentials=credentials,
                 **kwargs
             )
