@@ -12,6 +12,7 @@ class ApiStats(dict):
 
     def __init__(self, *args, **kwargs):
         super(ApiStats, self).__init__(*args, **kwargs)
+        self.transactions = 0
         for arg in args:
             if isinstance(arg, dict):
                 for k, v in arg.items():
