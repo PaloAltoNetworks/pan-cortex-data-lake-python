@@ -56,8 +56,6 @@ class HTTPClient(object):
             **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
 
         """
-        if not logging.getLogger(__name__).isEnabledFor(logging.DEBUG):
-            requests.packages.urllib3.disable_warnings()
         self.kwargs = kwargs.copy()  # used for __repr__
         with requests.Session() as self.session:
             self._default_headers()  # apply default headers
