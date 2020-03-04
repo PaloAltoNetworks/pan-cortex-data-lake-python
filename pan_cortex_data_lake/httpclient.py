@@ -220,7 +220,7 @@ class HTTPClient(object):
 
         # Non-Requests key-word arguments
         auto_refresh = kwargs.pop("auto_refresh", self.auto_refresh)
-        credentials = kwargs.pop("credentials", self.credentials)
+        credentials = kwargs.pop("credentials", None)
         endpoint = kwargs.pop("endpoint", "")  # default to empty endpoint
         enforce_json = kwargs.pop("enforce_json", self.enforce_json)
         raise_for_status = kwargs.pop("raise_for_status", self.raise_for_status)
