@@ -6,6 +6,8 @@ from __future__ import absolute_import
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 import requests
 from requests.adapters import HTTPAdapter
 
@@ -14,7 +16,7 @@ try:
     import ujson
 
     requests.models.complexjson = ujson
-    logging.debug("Monkey patched requests with ujson")
+    logger.debug("Monkey patched requests with ujson")
 except ImportError:
     pass
 
@@ -87,14 +89,13 @@ class HTTPClient(object):
                 self.session.headers.update({"x-envoy-force-trace": ""})
             self.port = kwargs.pop("port", 443)
             self.raise_for_status = kwargs.pop("raise_for_status", False)
-            self.url = kwargs.pop(
-                "url", "https://api.us.cdl.paloaltonetworks.com"
-            )
+            self.url = kwargs.pop("url", "https://api.us.cdl.paloaltonetworks.com")
 
             if len(kwargs) > 0:  # Handle invalid kwargs
                 raise UnexpectedKwargsError(kwargs)
 
             if self.credentials:
+                logger.debug("Applying session-level credentials")
                 self._apply_credentials(
                     auto_refresh=self.auto_refresh,
                     credentials=self.credentials,
@@ -137,12 +138,12 @@ class HTTPClient(object):
         if auto_refresh is True:
             if token is None:
                 token = credentials.refresh(access_token=None, timeout=10)
-                logging.debug("Token refreshed due to 'None' condition")
+                logger.debug("Token refreshed due to 'None' condition")
             elif credentials.jwt_is_expired():
                 token = credentials.refresh(timeout=10)
-                logging.debug("Token refreshed due to 'expired' condition")
+                logger.debug("Token refreshed due to 'expired' condition")
         headers.update({"Authorization": "Bearer {}".format(token)})
-        logging.debug("Credentials applied to authorization header")
+        logger.debug("Credentials applied to authorization header")
 
     def _default_headers(self):
         """Update default headers.
@@ -157,7 +158,7 @@ class HTTPClient(object):
                 "User-Agent": "%s/%s" % ("cortex-sdk-python", __version__),
             }
         )
-        logging.debug("Default headers applied: %r" % self.session.headers)
+        logger.debug("Default headers applied: %r" % self.session.headers)
 
     def _send_request(self, enforce_json, method, raise_for_status, url, **kwargs):
         """Send HTTP request.
@@ -226,6 +227,7 @@ class HTTPClient(object):
         url = "{}:{}{}".format(url, self.port, endpoint)
 
         if credentials:
+            logger.debug("Applying method-level credentials")
             self._apply_credentials(
                 auto_refresh=auto_refresh, credentials=credentials, headers=headers
             )
