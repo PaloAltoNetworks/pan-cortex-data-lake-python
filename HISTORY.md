@@ -1,10 +1,23 @@
 # History
 
-## 2.0.0-alpha5 (2020-02-20)
+## 2.0.0-alpha6 (2020-03-04)
+
+-   Chnaged `iter_job_results()` method to allow overriding `enforce_json`
+-   Updated default API gateway URL
+-   Minor corrections to docstrings
+-   Removeed suppression of urllib3 warnings
+-   Updated example scripts
+-   Updated README
+-   Reformatted/refactoring with black
+-   Added `transactions` attribute to `ApiStats` with default value
+-   Reimplemented module-level logging
+-   Applied change to `HTTPClient` to avoid applying header credentials twice when no method credentials are present
+
+## 2.0.0-alpha5 (2020-03-03)
 
 -   Fixed `Credentials` storage adapter import
 
-## 2.0.0-alpha4 (2020-02-20)
+## 2.0.0-alpha4 (2020-03-03)
 
 -   Updated MANIFEST
 
