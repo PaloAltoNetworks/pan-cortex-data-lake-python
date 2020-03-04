@@ -1,6 +1,6 @@
 ![Tests](https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/workflows/Tests/badge.svg) [![PyPI version](https://badge.fury.io/py/pan-cortex-data-lake.svg)](https://badge.fury.io/py/pan-cortex-data-lake)
 
-# Palo Alto Networks Cortex™ Data Lake Python SDK
+# Palo Alto Networks Cortex™ Data Lake SDK
 
 Python idiomatic SDK for the Cortex™ Data Lake.
 
