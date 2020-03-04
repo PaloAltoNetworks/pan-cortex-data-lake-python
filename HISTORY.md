@@ -2,7 +2,7 @@
 
 ## 2.0.0-alpha6 (2020-03-04)
 
--   Chnaged `iter_job_results()` method to allow overriding `enforce_json`
+-   Changed `iter_job_results()` method to allow overriding `enforce_json`
 -   Updated default API gateway URL
 -   Minor corrections to docstrings
 -   Removeed suppression of urllib3 warnings
