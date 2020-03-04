@@ -9,7 +9,7 @@ import logging
 import requests
 from requests.adapters import HTTPAdapter
 
-# support ujson in place of standrad json library
+# support ujson in place of standard json library
 try:
     import ujson
 
