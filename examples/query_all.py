@@ -6,6 +6,7 @@
 import os
 import sys
 import time
+import logging
 
 # Necessary to reference cortex package in relative path
 curpath = os.path.dirname(os.path.abspath(__file__))
@@ -40,9 +41,7 @@ job_id = q.json()["jobId"]  # access 'jobId' from 'query' response
 
 # Iterate through job results (pages)
 print("Iterate through job results: \n")
-for p in qs.iter_job_results(
-    job_id=job_id, result_format="valuesDictionary"
-):
+for p in qs.iter_job_results(job_id=job_id, result_format="valuesDictionary"):
     print("RESULTS: {}\n".format(p.text))
 
 print("STATS: {}".format(qs.stats))
