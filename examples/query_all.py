@@ -13,11 +13,11 @@ sys.path[:0] = [os.path.join(curpath, os.pardir)]
 
 from pan_cortex_data_lake import Credentials, QueryService
 
-url = "https://cortex-prd1-api.us.cdl.paloaltonetworks.com"  # prod us
+url = "https://api.us.cdl.paloaltonetworks.com"  # prod us
 
 # Create Credentials instance
 # export PAN_DEVELOPER_TOKEN for quick access
-c = Credentials(verify=False)
+c = Credentials()
 
 # Create Query Service instance
 qs = QueryService(url=url, force_trace=True, credentials=c)
@@ -41,7 +41,7 @@ job_id = q.json()["jobId"]  # access 'jobId' from 'query' response
 # Iterate through job results (pages)
 print("Iterate through job results: \n")
 for p in qs.iter_job_results(
-    job_id=job_id, page_size=1, result_format="valuesDictionary"
+    job_id=job_id, result_format="valuesDictionary"
 ):
     print("RESULTS: {}\n".format(p.text))
 
