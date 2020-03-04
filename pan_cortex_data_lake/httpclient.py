@@ -90,7 +90,7 @@ class HTTPClient(object):
             self.port = kwargs.pop("port", 443)
             self.raise_for_status = kwargs.pop("raise_for_status", False)
             self.url = kwargs.pop(
-                "url", "https://cortex-prd1-api.us.cdl.paloaltonetworks.com"
+                "url", "https://api.us.cdl.paloaltonetworks.com"
             )
 
             if len(kwargs) > 0:  # Handle invalid kwargs
