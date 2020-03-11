@@ -14,9 +14,7 @@ with open("HISTORY.md") as history_file:
 
 with open("requirements.txt") as requirements_file:
     regex = re.compile(r"(.+==[0-9]+\.[0-9]+\.[0-9]+)")
-    requirements = list(
-        filter(None, [regex.findall(line) for line in requirements_file])
-    )
+    requirements = regex.findall(requirements_file.read())
 
 setup_requirements = ["pytest-runner"]
 
