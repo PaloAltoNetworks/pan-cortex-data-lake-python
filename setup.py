@@ -4,6 +4,7 @@
 """Palo Alto Networks Cloud Python SDK setup script."""
 
 from setuptools import setup, find_packages
+import re
 
 with open("README.md") as readme_file:
     readme = readme_file.read()
@@ -12,7 +13,10 @@ with open("HISTORY.md") as history_file:
     history = history_file.read()
 
 with open("requirements.txt") as requirements_file:
-    requirements = requirements_file.read().splitlines()
+    regex = re.compile(r"(.+==[0-9]+\.[0-9]+\.[0-9]+)")
+    requirements = list(
+        filter(None, [regex.findall(line) for line in requirements_file])
+    )
 
 setup_requirements = ["pytest-runner"]
 
