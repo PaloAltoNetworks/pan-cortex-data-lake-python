@@ -155,7 +155,7 @@ class HTTPClient(object):
         self.session.headers.update(
             {
                 "Accept": "application/json",
-                "User-Agent": "%s/%s" % ("cortex-sdk-python", __version__),
+                "User-Agent": "%s/%s" % ("cortex-data-lake-python", __version__),
             }
         )
         logger.debug("Default headers applied: %r" % self.session.headers)
