@@ -8,6 +8,7 @@ import sys
 import uuid
 from collections import namedtuple
 from threading import Lock
+from urllib.parse import urlparse
 
 from requests import Request
 from time import time
@@ -20,7 +21,7 @@ from .exceptions import CortexError, PartialCredentialsError
 # Constants
 API_BASE_URL = "https://api.paloaltonetworks.com"
 AUTH_BASE_URL = "https://identity.paloaltonetworks.com/as/authorization.oauth2"
-DEVELOPER_TOKEN_URL = "https://app.apiexplorer.rocks"
+DEVELOPER_TOKEN_PROVIDER = "https://app.apiexplorer.rocks/request_token"
 
 ReadOnlyCredentials = namedtuple(
     "ReadOnlyCredentials",
@@ -39,7 +40,7 @@ class Credentials(object):
         client_id=None,
         client_secret=None,
         developer_token=None,
-        developer_token_url=None,
+        developer_token_provider=None,
         instance_id=None,
         profile=None,
         redirect_uri=None,
@@ -71,7 +72,7 @@ class Credentials(object):
             client_id (str): OAuth2 client ID. Defaults to ``None``.
             client_secret (str): OAuth2 client secret. Defaults to ``None``.
             developer_token (str): Developer Token. Defaults to ``None``.
-            developer_token_url (str): Developer Token URL. Defaults to ``None``.
+            developer_token_provider (str): Developer Token Provider URL. Defaults to ``None``.
             instance_id (str): Instance ID. Defaults to ``None``.
             profile (str): Credentials profile. Defaults to ``'default'``.
             redirect_uri (str): Redirect URI. Defaults to ``None``.
@@ -90,7 +91,7 @@ class Credentials(object):
         self.client_id_ = client_id
         self.client_secret_ = client_secret
         self.developer_token_ = developer_token
-        self.developer_token_url = developer_token_url or DEVELOPER_TOKEN_URL
+        self.developer_token_provider_ = developer_token_provider
         self.instance_id = instance_id
         self.jwt_exp_ = None
         self.profile = profile or "default"
@@ -177,6 +178,20 @@ class Credentials(object):
     def developer_token(self, developer_token):
         """Set developer token."""
         self.developer_token_ = developer_token
+
+    @property
+    def developer_token_provider(self):
+        """Get developer token provider."""
+        return (
+            self.developer_token_provider_
+            or os.getenv("PAN_DEVELOPER_TOKEN_PROVIDER")
+            or DEVELOPER_TOKEN_PROVIDER
+        )
+
+    @developer_token_provider.setter
+    def developer_token_provider(self, developer_token_provider):
+        """Set developer token provider."""
+        self.developer_token_provider_ = developer_token_provider
 
     @property
     def jwt_exp(self):
@@ -459,10 +474,15 @@ class Credentials(object):
             with self.token_lock:
                 if access_token == self.access_token or access_token is None:
                     if self.developer_token is not None:
+                        parsed_provider = urlparse(self.developer_token_provider)
+                        url = "{}://{}".format(
+                            parsed_provider.scheme, parsed_provider.netloc
+                        )
+                        endpoint = parsed_provider.path
                         r = self._httpclient.request(
                             method="POST",
-                            url=self.developer_token_url,
-                            endpoint="/request_token",
+                            url=url,
+                            endpoint=endpoint,
                             headers={
                                 "Authorization": "Bearer {}".format(
                                     self.developer_token
