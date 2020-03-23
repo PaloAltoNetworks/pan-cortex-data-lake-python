@@ -8,7 +8,11 @@ import sys
 import uuid
 from collections import namedtuple
 from threading import Lock
-from urllib.parse import urlparse
+
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 from requests import Request
 from time import time
