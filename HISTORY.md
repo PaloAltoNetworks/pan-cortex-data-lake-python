@@ -1,5 +1,11 @@
 # History
 
+## 2.0.0-alpha7 (2020-03-23)
+
+-   Updated SDK name in HTTPClient default headers
+-   Added support for specifying Developer Token provider using envar or kwarg
+-   Updated `credentials.json` parent dir name
+
 ## 2.0.0-alpha6 (2020-03-04)
 
 -   Changed `iter_job_results()` method to allow overriding `enforce_json`

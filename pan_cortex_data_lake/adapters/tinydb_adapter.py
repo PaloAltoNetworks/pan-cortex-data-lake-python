@@ -42,7 +42,10 @@ class TinyDBStore(StorageAdapter):
             dbfile = os.getenv("PAN_CREDENTIALS_DBFILE")
         else:
             dbfile = os.path.join(
-                os.path.expanduser("~"), ".config", "pancloud", "credentials.json"
+                os.path.expanduser("~"),
+                ".config",
+                "pan_cortex_data_lake",
+                "credentials.json",
             )
         if not os.path.exists(os.path.dirname(dbfile)):
             try:
