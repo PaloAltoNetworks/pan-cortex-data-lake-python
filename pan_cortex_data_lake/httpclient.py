@@ -47,11 +47,11 @@ class HTTPClient(object):
         Parameters:
             auto_refresh (bool): Perform token refresh following HTTP 401 response from server. Defaults to ``True``.
             auto_retry (bool): Retry last failed HTTP request following a token refresh. Defaults to ``True``.
-            credentials (Credentials): :class:`~pancloud.credentials.Credentials` object. Defaults to ``None``.
-            enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.PanCloudError`. Defaults to ``False``.
+            credentials (Credentials): :class:`~pan_cortex_data_lake.credentials.Credentials` object. Defaults to ``None``.
+            enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pan_cortex_data_lake.exceptions.CortecError`. Defaults to ``False``.
             force_trace (bool): If ``True``, forces trace and forces ``x-request-id`` to be returned in the response headers. Defaults to ``False``.
             port (int): TCP port to append to URL. Defaults to ``443``.
-            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
+            raise_for_status (bool): If ``True``, raises :exc:`~pan_cortex_data_lake.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
             url (str): URL to send API requests to - gets combined with ``port`` and :meth:`~request` ``path`` parameter. Defaults to ``None``.
 
         Args:
@@ -164,9 +164,9 @@ class HTTPClient(object):
         """Send HTTP request.
 
         Args:
-             enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.PanCloudError`. Defaults to ``False``.
+             enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pan_cortex_data_lake.exceptions.CortecError`. Defaults to ``False``.
              method (str): HTTP method.
-             raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
+             raise_for_status (bool): If ``True``, raises :exc:`~pan_cortex_data_lake.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
              url (str): Request URL.
              **kwargs (dict): Re-packed key-word arguments.
 
@@ -195,9 +195,9 @@ class HTTPClient(object):
         flexibility and efficiency.
 
         Parameters:
-            enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pancloud.exceptions.HTTPError`. Defaults to ``False``.
+            enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pan_cortex_data_lake.exceptions.HTTPError`. Defaults to ``False``.
             path (str): URI path to append to URL. Defaults to ``empty``.
-            raise_for_status (bool): If ``True``, raises :exc:`~pancloud.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
+            raise_for_status (bool): If ``True``, raises :exc:`~pan_cortex_data_lake.exceptions.HTTPError` if status_code not in 2XX. Defaults to ``False``.
 
         Args:
             **kwargs: Supported :class:`~requests.Session` and :class:`~requests.adapters.HTTPAdapter` parameters.
