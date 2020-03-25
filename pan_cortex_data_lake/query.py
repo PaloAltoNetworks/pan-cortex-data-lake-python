@@ -249,7 +249,7 @@ class QueryService(object):
                 else:
                     yield r
                     break
-            elif r.json()["state"] == ("RUNNING" or "PENDING"):
+            elif r.json()["state"] in ("RUNNING", "PENDING"):
                 yield r
                 time.sleep(1)
             elif r.json()["state"] == "FAILED":
