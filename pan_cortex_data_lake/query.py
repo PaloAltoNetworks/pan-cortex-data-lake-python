@@ -76,7 +76,7 @@ class QueryService(object):
 
         Args:
             job_id (str): Specifies the ID of the query job.
-            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -99,7 +99,7 @@ class QueryService(object):
         Args:
             job_id (str): Specifies the ID of the query job. (optional)
             query_params (dict): Query parameters.
-            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -128,7 +128,7 @@ class QueryService(object):
         Args:
             job_id (str): Specifies the ID of the query job.
             params (dict): Payload/request dictionary.
-            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -162,7 +162,7 @@ class QueryService(object):
             page_number (int): Return the nth page from the result set as specified by this parameter.
             page_size (int): If specified, limits the size of a batch of results to the specified value. If un-specified, backend picks a size that may provide best performance.
             result_format (str): valuesArray or valuesJson.
-            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -212,7 +212,7 @@ class QueryService(object):
             page_number (int): Return the nth page from the result set as specified by this parameter.
             page_size (int): If specified, limits the size of a batch of results to the specified value. If un-specified, backend picks a size that may provide best performance.
             result_format (str): valuesArray or valuesJson.
-            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
 
         Yields:
             requests.Response: Requests Response() object.
@@ -249,7 +249,7 @@ class QueryService(object):
                 else:
                     yield r
                     break
-            elif r.json()["state"] == ("RUNNING" or "PENDING"):
+            elif r.json()["state"] in ("RUNNING", "PENDING"):
                 yield r
                 time.sleep(1)
             elif r.json()["state"] == "FAILED":
@@ -275,7 +275,7 @@ class QueryService(object):
             state (str): Job state, e.g. 'RUNNING', 'PENDING', 'FAILED', 'DONE'.
             job_type (str): Query type hint.
             tenant_id (str): Tenant ID.
-            **kwargs: Supported :meth:`~pancloud.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
 
         Returns:
             requests.Response: Requests Response() object.

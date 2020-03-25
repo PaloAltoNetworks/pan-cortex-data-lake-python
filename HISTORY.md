@@ -1,5 +1,10 @@
 # History
 
+## 2.0.0-alpha8 (2020-03-25)
+
+-   Updated docstrings
+-   Bug fix for issue #143
+
 ## 2.0.0-alpha7 (2020-03-23)
 
 -   Updated SDK name in HTTPClient default headers
