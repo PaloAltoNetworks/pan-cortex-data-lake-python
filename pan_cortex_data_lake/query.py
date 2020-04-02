@@ -185,7 +185,7 @@ class QueryService(object):
         )
         self.stats.get_job_results += 1
 
-        rows = r.json().get("rowsInJob")
+        rows = r.json().get("rowsInPage")
         if rows is not None:
             self.stats.records += rows
 
