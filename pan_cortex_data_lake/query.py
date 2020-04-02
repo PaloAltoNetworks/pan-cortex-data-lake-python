@@ -242,9 +242,9 @@ class QueryService(object):
             if not r.ok:
                 raise HTTPError("%s" % r.text)
             if r.json()["state"] == "DONE":
-                scroll_token = r.json()["page"].get("scrollToken")
-                if scroll_token is not None:
-                    params["pageCursor"] = scroll_token
+                page_cursor = r.json()["page"].get("pageCursor")
+                if page_cursor is not None:
+                    params["pageCursor"] = page_cursor
                     yield r
                 else:
                     yield r
