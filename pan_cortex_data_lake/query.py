@@ -20,6 +20,7 @@ import time
 
 from .exceptions import CortexError, HTTPError
 from .httpclient import HTTPClient
+from . import __version__
 
 
 class QueryService(object):
@@ -110,9 +111,9 @@ class QueryService(object):
             if value is not None:
                 json.update({name: value})
         json.update(
-            {  # auto-apply cortex-sdk client type and version
-                "clientType": "cortex-sdk-python",
-                "clientVersion": "0.1.0",
+            {
+                "clientType": "cortex-data-lake-python",
+                "clientVersion": "%s" % __version__,
             }
         )
         endpoint = "/query/v2/jobs"
