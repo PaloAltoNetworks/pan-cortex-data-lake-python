@@ -1,5 +1,13 @@
 # History
 
+## 2.0.0-alpha9 (2020-04-04)
+
+-   Now checking if static `access_token` exists before attempting a developer token refresh (#147)
+-   Reduced the number of times `json()` property is called in `QueryService` and `HTTPClient` (#148)
+-   Updated `clientType` and `clientVersion` in `create_query()` method (#149)
+-   Updated `iter_job_results()` to use `pageCursor` instead of deprecated `scrollToken` (#145)
+-   Switched to using `rowsInPage` instead of `rowsInJob` when updating `stats.records` in `get_job_results()` (#146)
+
 ## 2.0.0-alpha8 (2020-03-25)
 
 -   Updated docstrings
