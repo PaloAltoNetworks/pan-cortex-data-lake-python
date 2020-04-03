@@ -20,6 +20,7 @@ import time
 
 from .exceptions import CortexError, HTTPError
 from .httpclient import HTTPClient
+from . import __version__
 
 
 class QueryService(object):
@@ -110,9 +111,9 @@ class QueryService(object):
             if value is not None:
                 json.update({name: value})
         json.update(
-            {  # auto-apply cortex-sdk client type and version
-                "clientType": "cortex-sdk-python",
-                "clientVersion": "0.1.0",
+            {
+                "clientType": "cortex-data-lake-python",
+                "clientVersion": "%s" % __version__,
             }
         )
         endpoint = "/query/v2/jobs"
@@ -241,22 +242,23 @@ class QueryService(object):
             )
             if not r.ok:
                 raise HTTPError("%s" % r.text)
-            if r.json()["state"] == "DONE":
-                page_cursor = r.json()["page"].get("pageCursor")
+            r_json = r.json()
+            if r_json["state"] == "DONE":
+                page_cursor = r_json["page"].get("pageCursor")
                 if page_cursor is not None:
                     params["pageCursor"] = page_cursor
                     yield r
                 else:
                     yield r
                     break
-            elif r.json()["state"] in ("RUNNING", "PENDING"):
+            elif r_json["state"] in ("RUNNING", "PENDING"):
                 yield r
                 time.sleep(1)
-            elif r.json()["state"] == "FAILED":
+            elif r_json["state"] == "FAILED":
                 yield r
                 break
             else:
-                raise CortexError("Bad state: %s" % r.json()["state"])
+                raise CortexError("Bad state: %s" % r_json["state"])
 
     def list_jobs(
         self,
