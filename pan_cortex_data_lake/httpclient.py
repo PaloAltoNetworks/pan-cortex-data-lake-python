@@ -45,7 +45,7 @@ class HTTPClient(object):
         granular performance and reliability tuning.
 
         Parameters:
-            auto_refresh (bool): Perform token refresh following HTTP 401 response from server. Defaults to ``True``.
+            auto_refresh (bool): Perform token refresh prior to request if ``access_token`` is ``None`` or expired. Defaults to ``True``.
             auto_retry (bool): Retry last failed HTTP request following a token refresh. Defaults to ``True``.
             credentials (Credentials): :class:`~pan_cortex_data_lake.credentials.Credentials` object. Defaults to ``None``.
             enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pan_cortex_data_lake.exceptions.CortecError`. Defaults to ``False``.
