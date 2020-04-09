@@ -1,5 +1,9 @@
 # History
 
+## 2.0.0-alpha10 (2020-04-09)
+
+-   Refactor how and where credentials are applied to request headers (#151)
+
 ## 2.0.0-alpha9 (2020-04-04)
 
 -   Now checking if static `access_token` exists before attempting a developer token refresh (#147)
