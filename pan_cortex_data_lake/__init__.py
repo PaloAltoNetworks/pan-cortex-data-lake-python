@@ -3,7 +3,7 @@
 """Main package for cortex."""
 
 __author__ = "Palo Alto Networks"
-__version__ = "2.0.0-a10"
+__version__ = "2.0.0-a11"
 
 from .exceptions import (  # noqa: F401
     CortexError,
