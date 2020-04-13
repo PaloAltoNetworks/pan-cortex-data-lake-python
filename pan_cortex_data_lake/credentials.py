@@ -477,8 +477,12 @@ class Credentials(object):
         if not self.token_lock.locked():
             with self.token_lock:
                 if access_token == self.access_token or access_token is None:
+                    print(self._credentials_found_in_instance)
                     if self.developer_token is not None and not any(
-                        [self.access_token_, os.getenv("PAN_ACCESS_TOKEN")]
+                        [
+                            os.getenv("PAN_ACCESS_TOKEN"),
+                            self._credentials_found_in_instance,
+                        ]
                     ):
                         parsed_provider = urlparse(self.developer_token_provider)
                         url = "{}://{}".format(
