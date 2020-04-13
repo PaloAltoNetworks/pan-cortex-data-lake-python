@@ -1,5 +1,10 @@
 # History
 
+## 2.0.0-alpha11 (2020-04-13)
+
+-   Refrain from passing credentials kwarg to get_job_results() in iter_job_results(), fixes #154
+-   Check for credentials in instance instead of self.access*token*, fixes #153
+
 ## 2.0.0-alpha10 (2020-04-09)
 
 -   Refactored how and where credentials are applied to request headers (#151)
