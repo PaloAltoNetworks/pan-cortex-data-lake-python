@@ -45,7 +45,7 @@ class HTTPClient(object):
         granular performance and reliability tuning.
 
         Parameters:
-            auto_refresh (bool): Perform token refresh following HTTP 401 response from server. Defaults to ``True``.
+            auto_refresh (bool): Perform token refresh prior to request if ``access_token`` is ``None`` or expired. Defaults to ``True``.
             auto_retry (bool): Retry last failed HTTP request following a token refresh. Defaults to ``True``.
             credentials (Credentials): :class:`~pan_cortex_data_lake.credentials.Credentials` object. Defaults to ``None``.
             enforce_json (bool): Require properly-formatted JSON or raise :exc:`~pan_cortex_data_lake.exceptions.CortecError`. Defaults to ``False``.
@@ -94,13 +94,6 @@ class HTTPClient(object):
             if len(kwargs) > 0:  # Handle invalid kwargs
                 raise UnexpectedKwargsError(kwargs)
 
-            if self.credentials:
-                logger.debug("Applying session-level credentials")
-                self._apply_credentials(
-                    auto_refresh=self.auto_refresh,
-                    credentials=self.credentials,
-                    headers=self.session.headers,
-                )
             self.stats = ApiStats({"transactions": 0})
 
     def __repr__(self):
@@ -139,7 +132,7 @@ class HTTPClient(object):
             if token is None:
                 token = credentials.refresh(access_token=None, timeout=10)
                 logger.debug("Token refreshed due to 'None' condition")
-            elif credentials.jwt_is_expired():
+            elif credentials.jwt_is_expired(token):
                 token = credentials.refresh(timeout=10)
                 logger.debug("Token refreshed due to 'expired' condition")
         headers.update({"Authorization": "Bearer {}".format(token)})
@@ -220,7 +213,7 @@ class HTTPClient(object):
 
         # Non-Requests key-word arguments
         auto_refresh = kwargs.pop("auto_refresh", self.auto_refresh)
-        credentials = kwargs.pop("credentials", None)
+        credentials = kwargs.pop("credentials", self.credentials)
         endpoint = kwargs.pop("endpoint", "")  # default to empty endpoint
         enforce_json = kwargs.pop("enforce_json", self.enforce_json)
         raise_for_status = kwargs.pop("raise_for_status", self.raise_for_status)
