@@ -219,7 +219,6 @@ class QueryService(object):
             requests.Response: Requests Response() object.
 
         """
-        credentials = kwargs.pop("credentials", None)
         params = kwargs.pop("params", {})
         enforce_json = kwargs.pop("enforce_json", True)
         for name, value in [
@@ -234,11 +233,7 @@ class QueryService(object):
                 params.update({name: value})
         while True:
             r = self.get_job_results(
-                job_id=job_id,
-                params=params,
-                enforce_json=enforce_json,
-                credentials=credentials,
-                **kwargs
+                job_id=job_id, params=params, enforce_json=enforce_json, **kwargs
             )
             if not r.ok:
                 raise HTTPError("%s" % r.text)
