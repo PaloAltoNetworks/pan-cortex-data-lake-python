@@ -1,5 +1,9 @@
 # History
 
+## 2.0.0-alpha12 (2020-04-15)
+
+-   Allow non-200 HTTP status responses in `iter_job_results()`.
+
 ## 2.0.0-alpha11 (2020-04-13)
 
 -   Refrain from passing credentials kwarg to get_job_results() in iter_job_results(), fixes #154
