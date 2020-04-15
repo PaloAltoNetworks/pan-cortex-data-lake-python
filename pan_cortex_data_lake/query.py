@@ -235,8 +235,6 @@ class QueryService(object):
             r = self.get_job_results(
                 job_id=job_id, params=params, enforce_json=enforce_json, **kwargs
             )
-            if not r.ok:
-                raise HTTPError("%s" % r.text)
             r_json = r.json()
             if r_json["state"] == "DONE":
                 page_cursor = r_json["page"].get("pageCursor")
