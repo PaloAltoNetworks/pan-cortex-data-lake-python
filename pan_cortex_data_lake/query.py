@@ -231,6 +231,7 @@ class QueryService(object):
         ]:
             if value is not None:
                 params.update({name: value})
+
         while True:
             r = self.get_job_results(
                 job_id=job_id, params=params, enforce_json=enforce_json, **kwargs
