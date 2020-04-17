@@ -7,6 +7,7 @@ import os
 from threading import RLock
 
 from tinydb import TinyDB, Query
+from tinydb.storages import MemoryStorage
 
 from .. import CortexError
 from . import StorageAdapter
@@ -16,6 +17,7 @@ class TinyDBStore(StorageAdapter):
     def __init__(self, **kwargs):
         self._storage_params = kwargs.get("storage_params") or {}
         self.dbfile = self._storage_params.get("dbfile")
+        self.memory_storage = self._storage_params.get("memory_storage", False)
         self.query = Query()
         self.db = self.init_store()
         self.lock = RLock()
@@ -36,6 +38,8 @@ class TinyDBStore(StorageAdapter):
             return q.get(credential)
 
     def init_store(self):
+        if self.memory_storage is True:
+            return TinyDB(storage=MemoryStorage)
         if self.dbfile:
             dbfile = self.dbfile
         elif os.getenv("PAN_CREDENTIALS_DBFILE"):
