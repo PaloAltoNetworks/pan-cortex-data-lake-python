@@ -83,6 +83,7 @@ class Credentials(object):
             region (str): Region. Defaults to ``None``.
             refresh_token (str): OAuth2 refresh token. Defaults to ``None``.
             scope (str): OAuth2 scope. Defaults to ``None``.
+            storage_adapter (str): Namespace path to storage adapter module. Defaults to "pan_cortex_data_lake.adapters.tinydb_adapter.TinyDBStore". 
             storage_params (dict) = Storage adapter parameters. Defaults to ``None``.
             token_url (str): Refresh URL. Defaults to ``None``.
             token_revoke_url (str): Revoke URL. Defaults to ``None``.
