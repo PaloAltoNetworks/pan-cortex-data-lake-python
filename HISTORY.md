@@ -1,5 +1,9 @@
 # History
 
+## 2.0.0-alpha13 (2020-04-17)
+
+-   Add support for enabling `MemoryStorage` with `storage_params`.
+
 ## 2.0.0-alpha12 (2020-04-15)
 
 -   Allow non-200 HTTP status responses in `iter_job_results()`.
