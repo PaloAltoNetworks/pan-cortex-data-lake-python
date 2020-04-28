@@ -1,5 +1,9 @@
 # History
 
+## 2.0.0-alpha14 (2020-04-28)
+
+-   Refactored `iter_job_results()` to `continue` if state is "RUNNING" or "PENDING".
+
 ## 2.0.0-alpha13 (2020-04-17)
 
 -   Add support for enabling `MemoryStorage` with `storage_params`.
