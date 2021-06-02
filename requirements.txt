@@ -24,7 +24,7 @@ tinydb==3.15.2 \
     --hash=sha256:1087ade5300c47dbf9539d9f6dafd53115bd5e85a67d480d8188bdbfa2d9eaf4 \
     --hash=sha256:f273d9b6d8b1b5e1d094a6eb8b72851b39b81099293344132c73332b60e3b893 \
     # via pan-cortex-data-lake (setup.py)
-urllib3==1.25.8 \
-    --hash=sha256:2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc \
-    --hash=sha256:87716c2d2a7121198ebcb7ce7cccf6ce5e9ba539041cfbaeecfb641dc0bf6acc \
+urllib3==1.26.5 \
+    --hash=sha256:753a0374df26658f99d826cfe40394a686d05985786d946fbe4165b5148f5a7c \
+    --hash=sha256:a7acd0977125325f516bda9735fa7142b909a8d01e8b2e4c8108d0984e6e0098 \
     # via requests
