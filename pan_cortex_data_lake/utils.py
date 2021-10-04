@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
-"""PAN Cloud Python SDK utilities."""
+"""
+:::info
+PAN Cloud Python SDK utilities.
+:::
+
+"""
 
 from __future__ import absolute_import
 

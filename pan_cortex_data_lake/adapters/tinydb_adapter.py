@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""TinyDB storage adapter."""
+"""
+:::info
+TinyDB storage adapter.
+:::
+"""
 from __future__ import absolute_import
 
 import os
@@ -74,7 +78,9 @@ class TinyDBStore(StorageAdapter):
     def write_credentials(self, credentials=None, profile=None, cache_token=None):
         """Write credentials.
 
+        :::info
         Write credentials to credentials file. Performs ``upsert``.
+        :::
 
         Args:
             cache_token (bool): If ``True``, stores ``access_token`` in token store. Defaults to ``True``.

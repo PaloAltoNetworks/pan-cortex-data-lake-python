@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-"""Exceptions raised by PAN Cloud library.
-
+"""
+:::info
 This module provides base classes for all errors raised by the PAN Cloud
 library. All other exceptions are raised and maintained by Python
 standard or nonstandard libraries.
+:::
 
 """
 

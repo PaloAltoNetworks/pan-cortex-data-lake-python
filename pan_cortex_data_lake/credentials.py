@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
-"""Access, store and refresh credentials."""
+"""
+:::info
+The Credentials object can be used to access, store and refresh credentials.
+:::
+
+"""
 from __future__ import absolute_import
 
 import os
@@ -56,8 +61,9 @@ class Credentials(object):
         token_url=None,
         **kwargs
     ):
-        """Persist Session() and credentials attributes.
+        """Persist ``Session()`` and credentials attributes.
 
+        :::info
         The ``Credentials`` class is an abstraction layer for accessing,
         storing and refreshing credentials needed for interacting with
         the Application Framework.
@@ -65,9 +71,10 @@ class Credentials(object):
         ``Credentials`` resolves credentials from the following locations,
         in the following order:
 
-            1) Class instance variables
-            2) Environment variables
-            3) Credentials store
+            1. Class instance variables
+            2. Environment variables
+            3. Credentials store
+        :::
 
         Args:
             access_token (str): OAuth2 access token. Defaults to ``None``.
@@ -83,7 +90,7 @@ class Credentials(object):
             region (str): Region. Defaults to ``None``.
             refresh_token (str): OAuth2 refresh token. Defaults to ``None``.
             scope (str): OAuth2 scope. Defaults to ``None``.
-            storage_adapter (str): Namespace path to storage adapter module. Defaults to "pan_cortex_data_lake.adapters.tinydb_adapter.TinyDBStore". 
+            storage_adapter (str): Namespace path to storage adapter module. Defaults to "pan_cortex_data_lake.adapters.tinydb_adapter.TinyDBStore".
             storage_params (dict) = Storage adapter parameters. Defaults to ``None``.
             token_url (str): Refresh URL. Defaults to ``None``.
             token_revoke_url (str): Revoke URL. Defaults to ``None``.
@@ -134,7 +141,8 @@ class Credentials(object):
             if args[k] is not None:
                 args[k] = "*" * 6
         return "{}({})".format(
-            self.__class__.__name__, ", ".join("%s=%r" % x for x in args.items()),
+            self.__class__.__name__,
+            ", ".join("%s=%r" % x for x in args.items()),
         )
 
     @property
@@ -599,7 +607,9 @@ class Credentials(object):
     def write_credentials(self):
         """Write credentials.
 
+        :::info
         Write credentials to credentials store.
+        :::
 
         Returns:
             Return value of self.storage.write_credentials()
