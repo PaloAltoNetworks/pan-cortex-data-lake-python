@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
-"""Interact with the Cortex Query Service API.
-
+"""
+:::info
 The Query Service is a Palo Alto Networks cloud service which allows
 for the storage and retrieval of data stored in the Cortex Data Lake.
 Any type of textual data can be stored in the Cortex Data Lake. Palo
 Alto Networks firewalls and software can write data to this service, as
 can the software and services created by Palo Alto Network's various
 partners.
+:::
 
 Examples:
-    Refer to the examples provided with this library.
+    Refer to the [examples provided with this library](https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/tree/master/examples).
 
 """
 
@@ -30,11 +31,11 @@ class QueryService(object):
         """
 
         Parameters:
-            session (HTTPClient): :class:`~cortex.httpclient.HTTPClient` object. Defaults to ``None``.
-            url (str): URL to send API requests to. Later combined with ``port`` and :meth:`~request` ``endpoint`` parameter.
+            session (HTTPClient): [HTTPClient](httpclient.md#httpclient) object. Defaults to ``None``.
+            url (str): URL to send API requests to. Later combined with ``port`` and ``endpoint`` parameter.
 
         Args:
-            **kwargs: Supported :class:`~cortex.httpclient.HTTPClient` parameters.
+            **kwargs: Supported [HTTPClient](httpclient.md#httpclient) parameters.
 
         """
         self.kwargs = kwargs.copy()  # used for __repr__
@@ -77,7 +78,7 @@ class QueryService(object):
 
         Args:
             job_id (str): Specifies the ID of the query job.
-            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -93,14 +94,16 @@ class QueryService(object):
     def create_query(self, job_id=None, query_params=None, **kwargs):
         """Create a search request.
 
-        When submission is successful, http status code of 201 (Created)
+        :::info
+        When submission is successful, http status code of ``201`` (Created)
         is returned with a 'jobId' in response. Specifying a 'jobId' is
         optional.
+        :::
 
         Args:
             job_id (str): Specifies the ID of the query job. (optional)
             query_params (dict): Query parameters.
-            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -129,7 +132,7 @@ class QueryService(object):
         Args:
             job_id (str): Specifies the ID of the query job.
             params (dict): Payload/request dictionary.
-            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -163,7 +166,7 @@ class QueryService(object):
             page_number (int): Return the nth page from the result set as specified by this parameter.
             page_size (int): If specified, limits the size of a batch of results to the specified value. If un-specified, backend picks a size that may provide best performance.
             result_format (str): valuesArray or valuesJson.
-            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
             requests.Response: Requests Response() object.
@@ -213,7 +216,7 @@ class QueryService(object):
             page_number (int): Return the nth page from the result set as specified by this parameter.
             page_size (int): If specified, limits the size of a batch of results to the specified value. If un-specified, backend picks a size that may provide best performance.
             result_format (str): valuesArray or valuesJson.
-            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Yields:
             requests.Response: Requests Response() object.
@@ -271,7 +274,7 @@ class QueryService(object):
             state (str): Job state, e.g. 'RUNNING', 'PENDING', 'FAILED', 'DONE'.
             job_type (str): Query type hint.
             tenant_id (str): Tenant ID.
-            **kwargs: Supported :meth:`~pan_cortex_data_lake.httpclient.HTTPClient.request` parameters.
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
             requests.Response: Requests Response() object.

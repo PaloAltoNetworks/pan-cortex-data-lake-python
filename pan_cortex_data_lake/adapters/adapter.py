@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""Base adapter class."""
+"""
+:::info
+Base adapter class.
+:::
+"""
 from __future__ import absolute_import
 
 from abc import ABCMeta, abstractmethod
@@ -42,7 +46,9 @@ class StorageAdapter(ABC):  # enforce StorageAdapter interface
     def write_credentials(self, credentials=None, profile=None, cache_token=None):
         """Write credentials.
 
+        :::info
         Write credentials to store.
+        :::
 
         Args:
             cache_token (bool): If ``True``, stores ``access_token`` in token store. Defaults to ``True``.
