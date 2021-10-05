@@ -165,7 +165,7 @@ class QueryService(object):
             page_cursor (str): Token/handle that can be used to fetch more data.
             page_number (int): Return the nth page from the result set as specified by this parameter.
             page_size (int): If specified, limits the size of a batch of results to the specified value. If un-specified, backend picks a size that may provide best performance.
-            result_format (str): valuesArray or valuesJson.
+            result_format (str): valuesArray or valuesDictionary.
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
