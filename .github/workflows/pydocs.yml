@@ -63,6 +63,8 @@ jobs:
 
       - name: Commit changes
         run: |
+          git config --global user.email "sserrata@paloaltonetworks.com"
+          git config --global user.name "Steven Serrata"
           git add .
           git commit -m "update pydocs"
           git status
