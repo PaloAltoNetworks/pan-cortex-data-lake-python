@@ -63,8 +63,10 @@ jobs:
 
       - name: Commit changes
         run: |
+          echo BRANCH_SUFFIX=--$(date +%s) >> $GITHUB_ENV
           git config --global user.email "sserrata@paloaltonetworks.com"
           git config --global user.name "Steven Serrata"
+          git checkout -b pydocs-${{ env.BRANCH_SUFFIX }}
           git add .
           git commit -m "update pydocs"
           git status
