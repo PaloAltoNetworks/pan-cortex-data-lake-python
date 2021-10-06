@@ -63,4 +63,6 @@ jobs:
 
       - name: Commit changes
         run: |
+          git add ...
+          git commit -m "update pydocs"
           git status
