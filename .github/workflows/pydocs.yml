@@ -71,7 +71,7 @@ jobs:
         id: pydocs
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PYDOC_TOKEN }}
           commit-message: Update pydocs
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
