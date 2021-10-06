@@ -85,7 +85,7 @@ class Credentials(object):
             developer_token (str): Developer Token. Defaults to ``None``.
             developer_token_provider (str): Developer Token Provider URL. Defaults to ``None``.
             instance_id (str): Instance ID. Defaults to ``None``.
-            profile (str): Credentials profile. Defaults to ``'default'``.
+            profile (str): Credentials profile. Defaults to 'default'.
             redirect_uri (str): Redirect URI. Defaults to ``None``.
             region (str): Region. Defaults to ``None``.
             refresh_token (str): OAuth2 refresh token. Defaults to ``None``.
@@ -94,7 +94,7 @@ class Credentials(object):
             storage_params (dict) = Storage adapter parameters. Defaults to ``None``.
             token_url (str): Refresh URL. Defaults to ``None``.
             token_revoke_url (str): Revoke URL. Defaults to ``None``.
-            **kwargs: Supported :class:`~requests.Session` parameters.
+            **kwargs: Supported [Session](https://github.com/psf/requests/blob/main/requests/sessions.py#L337) parameters.
 
         """
         self.access_token_ = access_token
