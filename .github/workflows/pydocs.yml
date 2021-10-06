@@ -46,8 +46,6 @@ jobs:
     name: Open pull request
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout docs repository
@@ -69,3 +67,24 @@ jobs:
           git add .
           git commit -m "update pydocs"
           git status
+
+      - name: Create Pull Request
+        id: pydocs
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update pydocs
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: pydocs
+          delete-branch: true
+          title: '[PyDocs] Update python docs'
+          body: |
+            Update pydocs
+            - Updated with `pydoc-markdown`
+
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.pydocs.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.pydocs.outputs.pull-request-url }}"
