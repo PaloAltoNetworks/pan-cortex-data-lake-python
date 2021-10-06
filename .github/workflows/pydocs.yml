@@ -63,7 +63,6 @@ jobs:
         run: |
           git config --global user.email "sserrata@paloaltonetworks.com"
           git config --global user.name "Steven Serrata"
-          git checkout -b pydocs
           git add .
           git commit -m "update pydocs"
           git status
