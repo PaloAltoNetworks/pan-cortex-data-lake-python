@@ -61,14 +61,14 @@ class Credentials(object):
         token_url=None,
         **kwargs
     ):
-        """Persist ``Session()`` and credentials attributes.
+        """Persist `Session()` and credentials attributes.
 
         :::info
-        The ``Credentials`` class is an abstraction layer for accessing,
+        The `Credentials` class is an abstraction layer for accessing,
         storing and refreshing credentials needed for interacting with
         the Application Framework.
 
-        ``Credentials`` resolves credentials from the following locations,
+        `Credentials` resolves credentials from the following locations,
         in the following order:
 
             1. Class instance variables
@@ -77,23 +77,23 @@ class Credentials(object):
         :::
 
         Args:
-            access_token (str): OAuth2 access token. Defaults to ``None``.
-            auth_base_url (str): IdP base authorization URL. Default to ``None``.
-            cache_token (bool): If ``True``, stores ``access_token`` in token store. Defaults to ``True``.
-            client_id (str): OAuth2 client ID. Defaults to ``None``.
-            client_secret (str): OAuth2 client secret. Defaults to ``None``.
-            developer_token (str): Developer Token. Defaults to ``None``.
-            developer_token_provider (str): Developer Token Provider URL. Defaults to ``None``.
-            instance_id (str): Instance ID. Defaults to ``None``.
+            access_token (str): OAuth2 access token. Defaults to `None`.
+            auth_base_url (str): IdP base authorization URL. Default to `None`.
+            cache_token (bool): If `True`, stores `access_token` in token store. Defaults to `True`.
+            client_id (str): OAuth2 client ID. Defaults to `None`.
+            client_secret (str): OAuth2 client secret. Defaults to `None`.
+            developer_token (str): Developer Token. Defaults to `None`.
+            developer_token_provider (str): Developer Token Provider URL. Defaults to `None`.
+            instance_id (str): Instance ID. Defaults to `None`.
             profile (str): Credentials profile. Defaults to 'default'.
-            redirect_uri (str): Redirect URI. Defaults to ``None``.
-            region (str): Region. Defaults to ``None``.
-            refresh_token (str): OAuth2 refresh token. Defaults to ``None``.
-            scope (str): OAuth2 scope. Defaults to ``None``.
+            redirect_uri (str): Redirect URI. Defaults to `None`.
+            region (str): Region. Defaults to `None`.
+            refresh_token (str): OAuth2 refresh token. Defaults to `None`.
+            scope (str): OAuth2 scope. Defaults to `None`.
             storage_adapter (str): Namespace path to storage adapter module. Defaults to "pan_cortex_data_lake.adapters.tinydb_adapter.TinyDBStore".
-            storage_params (dict): Storage adapter parameters. Defaults to ``None``.
-            token_url (str): Refresh URL. Defaults to ``None``.
-            token_revoke_url (str): Revoke URL. Defaults to ``None``.
+            storage_params (dict): Storage adapter parameters. Defaults to `None`.
+            token_url (str): Refresh URL. Defaults to `None`.
+            token_revoke_url (str): Revoke URL. Defaults to `None`.
             **kwargs: Supported [Session](https://github.com/psf/requests/blob/main/requests/sessions.py#L337) parameters.
 
         """
@@ -231,7 +231,7 @@ class Credentials(object):
         """Check for credentials in envars.
 
         Returns:
-            bool: ``True`` if at least one is found, otherwise ``False``.
+            bool: `True` if at least one is found, otherwise `False`.
 
         """
         return any(
@@ -265,7 +265,7 @@ class Credentials(object):
             credential (str): Credential to resolve.
 
         Returns:
-            str or None: Resolved credential or ``None``.
+            str or None: Resolved credential or `None`.
 
         """
         if self._credentials_found_in_instance:
@@ -281,7 +281,7 @@ class Credentials(object):
         """Extract payload field from JWT.
 
         Args:
-            access_token (str): Access token to decode. Defaults to ``None``.
+            access_token (str): Access token to decode. Defaults to `None`.
 
         Returns:
             dict: JSON object that contains the claims conveyed by the JWT.
@@ -312,7 +312,7 @@ class Credentials(object):
         """Extract exp field from access token.
 
         Args:
-            access_token (str): Access token to decode. Defaults to ``None``.
+            access_token (str): Access token to decode. Defaults to `None`.
 
         Returns:
             int: JWT expiration in epoch seconds.
@@ -339,10 +339,10 @@ class Credentials(object):
         """Exchange authorization code for token.
 
         Args:
-            client_id (str): OAuth2 client ID. Defaults to ``None``.
-            client_secret (str): OAuth2 client secret. Defaults to ``None``.
-            code (str): Authorization code. Defaults to ``None``.
-            redirect_uri (str): Redirect URI. Defaults to ``None``.
+            client_id (str): OAuth2 client ID. Defaults to `None`.
+            client_secret (str): OAuth2 client secret. Defaults to `None`.
+            code (str): Authorization code. Defaults to `None`.
+            redirect_uri (str): Redirect URI. Defaults to `None`.
 
         Returns:
             dict: Response from token URL.
@@ -393,12 +393,12 @@ class Credentials(object):
         """Generate authorization URL.
 
         Args:
-            client_id (str): OAuth2 client ID. Defaults to ``None``.
-            instance_id (str): App Instance ID. Defaults to ``None``.
-            redirect_uri (str): Redirect URI. Defaults to ``None``.
-            region (str): App Region. Defaults to ``None``.
-            scope (str): Permissions. Defaults to ``None``.
-            state (str): UUID to detect CSRF. Defaults to ``None``.
+            client_id (str): OAuth2 client ID. Defaults to `None`.
+            instance_id (str): App Instance ID. Defaults to `None`.
+            redirect_uri (str): Redirect URI. Defaults to `None`.
+            region (str): App Region. Defaults to `None`.
+            scope (str): Permissions. Defaults to `None`.
+            state (str): UUID to detect CSRF. Defaults to `None`.
 
         Returns:
             str, str: Auth URL, state
@@ -445,11 +445,11 @@ class Credentials(object):
         """Validate JWT access token expiration.
 
         Args:
-            access_token (str): Access token to validate. Defaults to ``None``.
+            access_token (str): Access token to validate. Defaults to `None`.
             leeway (float): Time in seconds to adjust for local clock skew. Defaults to 0.
 
         Returns:
-            bool: ``True`` if expired, otherwise ``False``.
+            bool: `True` if expired, otherwise `False`.
 
         """
         if access_token is not None:
@@ -477,7 +477,7 @@ class Credentials(object):
         """Refresh access and refresh tokens.
 
         Args:
-            access_token (str): Access token to refresh. Defaults to ``None``.
+            access_token (str): Access token to refresh. Defaults to `None`.
 
         Returns:
             str: Refreshed access token.

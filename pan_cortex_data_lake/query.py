@@ -31,8 +31,8 @@ class QueryService(object):
         """
 
         Parameters:
-            session (HTTPClient): [HTTPClient](httpclient.md#httpclient) object. Defaults to ``None``.
-            url (str): URL to send API requests to. Later combined with ``port`` and ``endpoint`` parameter.
+            session (HTTPClient): [HTTPClient](httpclient.md#httpclient) object. Defaults to `None`.
+            url (str): URL to send API requests to. Later combined with `port` and `endpoint` parameter.
 
         Args:
             **kwargs: Supported [HTTPClient](httpclient.md#httpclient) parameters.
@@ -83,6 +83,9 @@ class QueryService(object):
         Returns:
             requests.Response: Requests Response() object.
 
+        Raises:
+
+
         """
         endpoint = "/query/v2/jobs/{}".format(job_id)
         r = self._httpclient.request(
@@ -95,7 +98,7 @@ class QueryService(object):
         """Create a search request.
 
         :::info
-        When submission is successful, http status code of ``201`` (Created)
+        When submission is successful, http status code of `201` (Created)
         is returned with a 'jobId' in response. Specifying a 'jobId' is
         optional.
         :::
