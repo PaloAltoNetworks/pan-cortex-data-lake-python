@@ -3,6 +3,9 @@ sidebar_label: credentials
 title: credentials
 hide_title: true
 ---
+import TOCInline from '@theme/TOCInline';
+
+<TOCInline toc={toc} />;
 :::info
 The Credentials object can be used to access, store and refresh credentials.
 :::

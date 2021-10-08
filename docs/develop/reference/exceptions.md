@@ -3,6 +3,9 @@ sidebar_label: exceptions
 title: exceptions
 hide_title: true
 ---
+import TOCInline from '@theme/TOCInline';
+
+<TOCInline toc={toc} />;
 :::info
 This module provides base classes for all errors raised by the PAN Cloud
 library. All other exceptions are raised and maintained by Python

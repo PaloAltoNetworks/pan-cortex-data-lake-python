@@ -19,6 +19,9 @@ renderer:
       title: {module_name}
       hide_title: true
       ---
+      import TOCInline from '@theme/TOCInline';
+
+      <TOCInline toc={{toc}} />;
     header_level_by_type:
         Class: 2
         Function: 3

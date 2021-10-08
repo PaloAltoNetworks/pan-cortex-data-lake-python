@@ -3,6 +3,9 @@ sidebar_label: tinydb_adapter
 title: adapters.tinydb_adapter
 hide_title: true
 ---
+import TOCInline from '@theme/TOCInline';
+
+<TOCInline toc={toc} />;
 :::info
 TinyDB storage adapter.
 :::

@@ -3,6 +3,9 @@ sidebar_label: query
 title: query
 hide_title: true
 ---
+import TOCInline from '@theme/TOCInline';
+
+<TOCInline toc={toc} />;
 :::info
 The Query Service is a Palo Alto Networks cloud service which allows
 for the storage and retrieval of data stored in the Cortex Data Lake.

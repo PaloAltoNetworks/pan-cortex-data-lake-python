@@ -3,6 +3,9 @@ sidebar_label: httpclient
 title: httpclient
 hide_title: true
 ---
+import TOCInline from '@theme/TOCInline';
+
+<TOCInline toc={toc} />;
 ## HTTPClient
 
 HTTP client for the Cortex™ REST API

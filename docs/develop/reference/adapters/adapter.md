@@ -3,6 +3,9 @@ sidebar_label: adapter
 title: adapters.adapter
 hide_title: true
 ---
+import TOCInline from '@theme/TOCInline';
+
+<TOCInline toc={toc} />;
 :::info
 Base adapter class.
 :::
