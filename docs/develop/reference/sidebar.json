@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "items": [
+        "develop/reference/adapters/adapter",
+        "develop/reference/adapters/tinydb_adapter"
+      ],
+      "label": "adapters",
+      "type": "category"
+    },
+    "develop/reference/credentials",
+    "develop/reference/exceptions",
+    "develop/reference/httpclient",
+    "develop/reference/query",
+    "develop/reference/utils"
+  ],
+  "label": "SDK Reference",
+  "type": "category"
+}

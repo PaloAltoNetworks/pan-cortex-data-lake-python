@@ -98,7 +98,7 @@ class Credentials(object):
 
         Examples:
 
-            ```
+            ```python
             from pan_cortex_data_lake import Credentials
 
 
