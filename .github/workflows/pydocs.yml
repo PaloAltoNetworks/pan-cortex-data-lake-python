@@ -1,9 +1,6 @@
-name: PyDocs
+name: PyDocs Preview
 
 on:
-  push:
-    branches:
-      - master
   pull_request_target:
     branches:
       - master
@@ -19,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v2
