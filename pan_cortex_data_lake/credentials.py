@@ -102,17 +102,17 @@ class Credentials(object):
             from pan_cortex_data_lake import Credentials
 
 
-            # Load credentials from envars or `~/.config/pan_cortex_data_lake/credentials.json`
+            # Load credentials from envars or ~/.config/pan_cortex_data_lake/credentials.json
             c = Credentials()
 
-            # Load credentials with static `access_token`
-            access_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRyYXNoIFBBTkRBIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+            # Load credentials with static access_token
+            access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRyYXNoIFBBTkRBIiwiaWF0IjoxNTE2MjM5MDIyfQ"
             c = Credentials(access_token=access_token)
 
             # Load full credentials
-            client_id = 'trash'
-            client_secret = 'panda'
-            refresh_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRyYXNoIFBBTkRBIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+            client_id = "trash"
+            client_secret = "panda"
+            refresh_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRyYXNoIFBBTkRBIiwiaWF0IjoxNTE2MjM5MDIyfQ"
             c = Credentials(client_id=client_id, client_secret=client_secret, refresh_token=refresh_token)
             ```
 
