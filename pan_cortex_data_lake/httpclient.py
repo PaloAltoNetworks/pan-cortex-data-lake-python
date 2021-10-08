@@ -202,6 +202,12 @@ class HTTPClient(object):
         Returns:
             requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object
 
+        Raises:
+            HTTPError: If `raise_for_status = True` and non-2XX HTTP status returned or `enforce_json = True` and failure to decode JSON
+            response or `HTTPError` raised by requests.
+            RequiredKwargsError: If `method` kwarg not included in `request()`.
+            UnexpectedKwargsError: If unsupported kwarg is passed.
+
         """
         url = kwargs.pop("url", self.url)
 
