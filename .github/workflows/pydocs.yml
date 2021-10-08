@@ -65,7 +65,7 @@ jobs:
           git config --global user.email "sserrata@paloaltonetworks.com"
           git config --global user.name "Steven Serrata"
           git add .
-          git diff --cached --exit-code || git commit -m "update pydocs" && echo ::set-output name=changes::true
+          git diff --exit-code || git commit -m "update pydocs" && echo ::set-output name=changes::true
 
       - name: Create Pull Request
         if: steps.id.outputs.changes == 'true'
