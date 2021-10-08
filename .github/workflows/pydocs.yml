@@ -65,9 +65,10 @@ jobs:
           git config --global user.email "sserrata@paloaltonetworks.com"
           git config --global user.name "Steven Serrata"
           git add .
-          git commit -m "update pydocs"
+          git diff --cached --exit-code || git commit -m "update pydocs" && echo ::set-output name=changes::true
 
       - name: Create Pull Request
+        if: steps.id.outputs.changes == 'true'
         id: pydocs
         uses: peter-evans/create-pull-request@v3
         with:
@@ -80,8 +81,3 @@ jobs:
           body: |
             Update pydocs
             - Docs generated with `pydoc-markdown`
-
-      - name: Check outputs
-        run: |
-          echo "Pull Request Number - ${{ steps.pydocs.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.pydocs.outputs.pull-request-url }}"
