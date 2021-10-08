@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    if: github.repository_owner	 == 'PaloAltoNetworks'
     name: Generate docs
     runs-on: ubuntu-latest
     permissions:
