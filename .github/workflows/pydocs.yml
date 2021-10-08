@@ -77,7 +77,9 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           delete-branch: true
-          title: '[PyDocs] Update python library docs'
+          title: '🚫 [PyDocs Preview] Preview python library docs'
+          labels: |
+            don't merge
           body: |
             Update pydocs
             - Docs generated with `pydoc-markdown`
