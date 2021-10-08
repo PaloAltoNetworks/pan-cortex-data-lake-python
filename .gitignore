@@ -70,3 +70,6 @@ target/
 # IDE stuff
 .idea/*
 .vscode/*
+
+# pydoc-markdown
+docs/**/*.md

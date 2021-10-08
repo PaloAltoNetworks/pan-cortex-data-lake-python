@@ -32,27 +32,27 @@ class HTTPClient(object):
     """HTTP client for the Cortex™ REST API"""
 
     def __init__(self, **kwargs):
-        """Persist ``Session()`` attributes and implement connection-pooling.
+        """Persist `Session()` attributes and implement connection-pooling.
 
         :::info
-        Built on top of the ``Requests`` library, ``HTTPClient`` is an
+        Built on top of the `Requests` library, `HTTPClient` is an
         abstraction layer for preparing and sending HTTP `requests` to the
         Application Framework REST APIs and handling `responses`. All
-        ``Requests`` are prepared as ``Session`` objects, with the option
-        to persist certain attributes such as ``cert``, ``headers``,
-        ``proxies``, etc. ``HTTPAdapter`` is implemented to enable more
+        `Requests` are prepared as `Session` objects, with the option
+        to persist certain attributes such as `cert`, `headers`,
+        `proxies`, etc. `HTTPAdapter` is implemented to enable more
         granular performance and reliability tuning.
         :::
 
         Parameters:
-            auto_refresh (bool): Perform token refresh prior to request if ``access_token`` is ``None`` or expired. Defaults to ``True``.
-            auto_retry (bool): Retry last failed HTTP request following a token refresh. Defaults to ``True``.
-            credentials (Credentials): [Credentials](credentials.md#credentials) object. Defaults to ``None``.
-            enforce_json (bool): Require properly-formatted JSON or raise [CortexError](exceptions.md#cortexerror). Defaults to ``False``.
-            force_trace (bool): If ``True``, forces trace and forces ``x-request-id`` to be returned in the response headers. Defaults to ``False``.
-            port (int): TCP port to append to URL. Defaults to ``443``.
-            raise_for_status (bool): If ``True``, raises [HTTPError](exceptions.md#httperror) if status_code not in 2XX. Defaults to ``False``.
-            url (str): URL to send API requests to - gets combined with ``port`` and ``endpoint`` parameter. Defaults to ``None``.
+            auto_refresh (bool): Perform token refresh prior to request if `access_token` is `None` or expired. Defaults to `True`.
+            auto_retry (bool): Retry last failed HTTP request following a token refresh. Defaults to `True`.
+            credentials (Credentials): [Credentials](credentials.md#credentials) object. Defaults to `None`.
+            enforce_json (bool): Require properly-formatted JSON or raise [CortexError](exceptions.md#cortexerror). Defaults to `False`.
+            force_trace (bool): If `True`, forces trace and forces `x-request-id` to be returned in the response headers. Defaults to `False`.
+            port (int): TCP port to append to URL. Defaults to `443`.
+            raise_for_status (bool): If `True`, raises [HTTPError](exceptions.md#httperror) if status_code not in 2XX. Defaults to `False`.
+            url (str): URL to send API requests to - gets combined with `port` and `endpoint` parameter. Defaults to `None`.
 
         Args:
             **kwargs: Supported [Session](https://github.com/psf/requests/blob/main/requests/sessions.py#L337) and
@@ -120,10 +120,10 @@ class HTTPClient(object):
         """Update Authorization header.
 
         Update request headers with latest `access_token`. Perform token
-        `refresh` if token is ``None``.
+        `refresh` if token is `None`.
 
         Args:
-            auto_refresh (bool): Perform token refresh if access_token is ``None`` or expired. Defaults to ``True``.
+            auto_refresh (bool): Perform token refresh if access_token is `None` or expired. Defaults to `True`.
             credentials (class): Read-only credentials.
             headers (class): Requests `CaseInsensitiveDict`.
 
@@ -158,14 +158,14 @@ class HTTPClient(object):
         """Send HTTP request.
 
         Args:
-             enforce_json (bool): Require properly-formatted JSON or raise [CortexError](exceptions.md#cortexerror). Defaults to ``False``.
+             enforce_json (bool): Require properly-formatted JSON or raise [CortexError](exceptions.md#cortexerror). Defaults to `False`.
              method (str): HTTP method.
-             raise_for_status (bool): If ``True``, raises [HTTPError](exceptions.md#httperror) if status_code not in 2XX. Defaults to ``False``.
+             raise_for_status (bool): If `True`, raises [HTTPError](exceptions.md#httperror) if status_code not in 2XX. Defaults to `False`.
              url (str): Request URL.
              **kwargs (dict): Re-packed key-word arguments.
 
          Returns:
-            requests.Response: Requests Response() object
+            requests.Response: [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object
 
         """
         r = self.session.request(method, url, **kwargs)
@@ -191,16 +191,16 @@ class HTTPClient(object):
         :::
 
         Parameters:
-            enforce_json (bool): Require properly-formatted JSON or raise [HTTPError](exceptions.md#httperror). Defaults to ``False``.
-            path (str): URI path to append to URL. Defaults to ``empty``.
-            raise_for_status (bool): If ``True``, raises [HTTPError](exceptions.md#httperror) if status_code not in 2XX. Defaults to ``False``.
+            enforce_json (bool): Require properly-formatted JSON or raise [HTTPError](exceptions.md#httperror). Defaults to `False`.
+            path (str): URI path to append to URL. Defaults to `empty`.
+            raise_for_status (bool): If `True`, raises [HTTPError](exceptions.md#httperror) if status_code not in 2XX. Defaults to `False`.
 
         Args:
             **kwargs: Supported [Session](https://github.com/psf/requests/blob/main/requests/sessions.py#L337) and
             [HTTPAdapter](https://github.com/psf/requests/blob/main/requests/adapters.py#L85) parameters.
 
         Returns:
-            requests.Response: Requests Response() object
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object
 
         """
         url = kwargs.pop("url", self.url)

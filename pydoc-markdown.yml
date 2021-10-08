@@ -1,0 +1,50 @@
+loaders:
+  - type: python
+    search_path: [pan_cortex_data_lake]
+processors:
+  - type: filter
+    skip_empty_modules: true
+  - type: smart
+  - type: crossref
+renderer:
+  type: docusaurus
+  docs_base_path: docs
+  relative_output_path: develop/reference
+  relative_sidebar_path: sidebar.json
+  sidebar_top_level_label: SDK Reference
+  markdown:
+    render_module_header_template: |
+      ---
+      sidebar_label: {relative_module_name}
+      title: {module_name}
+      hide_title: true
+      ---
+    header_level_by_type:
+        Class: 2
+        Function: 3
+        Method: 3
+        Module: 1
+        Data: 3
+    code_headers: false
+    descriptive_class_title: false
+    descriptive_module_title: false
+    add_module_prefix: false
+    add_method_class_prefix: false
+    add_member_class_prefix: false
+    add_full_prefix: false
+    data_code_block: true
+    classdef_code_block: false
+    classdef_with_decorators: false
+    signature_in_header: false
+    signature_python_help_style: false
+    signature_with_vertical_bar: false
+    signature_with_def: false
+    signature_class_prefix: false
+    docstrings_as_blockquote: false
+    render_module_header: true
+    classdef_render_init_signature_if_needed: false
+    escape_html_in_docstring: false
+hooks:
+  post-render:
+    - ./docs/post_render.py
+

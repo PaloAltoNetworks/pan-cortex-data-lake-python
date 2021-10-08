@@ -31,8 +31,8 @@ class QueryService(object):
         """
 
         Parameters:
-            session (HTTPClient): [HTTPClient](httpclient.md#httpclient) object. Defaults to ``None``.
-            url (str): URL to send API requests to. Later combined with ``port`` and ``endpoint`` parameter.
+            session (HTTPClient): [HTTPClient](httpclient.md#httpclient) object. Defaults to `None`.
+            url (str): URL to send API requests to. Later combined with `port` and `endpoint` parameter.
 
         Args:
             **kwargs: Supported [HTTPClient](httpclient.md#httpclient) parameters.
@@ -81,7 +81,10 @@ class QueryService(object):
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            requests.Response: Requests Response() object.
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
+
+        Raises:
+
 
         """
         endpoint = "/query/v2/jobs/{}".format(job_id)
@@ -95,7 +98,7 @@ class QueryService(object):
         """Create a search request.
 
         :::info
-        When submission is successful, http status code of ``201`` (Created)
+        When submission is successful, http status code of `201` (Created)
         is returned with a 'jobId' in response. Specifying a 'jobId' is
         optional.
         :::
@@ -106,7 +109,7 @@ class QueryService(object):
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            requests.Response: Requests Response() object.
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         """
         json = kwargs.pop("json", {})
@@ -135,7 +138,7 @@ class QueryService(object):
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            requests.Response: Requests Response() object.
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         """
         endpoint = "/query/v2/jobs/{}".format(job_id)
@@ -169,7 +172,7 @@ class QueryService(object):
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            requests.Response: Requests Response() object.
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         """
         params = kwargs.pop("params", {})
@@ -218,8 +221,8 @@ class QueryService(object):
             result_format (str): valuesArray or valuesJson.
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
-        Yields:
-            requests.Response: Requests Response() object.
+        Returns:
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         """
         params = kwargs.pop("params", {})
@@ -277,7 +280,7 @@ class QueryService(object):
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            requests.Response: Requests Response() object.
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         """
         params = kwargs.pop("params", {})

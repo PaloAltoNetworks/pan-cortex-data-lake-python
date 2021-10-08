@@ -61,14 +61,14 @@ class Credentials(object):
         token_url=None,
         **kwargs
     ):
-        """Persist ``Session()`` and credentials attributes.
+        """Persist `Session()` and credentials attributes.
 
         :::info
-        The ``Credentials`` class is an abstraction layer for accessing,
+        The `Credentials` class is an abstraction layer for accessing,
         storing and refreshing credentials needed for interacting with
         the Application Framework.
 
-        ``Credentials`` resolves credentials from the following locations,
+        `Credentials` resolves credentials from the following locations,
         in the following order:
 
             1. Class instance variables
@@ -77,24 +77,44 @@ class Credentials(object):
         :::
 
         Args:
-            access_token (str): OAuth2 access token. Defaults to ``None``.
-            auth_base_url (str): IdP base authorization URL. Default to ``None``.
-            cache_token (bool): If ``True``, stores ``access_token`` in token store. Defaults to ``True``.
-            client_id (str): OAuth2 client ID. Defaults to ``None``.
-            client_secret (str): OAuth2 client secret. Defaults to ``None``.
-            developer_token (str): Developer Token. Defaults to ``None``.
-            developer_token_provider (str): Developer Token Provider URL. Defaults to ``None``.
-            instance_id (str): Instance ID. Defaults to ``None``.
-            profile (str): Credentials profile. Defaults to ``'default'``.
-            redirect_uri (str): Redirect URI. Defaults to ``None``.
-            region (str): Region. Defaults to ``None``.
-            refresh_token (str): OAuth2 refresh token. Defaults to ``None``.
-            scope (str): OAuth2 scope. Defaults to ``None``.
+            access_token (str): OAuth2 access token. Defaults to `None`.
+            auth_base_url (str): IdP base authorization URL. Default to `None`.
+            cache_token (bool): If `True`, stores `access_token` in token store. Defaults to `True`.
+            client_id (str): OAuth2 client ID. Defaults to `None`.
+            client_secret (str): OAuth2 client secret. Defaults to `None`.
+            developer_token (str): Developer Token. Defaults to `None`.
+            developer_token_provider (str): Developer Token Provider URL. Defaults to `None`.
+            instance_id (str): Instance ID. Defaults to `None`.
+            profile (str): Credentials profile. Defaults to 'default'.
+            redirect_uri (str): Redirect URI. Defaults to `None`.
+            region (str): Region. Defaults to `None`.
+            refresh_token (str): OAuth2 refresh token. Defaults to `None`.
+            scope (str): OAuth2 scope. Defaults to `None`.
             storage_adapter (str): Namespace path to storage adapter module. Defaults to "pan_cortex_data_lake.adapters.tinydb_adapter.TinyDBStore".
-            storage_params (dict) = Storage adapter parameters. Defaults to ``None``.
-            token_url (str): Refresh URL. Defaults to ``None``.
-            token_revoke_url (str): Revoke URL. Defaults to ``None``.
-            **kwargs: Supported :class:`~requests.Session` parameters.
+            storage_params (dict): Storage adapter parameters. Defaults to `None`.
+            token_url (str): Refresh URL. Defaults to `None`.
+            token_revoke_url (str): Revoke URL. Defaults to `None`.
+            **kwargs: Supported [Session](https://github.com/psf/requests/blob/main/requests/sessions.py#L337) parameters.
+
+        Examples:
+
+            ```python
+            from pan_cortex_data_lake import Credentials
+
+
+            # Load credentials from envars or ~/.config/pan_cortex_data_lake/credentials.json
+            c = Credentials()
+
+            # Load credentials with static access_token
+            access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRyYXNoIFBBTkRBIiwiaWF0IjoxNTE2MjM5MDIyfQ"
+            c = Credentials(access_token=access_token)
+
+            # Load full credentials
+            client_id = "trash"
+            client_secret = "panda"
+            refresh_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRyYXNoIFBBTkRBIiwiaWF0IjoxNTE2MjM5MDIyfQ"
+            c = Credentials(client_id=client_id, client_secret=client_secret, refresh_token=refresh_token)
+            ```
 
         """
         self.access_token_ = access_token
@@ -231,7 +251,7 @@ class Credentials(object):
         """Check for credentials in envars.
 
         Returns:
-            bool: ``True`` if at least one is found, otherwise ``False``.
+            bool: `True` if at least one is found, otherwise `False`.
 
         """
         return any(
@@ -265,7 +285,7 @@ class Credentials(object):
             credential (str): Credential to resolve.
 
         Returns:
-            str or None: Resolved credential or ``None``.
+            str or None: Resolved credential or `None`.
 
         """
         if self._credentials_found_in_instance:
@@ -281,10 +301,13 @@ class Credentials(object):
         """Extract payload field from JWT.
 
         Args:
-            access_token (str): Access token to decode. Defaults to ``None``.
+            access_token (str): Access token to decode. Defaults to `None`.
 
         Returns:
             dict: JSON object that contains the claims conveyed by the JWT.
+
+        Raises:
+            CortexError: If unable to decode JWT payload.
 
         """
         c = self.get_credentials()
@@ -312,10 +335,13 @@ class Credentials(object):
         """Extract exp field from access token.
 
         Args:
-            access_token (str): Access token to decode. Defaults to ``None``.
+            access_token (str): Access token to decode. Defaults to `None`.
 
         Returns:
             int: JWT expiration in epoch seconds.
+
+        Raises:
+            CortexError: If `exp` not in JWT claims.
 
         """
         c = self.get_credentials()
@@ -339,13 +365,16 @@ class Credentials(object):
         """Exchange authorization code for token.
 
         Args:
-            client_id (str): OAuth2 client ID. Defaults to ``None``.
-            client_secret (str): OAuth2 client secret. Defaults to ``None``.
-            code (str): Authorization code. Defaults to ``None``.
-            redirect_uri (str): Redirect URI. Defaults to ``None``.
+            client_id (str): OAuth2 client ID. Defaults to `None`.
+            client_secret (str): OAuth2 client secret. Defaults to `None`.
+            code (str): Authorization code. Defaults to `None`.
+            redirect_uri (str): Redirect URI. Defaults to `None`.
 
         Returns:
             dict: Response from token URL.
+
+        Raises:
+            CortexError: If non-2XX response or 'error' received from API or invalid JSON.
 
         """
         client_id = client_id or self.client_id
@@ -393,12 +422,12 @@ class Credentials(object):
         """Generate authorization URL.
 
         Args:
-            client_id (str): OAuth2 client ID. Defaults to ``None``.
-            instance_id (str): App Instance ID. Defaults to ``None``.
-            redirect_uri (str): Redirect URI. Defaults to ``None``.
-            region (str): App Region. Defaults to ``None``.
-            scope (str): Permissions. Defaults to ``None``.
-            state (str): UUID to detect CSRF. Defaults to ``None``.
+            client_id (str): OAuth2 client ID. Defaults to `None`.
+            instance_id (str): App Instance ID. Defaults to `None`.
+            redirect_uri (str): Redirect URI. Defaults to `None`.
+            region (str): App Region. Defaults to `None`.
+            scope (str): Permissions. Defaults to `None`.
+            state (str): UUID to detect CSRF. Defaults to `None`.
 
         Returns:
             str, str: Auth URL, state
@@ -445,11 +474,11 @@ class Credentials(object):
         """Validate JWT access token expiration.
 
         Args:
-            access_token (str): Access token to validate. Defaults to ``None``.
+            access_token (str): Access token to validate. Defaults to `None`.
             leeway (float): Time in seconds to adjust for local clock skew. Defaults to 0.
 
         Returns:
-            bool: ``True`` if expired, otherwise ``False``.
+            bool: `True` if expired, otherwise `False`.
 
         """
         if access_token is not None:
@@ -468,7 +497,7 @@ class Credentials(object):
             profile (str): Credentials profile to remove.
 
         Returns:
-            Return value of self.storage.remove_profile()
+            Return value of `self.storage.remove_profile()`.
 
         """
         return self.storage.remove_profile(profile=profile)
@@ -477,10 +506,15 @@ class Credentials(object):
         """Refresh access and refresh tokens.
 
         Args:
-            access_token (str): Access token to refresh. Defaults to ``None``.
+            access_token (str): Access token to refresh. Defaults to `None`.
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            str: Refreshed access token.
+            str: Refreshed access token and refresh token (if available).
+
+        Raises:
+            CortexError: If non-2XX response or 'error' received from API or invalid JSON.
+            PartialCredentialsError: If one or more required credentials are missing.
 
         """
         if not self.token_lock.locked():
@@ -551,7 +585,18 @@ class Credentials(object):
                         return self.access_token_
 
     def revoke_access_token(self, **kwargs):
-        """Revoke access token."""
+        """Revoke access token.
+
+        Args:
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
+
+        Returns:
+            dict: JSON object that contains the response from API.
+
+        Raises:
+            CortexError: If non-2XX response or 'error' received from API or invalid JSON.
+
+        """
         c = self.get_credentials()
         data = {
             "client_id": c.client_id,
@@ -578,7 +623,18 @@ class Credentials(object):
             return r_json
 
     def revoke_refresh_token(self, **kwargs):
-        """Revoke refresh token."""
+        """Revoke refresh token.
+
+        Args:
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
+
+        Returns:
+            dict: JSON object that contains the response from API.
+
+        Raises:
+            CortexError: If non-2XX response or 'error' received from API or invalid JSON.
+
+        """
         c = self.get_credentials()
         data = {
             "client_id": c.client_id,
@@ -612,7 +668,7 @@ class Credentials(object):
         :::
 
         Returns:
-            Return value of self.storage.write_credentials()
+            Return value of `self.storage.write_credentials()`.
 
         """
         c = self.get_credentials()
