@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - master
-      - pydocs
-  pull_request:
+  pull_request_target:
     branches:
       - master
 
