@@ -61,6 +61,7 @@ jobs:
           path: docs/
 
       - name: Commit changes
+        id: commit
         run: |
           git config --global user.email "sserrata@paloaltonetworks.com"
           git config --global user.name "Steven Serrata"
@@ -68,7 +69,7 @@ jobs:
           git diff --exit-code || git commit -m "update pydocs" && echo ::set-output name=changes::true
 
       - name: Create Pull Request
-        if: steps.id.outputs.changes == 'true'
+        if: steps.commit.outputs.changes == 'true'
         id: pydocs
         uses: peter-evans/create-pull-request@v3
         with:
