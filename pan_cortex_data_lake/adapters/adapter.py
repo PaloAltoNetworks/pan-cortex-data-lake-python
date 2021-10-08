@@ -22,7 +22,7 @@ class StorageAdapter(ABC):  # enforce StorageAdapter interface
 
         Args:
             credential (str): Credential to fetch.
-            profile (str): Credentials profile. Defaults to ``'default'``.
+            profile (str): Credentials profile. Defaults to 'default'.
 
         """
         pass
@@ -51,9 +51,9 @@ class StorageAdapter(ABC):  # enforce StorageAdapter interface
         :::
 
         Args:
-            cache_token (bool): If ``True``, stores ``access_token`` in token store. Defaults to ``True``.
+            cache_token (bool): If `True`, stores `access_token` in token store. Defaults to `True`.
             credentials (class): Read-only credentials.
-            profile (str): Credentials profile. Defaults to ``'default'``.
+            profile (str): Credentials profile. Defaults to 'default'.
 
         """
         pass

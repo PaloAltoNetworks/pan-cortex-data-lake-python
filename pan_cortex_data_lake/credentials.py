@@ -96,6 +96,26 @@ class Credentials(object):
             token_revoke_url (str): Revoke URL. Defaults to `None`.
             **kwargs: Supported [Session](https://github.com/psf/requests/blob/main/requests/sessions.py#L337) parameters.
 
+        Examples:
+
+            ```python
+            from pan_cortex_data_lake import Credentials
+
+
+            # Load credentials from envars or `~/.config/pan_cortex_data_lake/credentials.json`
+            c = Credentials()
+
+            # Load credentials with static `access_token`
+            access_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRyYXNoIFBBTkRBIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+            c = Credentials(access_token=access_token)
+
+            # Load full credentials
+            client_id = 'trash'
+            client_secret = 'panda'
+            refresh_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRyYXNoIFBBTkRBIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+            c = Credentials(client_id=client_id, client_secret=client_secret, refresh_token=refresh_token)
+            ```
+
         """
         self.access_token_ = access_token
         self.auth_base_url = auth_base_url or AUTH_BASE_URL
@@ -286,6 +306,9 @@ class Credentials(object):
         Returns:
             dict: JSON object that contains the claims conveyed by the JWT.
 
+        Raises:
+            CortexError: If unable to decode JWT payload.
+
         """
         c = self.get_credentials()
         jwt = access_token or c.access_token
@@ -317,6 +340,9 @@ class Credentials(object):
         Returns:
             int: JWT expiration in epoch seconds.
 
+        Raises:
+            CortexError: If `exp` not in JWT claims.
+
         """
         c = self.get_credentials()
         jwt = access_token or c.access_token
@@ -346,6 +372,9 @@ class Credentials(object):
 
         Returns:
             dict: Response from token URL.
+
+        Raises:
+            CortexError: If non-2XX response or 'error' received from API or invalid JSON.
 
         """
         client_id = client_id or self.client_id
@@ -468,7 +497,7 @@ class Credentials(object):
             profile (str): Credentials profile to remove.
 
         Returns:
-            Return value of self.storage.remove_profile()
+            Return value of `self.storage.remove_profile()`.
 
         """
         return self.storage.remove_profile(profile=profile)
@@ -478,9 +507,14 @@ class Credentials(object):
 
         Args:
             access_token (str): Access token to refresh. Defaults to `None`.
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            str: Refreshed access token.
+            str: Refreshed access token and refresh token (if available).
+
+        Raises:
+            CortexError: If non-2XX response or 'error' received from API or invalid JSON.
+            PartialCredentialsError: If one or more required credentials are missing.
 
         """
         if not self.token_lock.locked():
@@ -551,7 +585,18 @@ class Credentials(object):
                         return self.access_token_
 
     def revoke_access_token(self, **kwargs):
-        """Revoke access token."""
+        """Revoke access token.
+
+        Args:
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
+
+        Returns:
+            dict: JSON object that contains the response from API.
+
+        Raises:
+            CortexError: If non-2XX response or 'error' received from API or invalid JSON.
+
+        """
         c = self.get_credentials()
         data = {
             "client_id": c.client_id,
@@ -578,7 +623,18 @@ class Credentials(object):
             return r_json
 
     def revoke_refresh_token(self, **kwargs):
-        """Revoke refresh token."""
+        """Revoke refresh token.
+
+        Args:
+            **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
+
+        Returns:
+            dict: JSON object that contains the response from API.
+
+        Raises:
+            CortexError: If non-2XX response or 'error' received from API or invalid JSON.
+
+        """
         c = self.get_credentials()
         data = {
             "client_id": c.client_id,
@@ -612,7 +668,7 @@ class Credentials(object):
         :::
 
         Returns:
-            Return value of self.storage.write_credentials()
+            Return value of `self.storage.write_credentials()`.
 
         """
         c = self.get_credentials()

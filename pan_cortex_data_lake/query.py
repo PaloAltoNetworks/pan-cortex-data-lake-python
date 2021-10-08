@@ -81,7 +81,7 @@ class QueryService(object):
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            requests.Response: Requests Response() object.
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         Raises:
 
@@ -109,7 +109,7 @@ class QueryService(object):
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            requests.Response: Requests Response() object.
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         """
         json = kwargs.pop("json", {})
@@ -138,7 +138,7 @@ class QueryService(object):
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            requests.Response: Requests Response() object.
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         """
         endpoint = "/query/v2/jobs/{}".format(job_id)
@@ -172,7 +172,7 @@ class QueryService(object):
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            requests.Response: Requests Response() object.
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         """
         params = kwargs.pop("params", {})
@@ -221,8 +221,8 @@ class QueryService(object):
             result_format (str): valuesArray or valuesJson.
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
-        Yields:
-            requests.Response: Requests Response() object.
+        Returns:
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         """
         params = kwargs.pop("params", {})
@@ -280,7 +280,7 @@ class QueryService(object):
             **kwargs: Supported [HTTPClient.request()](httpclient.md#request) parameters.
 
         Returns:
-            requests.Response: Requests Response() object.
+            requests.Response: Requests [Response()](https://docs.python-requests.org/en/latest/api/#requests.Response) object.
 
         """
         params = kwargs.pop("params", {})
