@@ -43,4 +43,5 @@ renderer:
     docstrings_as_blockquote: false
     render_module_header: true
     classdef_render_init_signature_if_needed: false
+    escape_html_in_docstring: false
 
