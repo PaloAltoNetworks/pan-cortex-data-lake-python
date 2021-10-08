@@ -67,6 +67,7 @@ jobs:
           git config --global user.name "Steven Serrata"
           git add .
           (git diff --exit-code || git diff --exit-code --cached) || git commit -m "update pydocs"
+          git status
 
       - name: Create Pull Request
         id: pydocs
