@@ -84,7 +84,7 @@ jobs:
             Update pydocs
             - Docs generated with `pydoc-markdown`
             
-            > **For preview/review purposes only**, please close PR and delete branch when done. A new PR will
-              that can be merged will be generated when upstream changes are merged to main branch. 
+            > **For preview/review purposes only**, please close this PR and delete branch when done. A new PR
+              will be opened (that can be merged) when upstream changes are merged to main branch. 
   
 
