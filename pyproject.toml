@@ -40,7 +40,7 @@ dynamic = ["version", "description"]
 [project.urls]
 Home = "https://cortex.pan.dev"
 Source = "https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python"
-Documentation = "https://cortex.pan.dev"
+Documentation = "https://cortex.pan.dev/docs/develop/cdl_python_installation"
 
 [tool.flit.module]
 name = "pan_cortex_data_lake"
