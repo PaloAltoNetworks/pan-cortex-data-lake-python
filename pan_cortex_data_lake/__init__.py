@@ -3,7 +3,8 @@
 """Main package for cortex."""
 
 __author__ = "Palo Alto Networks"
-__version__ = "2.0.0-a14"
+__version__ = "2.0.0b1"
+__description__ = "Python idiomatic SDK for Cortex™ Data Lake."
 
 from .exceptions import (  # noqa: F401
     CortexError,
