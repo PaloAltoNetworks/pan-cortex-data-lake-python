@@ -36,15 +36,6 @@ classifiers = [
 license = {file = "LICENSE"}
 requires-python = ">=3.5"
 dynamic = ["version", "description"]
-
-[project.urls]
-Home = "https://cortex.pan.dev"
-Source = "https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python"
-Documentation = "https://cortex.pan.dev/docs/develop/cdl_python_installation"
-
-[tool.flit.module]
-name = "pan_cortex_data_lake"
-
 dependencies = [
     "requests >=2.6",
     "tinydb >=3,<=4"
@@ -58,3 +49,12 @@ test = [
     "tox",
     "coverage",
 ]
+
+[project.urls]
+Home = "https://cortex.pan.dev"
+Source = "https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python"
+Documentation = "https://cortex.pan.dev/docs/develop/cdl_python_installation"
+
+[tool.flit.module]
+name = "pan_cortex_data_lake"
+
