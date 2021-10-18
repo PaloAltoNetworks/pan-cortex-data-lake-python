@@ -37,7 +37,7 @@ license = {file = "LICENSE"}
 requires-python = ">=3.5"
 dynamic = ["version", "description"]
 dependencies = [
-    "requests >=2.6",
+    "requests >=2",
     "tinydb >=3,<=4"
 ]
 
