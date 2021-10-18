@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""Main package for cortex."""
+"""Python idiomatic SDK for Cortex™ Data Lake."""
 
 __author__ = "Palo Alto Networks"
 __version__ = "2.0.0b1"
-__description__ = "Python idiomatic SDK for Cortex™ Data Lake."
 
 from .exceptions import (  # noqa: F401
     CortexError,
