@@ -1,4 +1,4 @@
-![Tests](https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/workflows/Tests/badge.svg) ![PyPI upload](https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/workflows/PyPI%20upload/badge.svg?branch=master) ![![PyPI version](https://badge.fury.io/py/pan-cortex-data-lake.svg)](https://badge.fury.io/py/pan-cortex-data-lake)
+![Tests](https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/workflows/Tests/badge.svg) ![PyPI upload](https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/workflows/PyPI%20upload/badge.svg?branch=master) [![PyPI version](https://badge.fury.io/py/pan-cortex-data-lake.svg)](https://badge.fury.io/py/pan-cortex-data-lake)
 
 # Palo Alto Networks Cortex™ Data Lake SDK
 
