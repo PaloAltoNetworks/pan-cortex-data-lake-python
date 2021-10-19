@@ -10,7 +10,7 @@ from __future__ import absolute_import
 import os
 from threading import RLock
 
-from tinydb import TinyDB, Query
+from tinydb import TinyDB, Query, __version__
 from tinydb.storages import MemoryStorage
 
 from .. import CortexError
@@ -60,7 +60,12 @@ class TinyDBStore(StorageAdapter):
                 os.makedirs(os.path.dirname(dbfile), 0o700)
             except OSError as e:
                 raise CortexError("{}".format(e))
-        return TinyDB(dbfile, sort_keys=True, indent=4, default_table="profiles")
+        if __version__ >= "4.0.0":
+            db = TinyDB(dbfile, sort_keys=True, indent=4)
+            db.default_table_name = "profiles"
+        else:
+            db = TinyDB(dbfile, sort_keys=True, default_table="profiles", indent=4)
+        return db
 
     def remove_profile(self, profile=None):
         """Remove profile from credentials file.
