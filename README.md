@@ -1,4 +1,4 @@
-![Tests](https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/workflows/Tests/badge.svg) ![PyPI upload](https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/workflows/PyPI%20upload/badge.svg?branch=master) [![PyPI version](https://badge.fury.io/py/pan-cortex-data-lake.svg)](https://badge.fury.io/py/pan-cortex-data-lake)
+![Tests](https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/workflows/Tests/badge.svg) ![PyPI upload](https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/workflows/PyPI%20upload/badge.svg?branch=master) ![![PyPI version](https://badge.fury.io/py/pan-cortex-data-lake.svg)](https://badge.fury.io/py/pan-cortex-data-lake)
 
 # Palo Alto Networks Cortex™ Data Lake SDK
 
@@ -18,10 +18,11 @@ common tasks/operations.
 
 -   Log/event pagination
 -   OAuth 2.0 and token refreshing
--   More, coming soon!
+
+Resources:
 
 -   Documentation: <https://cortex.pan.dev>
--   Free software: ISC license
+-   Free software: [ISC license](https://choosealicense.com/licenses/isc/)
 
 ---
 
@@ -36,13 +37,27 @@ common tasks/operations.
 
 ## Status
 
-The Palo Alto Networks Cortex™ Data Lake Python SDK is considered **alpha** at this time.
+The Palo Alto Networks Cortex™ Data Lake Python SDK is considered **beta** at this time.
 
 ## Installation
 
 From PyPI:
 
-    $ pip install pan-cortex-data-lake
+```bash
+pip install pan-cortex-data-lake
+```
+
+From source:
+
+```bash
+pip install .
+```
+
+To run tests:
+
+```bash
+pip install .[test]
+```
 
 ## Obtaining and Using OAuth 2.0 Tokens
 
@@ -51,22 +66,21 @@ If you're an app developer, work with your Developer Relations representative to
 # Example
 
 ```python
->>> from pan_cortex_data_lake import Credentials, QueryService
->>> c = Credentials()
->>> qs = QueryService(credentials=c)
->>> query_params = {
-...     "query": "SELECT * FROM `1234567890.firewall.traffic` LIMIT 1",
-... }
->>> q = qs.create_query(query_params=query_params)
->>> q.status_code
-201
->>> q.json()
-{'jobId': '40fedce6-ddf5-44cf-9af2-7c3d5303f388', 'uri': '/query/v2/jobs/40fedce6-ddf5-44cf-9af2-7c3d5303f388'}
->>> results = qs.get_job_results(job_id='40fedce6-ddf5-44cf-9af2-7c3d5303f388')
->>> results.json()
+from pan_cortex_data_lake import Credentials, QueryService
+
+
+c = Credentials()
+qs = QueryService(credentials=c)
+query_params = {
+    "query": "SELECT * FROM `1234567890.firewall.traffic` LIMIT 1",
+}
+q = qs.create_query(query_params=query_params)
+results = qs.get_job_results(job_id=q.json()['jobId'])
+print(results.json())
 ```
 
 # Contributors
 
--   Kevin Steves - [github](https://github.com/kevinsteves)
--   Steven Serrata - [github](https://github.com/sserrata)
+<a href="https://github.com/PaloAltoNetworks/pan-cortex-data-lake-python/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=PaloAltoNetworks/pan-cortex-data-lake-python" />
+</a>
