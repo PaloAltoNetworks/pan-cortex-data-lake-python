@@ -98,27 +98,28 @@ class Credentials(object):
 
         Examples:
 
-            ```python
-            from pan_cortex_data_lake import Credentials
+        ```python
+        from pan_cortex_data_lake import Credentials
 
 
-            # Load credentials from envars or ~/.config/pan_cortex_data_lake/credentials.json
-            c = Credentials()
+        # Load credentials from envars or ~/.config/pan_cortex_data_lake/credentials.json
+        c = Credentials()
 
-            # Load credentials with static access_token
-            access_token = "eyJ..."
-            c = Credentials(access_token=access_token)
+        # Load credentials with static access_token
+        access_token = "eyJ..."
+        c = Credentials(access_token=access_token)
 
-            # Load full credentials
-            client_id = "trash"
-            client_secret = "panda"
-            refresh_token = "eyJ..."
-            c = Credentials(
-                client_id=client_id,
-                client_secret=client_secret,
-                refresh_token=refresh_token
-            )
-            ```
+        # Load full credentials
+        client_id = "trash"
+        client_secret = "panda"
+        refresh_token = "eyJ..."
+
+        c = Credentials(
+            client_id=client_id,
+            client_secret=client_secret,
+            refresh_token=refresh_token
+        )
+        ```
 
         """
         self.access_token_ = access_token
