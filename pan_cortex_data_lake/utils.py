@@ -2,7 +2,7 @@
 
 """
 :::info
-PAN Cloud Python SDK utilities.
+PAN CDL Python SDK utilities.
 :::
 
 """
