@@ -61,7 +61,7 @@ pip install .[test]
 
 ## Obtaining and Using OAuth 2.0 Tokens
 
-If you're an app developer, work with your Developer Relations representative to obtain your OAuth2 credentials. API Explorer may optionally be used to generate a Developer Token, which can also be used to authenticate with the API. For details on API Explorer developer tokens, please visit <https://cortex.pan.dev/docs/learn/developer_tokens>.
+If you're an app developer, work with your Developer Relations representative to obtain your OAuth2 credentials. API Explorer may optionally be used to generate a Developer Token, which can also be used to authenticate with the API. For details on API Explorer developer tokens, please visit <https://cortex.pan.dev/docs/data_lake/learn/developer_tokens>.
 
 # Example
 
